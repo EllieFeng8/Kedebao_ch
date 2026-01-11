@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Studio.DesignEffects
 import QtQuick.Effects
+import Core 1.0
 
 Rectangle {
     id: root
@@ -177,7 +178,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 //color: "white"
                 x: 243
-                text:"I0.00"
+                text:Kdb.unwindingFenceDetect1//"I0.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -197,12 +198,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.unwindingFenceDetect1Light ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.unwindingFenceDetect1Light ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -236,7 +237,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I1.00"
+                text:Kdb.unwindingFenceDetect2//"I1.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -256,12 +257,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.unwindingFenceDetect2Light ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.unwindingFenceDetect2Light ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -296,7 +297,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I2.00"
+                text:Kdb.largeWinderFenceDetect3//"I2.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -316,12 +317,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.largeWinderFenceDetect3Light ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.largeWinderFenceDetect3Light ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -356,7 +357,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I3.00"
+                text:Kdb.largeWinderFenceDetect4//"I3.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -376,12 +377,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.largeWinderFenceDetect4Light ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.largeWinderFenceDetect4Light ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -415,7 +416,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I4.00"
+                text:Kdb.unwindingSafetyLightCurtainAlarm//"I4.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -435,12 +436,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.unwindingSafetyLightCurtainAlarmLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.unwindingSafetyLightCurtainAlarmLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -474,7 +475,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I5.00"
+                text:Kdb.inspectionSafetyLightCurtainAlarm//"I5.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -494,12 +495,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.inspectionSafetyLightCurtainAlarmLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.inspectionSafetyLightCurtainAlarmLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -533,7 +534,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I6.00"
+                text:Kdb.largeWinderSafetyLightCurtainAlarm//"I6.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -553,12 +554,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.largeWinderSafetyLightCurtainAlarmLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.largeWinderSafetyLightCurtainAlarmLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -592,7 +593,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I7.00"
+                text:Kdb.smallWinderZeroSpeedDetect//"I7.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -612,12 +613,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.smallWinderZeroSpeedDetectLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.smallWinderZeroSpeedDetectLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -651,7 +652,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I8.00"
+                text:Kdb.largeWinderZeroSpeedDetect//"I8.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -671,12 +672,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.largeWinderZeroSpeedDetectLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.largeWinderZeroSpeedDetectLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -710,7 +711,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I9.00"
+                text:Kdb.unwindingTensionOver//"I9.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -730,12 +731,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.unwindingTensionOverLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.unwindingTensionOverLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -769,7 +770,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I0.10"
+                text:Kdb.smallWinderTensionOver//"I0.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -789,12 +790,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.smallWinderTensionOverLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.smallWinderTensionOverLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -828,7 +829,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I0.11"
+                text:Kdb.largeWinderTensionOver//"I0.11"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -848,12 +849,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.largeWinderTensionOverLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.largeWinderTensionOverLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -888,7 +889,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I0.12"
+                text:Kdb.leftSelvedgeWinderAngleAlarm//"I0.12"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -908,12 +909,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.leftSelvedgeWinderAngleAlarmLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.leftSelvedgeWinderAngleAlarmLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -947,7 +948,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:"I0.13"
+                text:Kdb.rightSelvedgeWinderAngleAlarm//"I0.13"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -967,12 +968,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: "#88FF0A"
+                color: Kdb.rightSelvedgeWinderAngleAlarmLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: "#88FF0A"
+                    shadowColor: Kdb.rightSelvedgeWinderAngleAlarmLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {

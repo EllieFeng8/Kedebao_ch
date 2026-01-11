@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Studio.DesignEffects
 import QtQuick.Effects
+import Core 1.0
 
 Rectangle {
     id: root
@@ -164,6 +165,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
+                text:Kdb.smallRollMotor
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -222,6 +224,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
+                text:Kdb.mainDriveMotor
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -280,6 +283,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
+                text:Kdb.largeRollMotor
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -337,6 +341,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         x: textInputLeft
         y: 0
+        text:Kdb.wasteRollMotorB
         //placeholderText: "請輸入內容"
         focus: true
 
@@ -394,6 +399,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
+                text:Kdb.unwindingMotor
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -451,6 +457,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
+                text:Kdb.edgeAlignMotor
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -509,6 +516,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 10
+                text:Kdb.cutterWheelMotor
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -567,6 +575,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 10
+                text:Kdb.wasteRollMotorA
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -626,6 +635,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 10
+                text:Kdb.unwindingTension
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -685,6 +695,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 10
+                text:Kdb.smallRollTension
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -743,6 +754,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 10
+                text:Kdb.largeRollTension
                 //placeholderText: "請輸入內容"
                 focus: true
 

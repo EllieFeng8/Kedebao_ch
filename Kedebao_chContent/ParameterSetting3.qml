@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Studio.DesignEffects
 import QtQuick.Effects
+import Core 1.0
 
 Rectangle {
     id: root
@@ -16,45 +17,45 @@ Rectangle {
     property int topMargin2: 31
     property int topMargin3: 40
     property int fontSize: 17
-    property bool clicked0:false
-    property bool clicked:false
-    property bool clicked1:false
-    property bool clicked2:false
-    property bool clicked3:false
-    property bool clicked4:false
-    property bool clicked5:false
-    property bool clicked6:false
-    property bool clicked7:false
-    property bool clicked8:false
-    property bool clicked9:false
-    property bool clicked10:false
-    property bool clicked11:false
-    property bool clicked12:false
-    property bool clicked13:false
-    property bool clicked14:false
-    property bool clicked15:false
-    property bool clicked16:false
-    property bool clicked17:false
-    property bool clicked18:false
-    property bool clicked19:false
-    property bool clicked20:false
-    property bool clicked21:false
-    property bool clicked22:false
-    property bool clicked23:false
-    property bool clicked24:false
-    property bool clicked25:false
-    property bool clicked26:false
-    property bool clicked27:false
-    property bool clicked28:false
-    property bool clicked29:false
-    property bool clicked30:false
-    property bool clicked31:false
-    property bool clicked32:false
-    property bool clicked33:false
-    property bool clicked34:false
-    property bool clicked35:false
-    property bool clicked36:false
-    property bool clicked37:false
+    property bool clicked0:Kdb.vfdAlarmResetSwitch
+    property bool clicked:Kdb.unwinderForwardSwitch
+    property bool clicked1:Kdb.unwinderReverseSwitch
+    property bool clicked2:Kdb.mainDriveForwardSwitch
+    property bool clicked3:Kdb.mainDriveReverseSwitch
+    property bool clicked4:Kdb.smallWinderForwardSwitch
+    property bool clicked5:Kdb.smallWinderReverseSwitch
+    property bool clicked6:Kdb.largeWinderForwardSwitch
+    property bool clicked7:Kdb.largeWinderReverseSwitch
+    property bool clicked8:Kdb.smallCutterStartSwitch
+    property bool clicked9:Kdb.selvedgeFanStartSwitch
+    property bool clicked10:Kdb.largeCutterStartSwitch
+    property bool clicked11:Kdb.leftSelvedgeWinderForwardSwitch
+    property bool clicked12:Kdb.leftSelvedgeWinderReverseSwitch
+    property bool clicked13:Kdb.rightSelvedgeWinderForwardSwitch
+    property bool clicked14:Kdb.rightSelvedgeWinderReverseSwitch
+    property bool clicked15:Kdb.webAlignerStartSwitch
+    property bool clicked16:Kdb.unwindingTensionAutoSwitch
+    property bool clicked17:Kdb.unwindingDiameterResetSwitch
+    property bool clicked18:Kdb.smallWinderTensionAutoSwitch
+    property bool clicked19:Kdb.smallWinderDiameterResetSwitch
+    property bool clicked20:Kdb.largeWinderTensionAutoSwitch
+    property bool clicked21:Kdb.largeWinderDiameterResetSwitch
+    property bool clicked22:Kdb.leftSelvedgeWinderAutoSwitch
+    property bool clicked23:Kdb.rightSelvedgeWinderAutoSwitch
+    property bool clicked24:Kdb.nipRollUpSwitch
+    property bool clicked25:Kdb.nipRollDownSwitch
+    property bool clicked26:Kdb.leftPressPlateForwardSwitch
+    property bool clicked27:Kdb.leftPressPlateBackwardSwitch
+    property bool clicked28:Kdb.rightPressPlateForwardSwitch
+    property bool clicked29:Kdb.rightPressPlateBackwardSwitch
+    property bool clicked30:Kdb.smallCutterInSwitch
+    property bool clicked31:Kdb.largeCutterInSwitch
+    property bool clicked32:Kdb.modeSelectSwitch
+    property bool clicked33:Kdb.runIndicatorSwitch
+    property bool clicked34:Kdb.alarmIndicatorSwitch
+    property bool clicked35:Kdb.stopIndicatorSwitch
+    property bool clicked36:Kdb.buzzerSwitch
+    property bool clicked37:Kdb.smallRollModeSelectSwitch
 
     property int topMargin: 25
     property int groupLeftMargin: 100
@@ -205,7 +206,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.00"
+                text:Kdb.vfdAlarmReset//"Q0.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -253,7 +254,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 223
-                text:"Q0.00"
+                text:Kdb.unwinderForward//"Q0.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -301,7 +302,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q1.00"
+                text:Kdb.unwinderReverse//"Q1.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -350,7 +351,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.02"
+                text:Kdb.mainDriveForward//"Q0.02"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -399,7 +400,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.03"
+                text:Kdb.mainDriveReverse//"Q0.03"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -447,7 +448,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.04"
+                text:Kdb.smallWinderForward//"Q0.04"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -495,7 +496,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.05"
+                text:Kdb.smallWinderReverse//"Q0.05"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -543,7 +544,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.06"
+                text:Kdb.largeWinderForward//"Q0.06"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -591,7 +592,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.07"
+                text:Kdb.largeWinderReverse//"Q0.07"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -639,7 +640,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.08"
+                text:Kdb.smallCutterStart//"Q0.08"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -687,7 +688,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.10"
+                text:Kdb.selvedgeFanStart//"Q0.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -735,7 +736,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.11"
+                text:Kdb.largeCutterStart//"Q0.11"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -783,7 +784,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.12"
+                text:Kdb.leftSelvedgeWinderForward//"Q0.12"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -831,7 +832,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.11"
+                text:Kdb.leftSelvedgeWinderReverse//"Q0.11"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -879,7 +880,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.14"
+                text:Kdb.rightSelvedgeWinderForward//"Q0.14"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -927,7 +928,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:"Q0.15"
+                text:Kdb.rightSelvedgeWinderReverse//"Q0.15"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1014,7 +1015,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.00"
+                text:Kdb.webAlignerStart//"Q1.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1062,7 +1063,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.00"
+                text:Kdb.unwindingTensionAuto//"Q1.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1111,7 +1112,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.03"
+                text:Kdb.unwindingDiameterReset//"Q1.03"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1160,7 +1161,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.03"
+                text:Kdb.smallWinderTensionAuto//"Q1.03"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1208,7 +1209,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.04"
+                text:Kdb.smallWinderDiameterReset//"Q1.04"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1256,7 +1257,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.06"
+                text:Kdb.largeWinderTensionAuto//"Q1.06"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1304,7 +1305,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.07"
+                text:Kdb.largeWinderDiameterReset//"Q1.07"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1352,7 +1353,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.08"
+                text:Kdb.leftSelvedgeWinderAuto//"Q1.08"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1400,7 +1401,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.09"
+                text:Kdb.rightSelvedgeWinderAuto//"Q1.09"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1448,7 +1449,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.10"
+                text:Kdb.nipRollUp//"Q1.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1496,7 +1497,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.11"
+                text:Kdb.nipRollDown//"Q1.11"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1544,7 +1545,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.12"
+                text:Kdb.leftPressPlateForward//"Q1.12"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1592,7 +1593,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.13"
+                text:Kdb.leftPressPlateBackward//"Q1.13"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1640,7 +1641,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.14"
+                text:Kdb.rightPressPlateForward//"Q1.14"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1688,7 +1689,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.15"
+                text:Kdb.rightPressPlateBackward//"Q1.15"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1735,7 +1736,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q1.10"
+                text:Kdb.smallCutterIn//"Q1.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1821,7 +1822,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q2.00"
+                text:Kdb.largeCutterIn//"Q2.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1870,7 +1871,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q2.01"
+                text:Kdb.modeSelect//"Q2.01"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1918,7 +1919,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q2.02"
+                text:Kdb.runIndicator//"Q2.02"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1967,7 +1968,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:"Q2.03"
+                text:Kdb.alarmIndicator//"Q2.03"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2017,7 +2018,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
                 y: 0
-                text:"Q2.04"
+                text:Kdb.stopIndicator//"Q2.04"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2066,7 +2067,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
                 y: 0
-                text:"Q2.04"
+                text:Kdb.buzzer//"Q2.04"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2115,7 +2116,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
                 y: 0
-                text:"Q2.04"
+                text:Kdb.smallRollModeSelect//"Q2.04"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true

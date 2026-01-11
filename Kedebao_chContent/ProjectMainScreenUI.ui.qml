@@ -55,6 +55,7 @@ Rectangle {
     property bool smallCoiSwitch: false //小捲張力switch
     property bool bigCoiSwitch: false //大捲張力switch
 
+    property int modifyBrakingDistance: 5
     clip: true
 
     Item {
@@ -826,7 +827,7 @@ Rectangle {
             horizontalAlignment: Text.AlignLeft
             lineHeight: 36
             lineHeightMode: Text.FixedHeight
-            text: "1.2"
+            text: Kdb.unwindingTension
             verticalAlignment: Text.AlignVCenter
         }
 
@@ -847,7 +848,12 @@ Rectangle {
             wrapMode: Text.WordWrap
             font.styleName: "Bold"
             maximumLength: 4 //限制輸入2位整數
-            text: "1.5"
+            text: Kdb.modifyUnwindingTension
+            onTextChanged: {
+                if(Kdb.modifyUnwindingTension !== text)
+                    Kdb.modifyUnwindingTension = text
+                console.log("11 modifyUnwindingTension changed~~~",Kdb.modifyUnwindingTension);
+            }
         }
         Image {
             id: servo_1
@@ -1169,7 +1175,7 @@ Rectangle {
             horizontalAlignment: Text.AlignLeft
             lineHeight: 36
             lineHeightMode: Text.FixedHeight
-            text: "1.2"
+            text: Kdb.largeRollTension
             verticalAlignment: Text.AlignVCenter
         }
 
@@ -1188,8 +1194,13 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             wrapMode: Text.WordWrap
             font.styleName: "Bold"
-            text: "1.5"
+            text: Kdb.modifyLargeWinderTensionOver
             maximumLength: 4 //限制輸入2位整數
+            onTextChanged: {
+                if(Kdb.modifyLargeWinderTensionOver !== text)
+                    Kdb.modifyLargeWinderTensionOver = text
+                console.log("11modifyLargeWinderTensionOver changed~~~",Kdb.modifyLargeWinderTensionOver);
+            }
         }
         Image {
             id: servo_2
@@ -1313,10 +1324,11 @@ Rectangle {
             wrapMode: Text.WordWrap
             font.styleName: "Bold"
             maximumLength: 2 //限制輸入2位整數
-            text: "5"
+            text: Kdb.modifyBrakingDistance
             onTextChanged: {
-                Kdb.modifyBrakingDistance = brakeDistance.text
-                console.log("11changed~~~",Kdb.modifyBrakingDistance);
+                if(Kdb.modifyBrakingDistance !== text)
+                    Kdb.modifyBrakingDistance = text
+                console.log("11modifyBrakingDistance changed~~~",Kdb.modifyBrakingDistance);
             }
         }
     }
@@ -1700,7 +1712,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignLeft
                 lineHeight: 36
                 lineHeightMode: Text.FixedHeight
-                text: "1.2"
+                text: Kdb.smallRollTension
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -1720,8 +1732,13 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
                 font.styleName: "Bold"
-                text: "1.5"
+                text: Kdb.modifySmallWinderTensionOver
                 maximumLength: 4 //限制輸入2位整數
+                onTextChanged: {
+                    if(Kdb.modifySmallWinderTensionOver !== text)
+                        Kdb.modifySmallWinderTensionOver = text
+                    console.log("11modifySmallWinderTensionOver changed~~~",Kdb.modifySmallWinderTensionOver);
+                }
             }
             Image {
                 id: servo_3
