@@ -21,9 +21,7 @@ qt_standard_project_setup()
 
 add_subdirectory(Core)
 
-qt_add_executable(${CMAKE_PROJECT_NAME}
-        core/KdbProxy.cpp
-        core/kdbProxy.h)
+qt_add_executable(${CMAKE_PROJECT_NAME})
 qt_add_resources(${CMAKE_PROJECT_NAME} "configuration"
     PREFIX "/"
     FILES
