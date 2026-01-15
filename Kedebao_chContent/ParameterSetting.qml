@@ -46,7 +46,12 @@ Rectangle {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: root.visible = false
+            onClicked: {
+                // parameterSetting4.visible = true
+                //root.visible = false
+                AppState.pageNum = 0;
+                setParameterInterface(AppState.pageNum);
+            }
         }
     }
 
@@ -84,8 +89,10 @@ Rectangle {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                parameterSetting2.visible = true
+                //parameterSetting2.visible = true
                 //root.visible = false
+                AppState.pageNum = 2;
+                setParameterInterface(AppState.pageNum);
             }
         }
     }
@@ -107,8 +114,10 @@ Rectangle {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                parameterSetting2.visible = true
+                //parameterSetting2.visible = true
                 //root.visible = false
+                AppState.pageNum = 4;
+                setParameterInterface(AppState.pageNum);
             }
         }
     }
@@ -145,6 +154,7 @@ Rectangle {
         Text {
             id: input1_1Text
             text: "INPUT-1"
+            padding:10
             font.pointSize: 14
             font.weight: Font.Bold
             anchors.horizontalCenter: parent.horizontalCenter
@@ -154,7 +164,7 @@ Rectangle {
             id:text_0
             //anchors.top: text_0.bottom
             //anchors.topMargin: 40
-            x: 8
+            x: 38
             y: 75
             width: 193
             height: 24
@@ -168,7 +178,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.unwinderVfdFreqAlarm//"I0.00"
+                text:Number(Kdb.unwinderVfdFreqAlarm).toFixed(2)//Kdb.unwinderVfdFreqAlarm//"I0.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: false
@@ -212,8 +222,9 @@ Rectangle {
         Text {
             id:text_1
             anchors.top: text_0.bottom
+            anchors.left: text_0.left
             anchors.topMargin: topMargin
-            x: 8
+            //x: 8
             //y: 85
             width: 193
             height: 24
@@ -227,7 +238,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.mainDriveVfdFreqAlarm//"I0.00"
+                text:Number(Kdb.mainDriveVfdFreqAlarm).toFixed(2)//Kdb.mainDriveVfdFreqAlarm//"I0.00"
                 color: "#aaaaaa"
                 focus: true
 
@@ -271,8 +282,9 @@ Rectangle {
         Text {
             id:text_2
             anchors.top: text_1.bottom
+            anchors.left: text_1.left
             anchors.topMargin: topMargin
-            x: 8
+            //x: 8
             //y: 125
             width: 193
             height: 24
@@ -286,7 +298,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.smallWinderVfdFreqAlarm//"I3.00"
+                text:Number(Kdb.smallWinderVfdFreqAlarm).toFixed(2)//Kdb.smallWinderVfdFreqAlarm//"I3.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -333,8 +345,9 @@ Rectangle {
         Text {
             id:text_3
             anchors.top: text_2.bottom
+            anchors.left: text_2.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             //y: 165
             width: 193
             height: 24
@@ -348,7 +361,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.largeWinderVfdFreqAlarm//"I4.00"
+                text:Number(Kdb.largeWinderVfdFreqAlarm).toFixed(2)//Kdb.largeWinderVfdFreqAlarm//"I4.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -392,8 +405,9 @@ Rectangle {
         Text {
             id:text_4
             anchors.top: text_3.bottom
+            anchors.left: text_3.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             y: 205
             width: 193
             height: 24
@@ -407,7 +421,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.smallCutterVfdFreqAlarm//"I5.00"
+                text:Number(Kdb.smallCutterVfdFreqAlarm).toFixed(2)//Kdb.smallCutterVfdFreqAlarm//"I5.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -451,8 +465,9 @@ Rectangle {
         Text {
             id:text_5
             anchors.top: text_4.bottom
+            anchors.left: text_4.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             y: 205
             width: 193
             height: 24
@@ -466,7 +481,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.selvedgeFanVfdFreqAlarm//"I6.00"
+                text:Number(Kdb.selvedgeFanVfdFreqAlarm).toFixed(2)//Kdb.selvedgeFanVfdFreqAlarm//"I6.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -510,8 +525,9 @@ Rectangle {
         Text {
             id:text_6
             anchors.top: text_5.bottom
+            anchors.left: text_5.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             //y: 245
             width: 193
             height: 24
@@ -525,7 +541,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.leftFanOverloadAlarm//"I7.00"
+                text:Number(Kdb.leftFanOverloadAlarm).toFixed(2)//Kdb.leftFanOverloadAlarm//"I7.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -569,8 +585,9 @@ Rectangle {
         Text {
             id:text_7
             anchors.top: text_6.bottom
+            anchors.left: text_6.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             //y: 285
             width: 193
             height: 24
@@ -584,7 +601,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.rightFanOverloadAlarm//"I8.00"
+                text:Number(Kdb.rightFanOverloadAlarm).toFixed(2)//"I8.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -604,12 +621,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: Kdb.leftFanOverloadAlarmLirightFanOverloadAlarmLightght ?  "#88FF0A" : "red"
+                color: Kdb.rightFanOverloadAlarmLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: Kdb.leftFanOverloadAlarmLirightFanOverloadAlarmLightght ?  "#88FF0A" : "red"
+                    shadowColor: Kdb.rightFanOverloadAlarmLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -628,8 +645,9 @@ Rectangle {
         Text {
             id:text_8
             anchors.top: text_7.bottom
+            anchors.left: text_7.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             //y: 325
             width: 193
             height: 24
@@ -643,7 +661,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.largeCutterVfdFreqAlarm//"I9.00"
+                text:Number(Kdb.largeCutterVfdFreqAlarm).toFixed(2)//Kdb.largeCutterVfdFreqAlarm//"I9.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -687,8 +705,9 @@ Rectangle {
         Text {
             id:text_9
             anchors.top: text_8.bottom
+            anchors.left: text_8.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             //y: 365
             width: 193
             height: 24
@@ -702,7 +721,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.leftSelvedgeWinderVfdAlarm//"I0.10"
+                text:Number(Kdb.leftSelvedgeWinderVfdAlarm).toFixed(2)//Kdb.leftSelvedgeWinderVfdAlarm//"I0.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -746,8 +765,9 @@ Rectangle {
         Text {
             id:text_10
             anchors.top: text_9.bottom
+            anchors.left: text_9.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             //y: 405
             width: 193
             height: 24
@@ -761,7 +781,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.rightSelvedgeWinderVfdAlarm//"I0.11"
+                text:Number(Kdb.rightSelvedgeWinderVfdAlarm).toFixed(2)//Kdb.rightSelvedgeWinderVfdAlarm//"I0.11"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -805,8 +825,9 @@ Rectangle {
         Text {
             id:text_11
             anchors.top: text_10.bottom
+            anchors.left: text_10.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             //y: 445
             width: 193
             height: 24
@@ -820,7 +841,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.webAlignerVfdFreqAlarm//"I0.12"
+                text:Number(Kdb.webAlignerVfdFreqAlarm).toFixed(2)//Kdb.webAlignerVfdFreqAlarm//"I0.12"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -864,9 +885,10 @@ Rectangle {
         Text {
             id:text_12
             anchors.top: text_11.bottom
+            anchors.left: text_11.left
             anchors.topMargin: topMargin
-            x: 8
-            y: 485
+            // x: 8
+            // y: 485
             width: 193
             height: 24
             text: qsTr("放卷軸電源檢出")
@@ -880,7 +902,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.unwinderPowerLoss//"I0.13"
+                text: Number(Kdb.unwinderPowerLoss).toFixed(2)//Kdb.unwinderPowerLoss//"I0.13"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -924,8 +946,9 @@ Rectangle {
         Text {
             id:text_13
             anchors.top: text_12.bottom
+            anchors.left: text_12.left
             anchors.topMargin: topMargin
-            x: 8
+            // x: 8
             //y: 525
             width: 193
             height: 24
@@ -939,7 +962,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft
-                text:Kdb.mainDrivePowerLoss//"I0.14"
+                text:Number(Kdb.mainDrivePowerLoss).toFixed(2)//Kdb.mainDrivePowerLoss//"I0.14"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -983,6 +1006,7 @@ Rectangle {
         Text {
             id:text_14
             anchors.top: text_13.bottom
+            anchors.left: text_13.left
             anchors.topMargin: topMargin
             x: 8
             //y: 565
@@ -998,7 +1022,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 203
-                text:Kdb.smallWinderPowerLoss//"I0.15"
+                text:Number(Kdb.smallWinderPowerLoss).toFixed(2)//Kdb.smallWinderPowerLoss//"I0.15"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1043,6 +1067,7 @@ Rectangle {
             id:text_15
             x: 8
             anchors.top: text_14.bottom
+            anchors.left: text_14.left
             anchors.topMargin: topMargin
             width: 193
             height: 24
@@ -1056,7 +1081,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 203
-                text:Kdb.largeWinderPowerLoss//"I0.16"
+                text:Number(Kdb.largeWinderPowerLoss).toFixed(2)//Kdb.largeWinderPowerLoss//"I0.16"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1135,6 +1160,7 @@ Rectangle {
         Text {
             id: input1_2Text
             text: "INPUT-2"
+            padding:10
             font.pointSize: 14
             font.weight: Font.Bold
             anchors.horizontalCenter: parent.horizontalCenter
@@ -1157,7 +1183,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 //color: "white"
                 x: textLeft2
-                text:Kdb.smallCutterPowerLoss//"I1.00"
+                text:Number(Kdb.smallCutterPowerLoss).toFixed(2)//Kdb.smallCutterPowerLoss//"I1.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1216,7 +1242,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.selvedgeFanPowerLoss//"I2.00"
+                text:Number(Kdb.selvedgeFanPowerLoss).toFixed(2)//Kdb.selvedgeFanPowerLoss//"I2.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1276,7 +1302,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.largeCutterPowerLoss//"I3.00"
+                text:Number(Kdb.largeCutterPowerLoss).toFixed(2)//Kdb.largeCutterPowerLoss//"I3.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1336,7 +1362,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.leftSelvedgeWinderPowerLoss//"I4.00"
+                text:Number(Kdb.leftSelvedgeWinderPowerLoss).toFixed(2)//Kdb.leftSelvedgeWinderPowerLoss//"I4.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1395,7 +1421,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.rightSelvedgeWinderPowerLoss//"I5.00"
+                text:Number(Kdb.rightSelvedgeWinderPowerLoss).toFixed(2)//Kdb.rightSelvedgeWinderPowerLoss//"I5.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1454,7 +1480,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.webAlignerPowerLoss//"I6.00"
+                text:Number(Kdb.webAlignerPowerLoss).toFixed(2)//Kdb.webAlignerPowerLoss//"I6.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1513,7 +1539,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.unwinderDisconnect//"I7.00"
+                text:Number(Kdb.unwinderDisconnect).toFixed(2)//Kdb.unwinderDisconnect//"I7.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1572,7 +1598,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.mainDriveDisconnect//"I8.00"
+                text:Number(Kdb.mainDriveDisconnect).toFixed(2)//Kdb.mainDriveDisconnect//"I8.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1631,7 +1657,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.smallWinderDisconnect//"I9.00"
+                text:Number(Kdb.smallWinderDisconnect).toFixed(2)//Kdb.smallWinderDisconnect//"I9.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1690,7 +1716,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.largeWinderDisconnect//"I0.10"
+                text:Number(Kdb.largeWinderDisconnect).toFixed(2)//Kdb.largeWinderDisconnect//"I0.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1749,7 +1775,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.smallCutterDisconnect//"I0.11"
+                text:Number(Kdb.smallCutterDisconnect).toFixed(2)//Kdb.smallCutterDisconnect//"I0.11"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1808,7 +1834,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.leftFanDisconnect//"I0.12"
+                text:Number(Kdb.leftFanDisconnect).toFixed(2)//Kdb.leftFanDisconnect//"I0.12"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1868,7 +1894,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.rightFanDisconnect//"I0.13"
+                text:Number(Kdb.rightFanDisconnect).toFixed(2)//Kdb.rightFanDisconnect//"I0.13"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1927,7 +1953,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.largeCutterDisconnect//"I0.14"
+                text:Number(Kdb.largeCutterDisconnect).toFixed(2)//Kdb.largeCutterDisconnect//"I0.14"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1986,7 +2012,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.leftSelvedgeWinderDisconnect//"I0.15"
+                text:Number(Kdb.leftSelvedgeWinderDisconnect).toFixed(2)//Kdb.leftSelvedgeWinderDisconnect//"I0.15"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2044,7 +2070,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: textLeft2
-                text:Kdb.rightSelvedgeWinderDisconnect//"I0.16"
+                text:Number(Kdb.rightSelvedgeWinderDisconnect).toFixed(2)//Kdb.rightSelvedgeWinderDisconnect//"I0.16"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2120,6 +2146,7 @@ Rectangle {
         Text {
             id: input1_3Text
             text: "INPUT-3"
+            padding:10
             font.pointSize: 14
             font.weight: Font.Bold
             anchors.horizontalCenter: parent.horizontalCenter
@@ -2142,7 +2169,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 //color: "white"
                 x: 243
-                text:Kdb.webAlignerDisconnect//"I0.00"
+                text:Number(Kdb.webAlignerDisconnect).toFixed(2)//Kdb.webAlignerDisconnect//"I0.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2202,7 +2229,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
                 y: parent.top
-                text:Kdb.emergencyStop1//"I1.00"
+                text:Number(Kdb.emergencyStop1).toFixed(2)//Kdb.emergencyStop1//"I1.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2263,7 +2290,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
                 y: parent.top
-                text:Kdb.emergencyStop2//"I2.00"
+                text:Number(Kdb.emergencyStop2).toFixed(2)//Kdb.emergencyStop2//"I2.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2324,7 +2351,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
                 y: parent.top
-                text:Kdb.emergencyStop3//"I3.00"
+                text:Number(Kdb.emergencyStop3).toFixed(2)//Kdb.emergencyStop3//"I3.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2384,7 +2411,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
                 y: parent.top
-                text:Kdb.emergencyStop4//"I4.00"
+                text:Number(Kdb.emergencyStop4).toFixed(2)//Kdb.emergencyStop4//"I4.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2444,7 +2471,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
                 y: parent.top
-                text:Kdb.emergencyStop5//"I5.00"
+                text:Number(Kdb.emergencyStop5).toFixed(2)//Kdb.emergencyStop5//"I5.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2504,7 +2531,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
                 y: parent.top
-                text:Kdb.emergencyStop6//"I6.00"
+                text:Number(Kdb.emergencyStop6).toFixed(2)//Kdb.emergencyStop6//"I6.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2564,7 +2591,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
                 y: parent.top
-                text:Kdb.emergencyStop7//"I7.00"
+                text:Number(Kdb.emergencyStop7).toFixed(2)//Kdb.emergencyStop7//"I7.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2623,7 +2650,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.mainDriveLeftDoor1Open//"I8.00"
+                text:Number(Kdb.mainDriveLeftDoor1Open).toFixed(2)//Kdb.mainDriveLeftDoor1Open//"I8.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2682,7 +2709,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.mainDriveLeftDoor2Open//"I9.00"
+                text:Number(Kdb.mainDriveLeftDoor2Open).toFixed(2)//Kdb.mainDriveLeftDoor2Open//"I9.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2741,7 +2768,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.mainDriveRightDoor3Open//"I0.10"
+                text:Number(Kdb.mainDriveRightDoor3Open).toFixed(2)//Kdb.mainDriveRightDoor3Open//"I0.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2761,12 +2788,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: Kdb.mainDriveLeftDoor3OpenLight ?  "#88FF0A" : "red"
+                color: Kdb.mainDriveRightDoor3OpenLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: Kdb.mainDriveLeftDoor3OpenLight ?  "#88FF0A" : "red"
+                    shadowColor: Kdb.mainDriveRightDoor3OpenLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -2800,7 +2827,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.mainDriveRightDoor4Open//"I0.11"
+                text:Number(Kdb.mainDriveRightDoor4Open).toFixed(2)//Kdb.mainDriveRightDoor4Open//"I0.11"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2820,12 +2847,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: Kdb.mainDriveLeftDoor4OpenLight ?  "#88FF0A" : "red"
+                color: Kdb.mainDriveRightDoor4OpenLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: Kdb.mainDriveLeftDoor4OpenLight ?  "#88FF0A" : "red"
+                    shadowColor: Kdb.mainDriveRightDoor4OpenLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -2860,7 +2887,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.largeWinderLeftDoor5Open//"I0.12"
+                text:Number(Kdb.largeWinderLeftDoor5Open).toFixed(2)//Kdb.largeWinderLeftDoor5Open//"I0.12"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2880,12 +2907,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: Kdb.mainDriveLeftDoor5OpenLight ?  "#88FF0A" : "red"
+                color: Kdb.largeWinderLeftDoor5OpenLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: Kdb.mainDriveLeftDoor5OpenLight ?  "#88FF0A" : "red"
+                    shadowColor: Kdb.largeWinderLeftDoor5OpenLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -2919,7 +2946,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.largeWinderLeftDoor6Open//"I0.13"
+                text:Number(Kdb.largeWinderLeftDoor6Open).toFixed(2)//Kdb.largeWinderLeftDoor6Open//"I0.13"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2939,12 +2966,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: Kdb.mainDriveLeftDoor6OpenLight ?  "#88FF0A" : "red"
+                color: Kdb.largeWinderLeftDoor6OpenLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: Kdb.mainDriveLeftDoor6OpenLight ?  "#88FF0A" : "red"
+                    shadowColor: Kdb.largeWinderLeftDoor6OpenLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -2978,7 +3005,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.largeWinderRightDoor7Open//"I0.14"
+                text:Number(Kdb.largeWinderRightDoor7Open).toFixed(2)//Kdb.largeWinderRightDoor7Open//"I0.14"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -2998,12 +3025,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: Kdb.mainDriveLeftDoor7OpenLight ?  "#88FF0A" : "red"
+                color: Kdb.largeWinderRightDoor7OpenLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: Kdb.mainDriveLeftDoor7OpenLight ?  "#88FF0A" : "red"
+                    shadowColor: Kdb.largeWinderRightDoor7OpenLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -3036,7 +3063,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.largeWinderRightDoor8Open//"I0.15"
+                text:Number(Kdb.largeWinderRightDoor8Open).toFixed(2)//Kdb.largeWinderRightDoor8Open//"I0.15"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -3056,12 +3083,12 @@ Rectangle {
                 width:30
                 radius:50
                 //width: input0_2.width
-                color: Kdb.mainDriveLeftDoor8OpenLight ?  "#88FF0A" : "red"
+                color: Kdb.largeWinderRightDoor8OpenLight ?  "#88FF0A" : "red"
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
                     shadowEnabled:  true
-                    shadowColor: Kdb.mainDriveLeftDoor8OpenLight ?  "#88FF0A" : "red"
+                    shadowColor: Kdb.largeWinderRightDoor8OpenLight ?  "#88FF0A" : "red"
                     shadowBlur: 0.8
                 }
                 MouseArea {
@@ -3078,8 +3105,8 @@ Rectangle {
         }
     }
 
-    ParameterSetting2{
-        id: parameterSetting2
-        visible: false
-    }
+    // ParameterSetting2{
+    //     id: parameterSetting2
+    //     visible: false
+    // }
 }

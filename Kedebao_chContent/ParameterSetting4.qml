@@ -12,7 +12,7 @@ Rectangle {
 
 
     property int topMargin: 65
-    property int topMargin2: 25
+    property int topMargin2: 35
     property int groupLeftMargin: 100
     property int setWidth: 190
     property int setWidth1: 173
@@ -49,7 +49,10 @@ Rectangle {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onClicked: root.visible = false
+            onClicked: {
+                AppState.pageNum = 0;
+                setParameterInterface(AppState.pageNum);
+            }
         }
     }
 
@@ -70,8 +73,10 @@ Rectangle {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
+                AppState.pageNum = 1;
+                setParameterInterface(AppState.pageNum);
                 //parameterSetting2.visible = true
-                root.visible = false
+                // root.visible = false
             }
         }
     }
@@ -94,7 +99,9 @@ Rectangle {
             cursorShape: Qt.PointingHandCursor
             onClicked: {
                 //parameterSetting2.visible = true
-                root.visible = false
+                // root.visible = false
+                AppState.pageNum = 3;
+                setParameterInterface(AppState.pageNum);
             }
         }
     }
@@ -121,6 +128,7 @@ Rectangle {
         width: 548
         height: 908
         radius: 40
+
         //border.color: "#2a000000"
 
         gradient: Gradient {
@@ -146,6 +154,7 @@ Rectangle {
         Text {
             id: output4_1Text
             text: "ANALOG OUTPUT"
+            padding:10
             font.pointSize: 14
             font.weight: Font.Bold
             anchors.horizontalCenter: parent.horizontalCenter
@@ -157,7 +166,7 @@ Rectangle {
             //anchors.top: text_0.bottom
             //anchors.topMargin: 40
             x: 8
-            y: 75
+            y: 90
             width: setWidth1
             height: 24
             text: qsTr("類比電壓輸出-1
@@ -172,7 +181,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 203
                 y: 20
-                text:Kdb.analogOutUnwinderMainDrive//"V0"
+                text:Number(Kdb.analogOutUnwinderMainDrive).toFixed(2)//Kdb.analogOutUnwinderMainDrive//"V0"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -205,19 +214,18 @@ Rectangle {
                 width: 60
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
-                text:Kdb.modifyAnalogOutUnwinderMainDrive
+                text:Number(Kdb.modifyAnalogOutUnwinderMainDrive).toFixed(2)//Kdb.modifyAnalogOutUnwinderMainDrive
                 x: 386
                 y: 20
-                maximumLength: 4 //限制輸入4位整數
-                //placeholderText: "請輸入內容"
                 focus: true
-
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 Rectangle {
                     height: 2
                     y:22
                     width: output0_2.width
                     color: "#aaaaaa"
                 }
+
             }
             Image {
                 id: btn0
@@ -244,7 +252,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked:{
+                        if(Kdb.modifyAnalogOutUnwinderMainDrive !== Number(output0_2.text)) {
+                            Kdb.modifyAnalogOutUnwinderMainDrive = output0_2.text
+                            console.log("11 modifyAnalogOutUnwinderMainDrive changed~~~", Kdb.modifyAnalogOutUnwinderMainDrive);
+                        }
+                    }
                 }
             }
         }
@@ -270,7 +283,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 203
                 y: 20
-                text:Kdb.analogOutWinder//"V1"
+                text:Number(Kdb.analogOutWinder).toFixed(2)//Kdb.analogOutWinder//"V1"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -306,8 +319,8 @@ Rectangle {
                 //color: "white"
                 x: 386
                 y: 20
-                text:Kdb.modifyAnalogOutWinder
-                maximumLength: 4 //限制輸入4位整數
+                text:Number(Kdb.modifyAnalogOutWinder).toFixed(2)//Kdb.modifyAnalogOutWinder
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -343,7 +356,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked:{
+                        if(Kdb.modifyAnalogOutWinder !== Number(output0_3.text)) {
+                            Kdb.modifyAnalogOutWinder = output0_3.text
+                            console.log("11 modifyAnalogOutWinder changed~~~", Kdb.modifyAnalogOutWinder);
+                        }
+                    }
                 }
             }
         }
@@ -370,7 +388,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 203
                 y: 20
-                text:Kdb.analogOutCutter//"V2"
+                text:Number(Kdb.analogOutCutter).toFixed(2)//Kdb.analogOutCutter//"V2"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -403,10 +421,10 @@ Rectangle {
                 width: 60
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
-                text:Kdb.modifyAnalogOutCutter
+                text:Number(Kdb.modifyAnalogOutCutter).toFixed(2)//Kdb.modifyAnalogOutCutter
                 x: 386
                 y: 20
-                maximumLength: 4 //限制輸入4位整數
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 focus: true
 
                 Rectangle {
@@ -441,7 +459,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked:{
+                        if(Kdb.modifyAnalogOutCutter !== Number(output1_2.text)) {
+                            Kdb.modifyAnalogOutCutter = output1_2.text
+                            console.log("11 modifyAnalogOutCutter changed~~~", Kdb.modifyAnalogOutCutter);
+                        }
+                    }
                 }
             }
         }
@@ -468,7 +491,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: 203
                 y: 20
-                text:Kdb.analogOutSelvedgeWinder//"V3"
+                text:Number(Kdb.analogOutSelvedgeWinder).toFixed(2)//Kdb.analogOutSelvedgeWinder//"V3"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -501,10 +524,10 @@ Rectangle {
                 width: 60
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
-                text:Kdb.modifyAnalogOutSelvedgeWinder
+                text:Number(Kdb.modifyAnalogOutSelvedgeWinder).toFixed(2)//Kdb.modifyAnalogOutSelvedgeWinder
                 x: 386
                 y: 20
-                maximumLength: 4 //限制輸入4位整數
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
@@ -540,7 +563,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked:{
+                        if(Kdb.modifyAnalogOutSelvedgeWinder !== Number(output0_5.text)) {
+                            Kdb.modifyAnalogOutSelvedgeWinder = output0_5.text
+                            console.log("11 modifyAnalogOutSelvedgeWinder changed~~~", Kdb.modifyAnalogOutSelvedgeWinder);
+                        }
+                    }
                 }
             }
         }
@@ -581,6 +609,7 @@ Rectangle {
         Text {
             id: output1_2Text
             text: "IPC-INPUT"
+            padding:10
             font.pointSize: 14
             font.weight: Font.Bold
             anchors.horizontalCenter: parent.horizontalCenter
@@ -588,8 +617,8 @@ Rectangle {
         //啟動
         Text {
             id:text_2_0
-            x: 8
-            y: 75
+            x: 38
+            y: 90
             width: setWidth
             height: 24
             text: qsTr("啟動")
@@ -603,7 +632,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.ipcStart//"I4.00"
+                text:Number(Kdb.ipcStart).toFixed(2)//Kdb.ipcStart//"I4.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -647,8 +676,9 @@ Rectangle {
         Text {
             id:text_2_1
             anchors.top: text_2_0.bottom
+            anchors.left: text_2_0.left
             anchors.topMargin: topMargin2
-            x: 8
+            // x: 8
             //y: 85
             width: setWidth
             height: 24
@@ -663,7 +693,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: parent.top
-                text:Kdb.ipcStop//"I4.01"
+                text:Number(Kdb.ipcStop).toFixed(2)//Kdb.ipcStop//"I4.01"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -708,9 +738,8 @@ Rectangle {
         Text {
             id:text_2_2
             anchors.top: text_2_1.bottom
+            anchors.left: text_2_1.left
             anchors.topMargin: topMargin2
-            x: 8
-            //y: 125
             width: setWidth
             height: 24
             text: qsTr("異常復歸")
@@ -724,7 +753,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: parent.top
-                text:Kdb.ipcAlarmReset//"I4.02"
+                text:Number(Kdb.ipcAlarmReset).toFixed(2)//Kdb.ipcAlarmReset//"I4.02"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -769,9 +798,8 @@ Rectangle {
         Text {
             id:text_2_3
             anchors.top: text_2_2.bottom
+            anchors.left: text_2_2.left
             anchors.topMargin: topMargin2
-            x: 8
-            //y: 165
             width: setWidth
             height: 24
             text: qsTr("主機寸動正轉")
@@ -785,7 +813,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: parent.top
-                text:Kdb.mainJogForward//"I4.03"
+                text:Number(Kdb.mainJogForward).toFixed(2)//Kdb.mainJogForward//"I4.03"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -829,9 +857,9 @@ Rectangle {
         Text {
             id:text_2_4
             anchors.top: text_2_3.bottom
+            anchors.left: text_2_3.left
             anchors.topMargin: topMargin2
-            x: 8
-            y: 205
+
             width: setWidth
             height: 24
             text: qsTr("主機寸動反轉")
@@ -845,7 +873,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: parent.top
-                text:Kdb.mainJogReverse//"I4.04"
+                text:Number(Kdb.mainJogReverse).toFixed(2)//Kdb.mainJogReverse//"I4.04"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -889,9 +917,8 @@ Rectangle {
         Text {
             id:text_2_5
             anchors.top: text_2_4.bottom
+            anchors.left: text_2_4.left
             anchors.topMargin: topMargin2
-            x: 8
-            y: 205
             width: setWidth
             height: 24
             text: qsTr("小卷收卷寸動正轉")
@@ -905,7 +932,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: parent.top
-                text:Kdb.smallWinderJogForward//"I4.05"
+                text:Number(Kdb.smallWinderJogForward).toFixed(2)//Kdb.smallWinderJogForward//"I4.05"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -949,9 +976,8 @@ Rectangle {
         Text {
             id:text_2_6
             anchors.top: text_2_5.bottom
+            anchors.left: text_2_5.left
             anchors.topMargin: topMargin2
-            x: 8
-            //y: 245
             width: setWidth
             height: 24
             text: qsTr("小卷收卷寸動反轉")
@@ -965,7 +991,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.smallWinderJogReverse//"I4.06"
+                text:Number(Kdb.smallWinderJogReverse).toFixed(2)//Kdb.smallWinderJogReverse//"I4.06"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1009,9 +1035,8 @@ Rectangle {
         Text {
             id:text_2_7
             anchors.top: text_2_6.bottom
+            anchors.left: text_2_6.left
             anchors.topMargin: topMargin2
-            x: 8
-            //y: 285
             width: setWidth
             height: 24
             text: qsTr("放卷軸寸動反轉選擇")
@@ -1025,7 +1050,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.unwinderJogReverseSelect//"I4.07"
+                text:Number(Kdb.unwinderJogReverseSelect).toFixed(2)//Kdb.unwinderJogReverseSelect//"I4.07"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1069,9 +1094,8 @@ Rectangle {
         Text {
             id:text_2_8
             anchors.top: text_2_7.bottom
+            anchors.left: text_2_7.left
             anchors.topMargin: topMargin2
-            x: 8
-            //y: 325
             width: setWidth
             height: 24
             text: qsTr("放卷軸寸動啟動")
@@ -1085,7 +1109,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.unwinderJogStart//"I4.08"
+                text:Number(Kdb.unwinderJogStart).toFixed(2)//Kdb.unwinderJogStart//"I4.08"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1129,9 +1153,8 @@ Rectangle {
         Text {
             id:text_2_9
             anchors.top: text_2_8.bottom
+            anchors.left: text_2_8.left
             anchors.topMargin: topMargin2
-            x: 8
-            //y: 365
             width: setWidth
             height: 24
             text: qsTr("收卷寸動反轉選擇")
@@ -1145,7 +1168,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.winderJogReverseSelect//"I4.09"
+                text:Number(Kdb.winderJogReverseSelect).toFixed(2)//Kdb.winderJogReverseSelect//"I4.09"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1189,9 +1212,8 @@ Rectangle {
         Text {
             id:text_2_10
             anchors.top: text_2_9.bottom
+            anchors.left: text_2_9.left
             anchors.topMargin: topMargin2
-            x: 8
-            //y: 405
             width: setWidth
             height: 24
             text: qsTr("收卷寸動啟動")
@@ -1205,7 +1227,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.winderJogStart//"I4.10"
+                text:Number(Kdb.winderJogStart).toFixed(2)//Kdb.winderJogStart//"I4.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1249,9 +1271,8 @@ Rectangle {
         Text {
             id:text_2_11
             anchors.top: text_2_10.bottom
+            anchors.left: text_2_10.left
             anchors.topMargin: topMargin2
-            x: 8
-            //y: 405
             width: setWidth
             height: 24
             text: qsTr("左側耳料收卷選擇")
@@ -1265,7 +1286,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.leftSelvedgeWinderSelect//"I4.10"
+                text:Number(Kdb.leftSelvedgeWinderSelect).toFixed(2)//Kdb.leftSelvedgeWinderSelect//"I4.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -1309,9 +1330,8 @@ Rectangle {
         Text {
             id:text_2_12
             anchors.top: text_2_11.bottom
+            anchors.left: text_2_11.left
             anchors.topMargin: topMargin2
-            x: 8
-            //y: 445
             width: setWidth
             height: 24
             text: qsTr("右側耳料收卷選擇")
@@ -1325,7 +1345,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.rightSelvedgeWinderSelect//"I4.10"
+                text:Number(Kdb.rightSelvedgeWinderSelect).toFixed(2)//Kdb.rightSelvedgeWinderSelect//"I4.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true

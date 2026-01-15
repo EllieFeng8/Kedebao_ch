@@ -2,7 +2,10 @@
 ### Do not change
 
 
-
+set_source_files_properties(AppState.qml
+        PROPERTIES
+        QT_QML_SINGLETON_TYPE true
+)
 qt_add_library(Kedebao_chContent STATIC)
 qt6_add_qml_module(Kedebao_chContent
     URI "Kedebao_chContent"
@@ -10,6 +13,7 @@ qt6_add_qml_module(Kedebao_chContent
     RESOURCE_PREFIX "/qt/qml"
     QML_FILES
         "App.qml"
+        "AppState.qml"
         "IndicatorUI.qml"
         "ModeSwitch.qml"
         "ModeSwitchUI.ui.qml"
@@ -20,7 +24,7 @@ qt6_add_qml_module(Kedebao_chContent
         "ParameterSetting4.qml"
         "ProjectMainScreen.qml"
         "ProjectMainScreenUI.ui.qml"
-        "Screen01.ui.qml"
+
     RESOURCES
         "assets/111.png"
         "assets/222.png"
@@ -28,6 +32,10 @@ qt6_add_qml_module(Kedebao_chContent
         "assets/basicSwitch.png"
         "assets/basicSwitchL.png"
         "assets/bigpic.png"
+        "assets/bigPic_positive.png"
+        "assets/bigPic_reverse.png"
+        "assets/smallPic_positive.png"
+        "assets/smallPic_reverse.png"
         "assets/doorway_1.png"
         "assets/doorway_1@2x.png"
         "assets/doorway_2.png"
@@ -99,6 +107,8 @@ qt6_add_qml_module(Kedebao_chContent
         "assets/rectangle_14@2x.png"
         "assets/rectangle_15.png"
         "assets/rectangle_15@2x.png"
+        "assets/Rectangle 1511.png"
+        "assets/Rectangle 1500.png"
         "assets/rectangle_16.png"
         "assets/rectangle_16@2x.png"
         "assets/rectangle_17.png"

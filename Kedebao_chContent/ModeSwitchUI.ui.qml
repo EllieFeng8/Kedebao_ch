@@ -10,7 +10,7 @@ Rectangle {
     height: 1080
 
     clip: true
-    color: "#ffffff"
+    color:"#eeeeef"
     property alias controlMouseArea: controlMouseArea
     property alias parameter: parameter
     property alias parameterMouseArea: parameterMouseArea
@@ -18,13 +18,36 @@ Rectangle {
     property alias smallRollText: smallRollText
     property alias basicSwitchbig: basicSwitchbig
     property alias basicSwitchbigMouseArea: basicSwitchbigMouseArea
-    property bool isBig: true
 
+    property alias backMouseArea: backMouseArea
+
+    Image {
+        id: back
+        x:22
+        y:20
+        source: "assets/Group 36.png"
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            shadowEnabled: backMouseArea.containsMouse ? true : false
+            shadowColor: "#58000000"
+            shadowBlur: 0.8
+        }
+        MouseArea {
+            id: backMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            //onClicked: modeSwitch.visible = false
+        }
+    }
+    //模式
     Rectangle {
-        width: 773
-        height: 259
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: 59
+        width: 830
+        height: 766
+        //anchors.horizontalCenter: parent.horizontalCenter
+        y: 226
+        x: 85
         radius: 40
         gradient: Gradient {
             GradientStop {
@@ -35,6 +58,14 @@ Rectangle {
                 position: 0.5
                 color: "#eaeaea"
             }
+        }
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            shadowEnabled: true
+            shadowColor: "#c4c4c6"
+            shadowBlur: 0.8
+            shadowHorizontalOffset: 3
+            shadowVerticalOffset: 3
         }
 
         Text {
@@ -47,20 +78,21 @@ Rectangle {
             width: 179
 
             color: "#000000"
-            font.pixelSize: 32
+            font.pixelSize: 64
             font.weight: Font.DemiBold
             horizontalAlignment: Text.AlignLeft
-            lineHeight: 22
+            //lineHeight: 22
             lineHeightMode: Text.FixedHeight
             font.bold: true
             text: "模式切換"
-            verticalAlignment: Text.AlignVCenter
+            padding:10
+            //verticalAlignment: Text.AlignVCenter
         }
         Image {
             id: basicSwitchbig
-            x: 327
-            y: 104
-            source: "assets/basicSwitch.png"
+            x: 138
+            y: 275
+            source: AppState.isBig ? "assets/basicSwitch.png":"assets/basicSwitchL.png"
 
             layer.enabled: true
             layer.effect: MultiEffect {
@@ -79,42 +111,58 @@ Rectangle {
         Text {
             id: smallRollText
 
-            x: 174
-            y: 168
+            x: 85
+            y: 509
 
-            height: 39
-            width: 75
+            //height: 59
+            width: 65
 
-            color: "#8f8f8f"
-            font.pixelSize: 32
+            color: AppState.isBig ?   "#8f8f8f" : "#000000"
+            font.pixelSize: AppState.isBig ? 64 : 68
             font.weight: Font.Bold
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignTop
-            text: "小捲"
+            verticalAlignment: Text.AlignVCenter//文字垂直置中
+            horizontalAlignment: Text.AlignHCenter//文字水平之中
+            text: "小\n捲"
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: AppState.isBig ? false : true
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
         }
         Text {
             id: bigRollText
 
-            x: 514
-            y: 168
+            x: 690
+            y: 509
 
-            height: 39
-            width: 87
+            //height: 59
+            width: 65
 
-            color: "#000000"
-            font.pixelSize: 32
+            color: AppState.isBig ?  "#000000":"#8f8f8f"
+            font.pixelSize: AppState.isBig ? 68 : 64
             font.weight: Font.Bold
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignTop
-            text: "大捲"
+            verticalAlignment: Text.AlignVCenter//文字垂直置中
+            horizontalAlignment: Text.AlignHCenter//文字水平之中
+            text: "大\n捲"
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: AppState.isBig ? true :  false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
         }
     }
+    //參數
     Rectangle {
-        width: 366
-        height: 259
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: 439
+        width: 842
+        height: 360
+        //anchors.horizontalCenter: parent.horizontalCenter
+        y: 226
+        x:993
         radius: 40
+        //border.color:"#b7c6c6c6"
         gradient: Gradient {
             //orientation: Gradient.Horizontal
             GradientStop {
@@ -126,19 +174,21 @@ Rectangle {
                 color: "#eaeaea"
             }
         }
+
         Text {
             id: parameter
             font.weight: Font.Bold
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            font.pointSize: parameterMouseArea.containsMouse ? 22 : 20
+            font.pointSize: parameterMouseArea.containsMouse ? 54 : 48
             text: "參數介面"
+            color:"#16121c"
         }
 
         layer.enabled: true
         layer.effect: MultiEffect {
-            shadowEnabled: parameterMouseArea.containsMouse ? true : false
-            shadowColor: "#58000000"
+            shadowEnabled:  true
+            shadowColor: parameterMouseArea.containsMouse ?"#58000000" : "#c4c4c6"
             shadowBlur: 0.8
         }
         MouseArea {
@@ -148,15 +198,15 @@ Rectangle {
             cursorShape: Qt.PointingHandCursor
         }
     }
-
+    //控制
     Rectangle {
-        width: 366
-        height: 259
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: 772
+        width: 842
+        height: 360
+        //anchors.horizontalCenter: parent.horizontalCenter
+        y: 632
+        x:993
         radius: 40
         gradient: Gradient {
-            //orientation: Gradient.Horizontal
             GradientStop {
                 position: 0.0
                 color: "#FEFBFC"
@@ -171,14 +221,15 @@ Rectangle {
             font.weight: Font.Bold
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            font.pointSize: controlMouseArea.containsMouse ? 22 : 20
+            font.pointSize: controlMouseArea.containsMouse ? 54 : 48
             text: "控制介面"
+            color:"#16121c"
         }
 
         layer.enabled: true
         layer.effect: MultiEffect {
-            shadowEnabled: controlMouseArea.containsMouse ? true : false
-            shadowColor: "#58000000"
+            shadowEnabled: true
+            shadowColor: controlMouseArea.containsMouse ? "#58000000" : "#c4c4c6"
             shadowBlur: 0.8
         }
         MouseArea {

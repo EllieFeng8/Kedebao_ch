@@ -26,6 +26,27 @@ Rectangle {
         x:22
         y:20
         source: "assets/Group 36.png"
+
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            shadowEnabled: backMouseArea.containsMouse ? true : false
+            shadowColor: "#58000000"
+            shadowBlur: 0.8
+        }
+
+        MouseArea {
+            id: backMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                // parameterSetting4.visible = true
+                //root.visible = false
+                AppState.pageNum = 0;
+                setParameterInterface(AppState.pageNum);
+            }
+        }
     }
 
     Image {
@@ -45,7 +66,9 @@ Rectangle {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                root.visible = false
+                // root.visible = false
+                AppState.pageNum = 1;
+                setParameterInterface(AppState.pageNum);
             }
         }
     }
@@ -68,8 +91,10 @@ Rectangle {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                root.visible = false
+                // root.visible = false
                 //root.visible = false
+                AppState.pageNum = 1;
+                setParameterInterface(AppState.pageNum);
             }
         }
     }
@@ -91,8 +116,10 @@ Rectangle {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                parameterSetting3.visible = true
+                // parameterSetting3.visible = true
                 //root.visible = false
+                AppState.pageNum = 3;
+                setParameterInterface(AppState.pageNum);
             }
         }
 
@@ -115,8 +142,10 @@ Rectangle {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                parameterSetting3.visible = true
+                // parameterSetting3.visible = true
                 //root.visible = false
+                AppState.pageNum = 4;
+                setParameterInterface(AppState.pageNum);
             }
         }
     }
@@ -156,6 +185,7 @@ Rectangle {
         Text {
             id: input1_4Text
             text: "INPUT-4"
+            padding:10
             font.pointSize: 14
             font.weight: Font.Bold
             anchors.horizontalCenter: parent.horizontalCenter
@@ -178,7 +208,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 //color: "white"
                 x: 243
-                text:Kdb.unwindingFenceDetect1//"I0.00"
+                text:Number(Kdb.unwindingFenceDetect1).toFixed(2)//Kdb.unwindingFenceDetect1//"I0.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -237,7 +267,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.unwindingFenceDetect2//"I1.00"
+                text:Number(Kdb.unwindingFenceDetect2).toFixed(2)//Kdb.unwindingFenceDetect2//"I1.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -297,7 +327,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.largeWinderFenceDetect3//"I2.00"
+                text:Number(Kdb.largeWinderFenceDetect3).toFixed(2)//Kdb.largeWinderFenceDetect3//"I2.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -357,7 +387,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.largeWinderFenceDetect4//"I3.00"
+                text:Number(Kdb.largeWinderFenceDetect4).toFixed(2)//Kdb.largeWinderFenceDetect4//"I3.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -416,7 +446,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.unwindingSafetyLightCurtainAlarm//"I4.00"
+                text:Number(Kdb.unwindingSafetyLightCurtainAlarm).toFixed(2)//Kdb.unwindingSafetyLightCurtainAlarm//"I4.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -475,7 +505,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.inspectionSafetyLightCurtainAlarm//"I5.00"
+                text:Number(Kdb.inspectionSafetyLightCurtainAlarm).toFixed(2)//Kdb.inspectionSafetyLightCurtainAlarm//"I5.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -534,7 +564,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.largeWinderSafetyLightCurtainAlarm//"I6.00"
+                text:Number(Kdb.largeWinderSafetyLightCurtainAlarm).toFixed(2)//Kdb.largeWinderSafetyLightCurtainAlarm//"I6.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -593,7 +623,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.smallWinderZeroSpeedDetect//"I7.00"
+                text:Number(Kdb.smallWinderZeroSpeedDetect).toFixed(2)//Kdb.smallWinderZeroSpeedDetect//"I7.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -652,7 +682,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.largeWinderZeroSpeedDetect//"I8.00"
+                text:Number(Kdb.largeWinderZeroSpeedDetect).toFixed(2)//Kdb.largeWinderZeroSpeedDetect//"I8.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -711,7 +741,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.unwindingTensionOver//"I9.00"
+                text:Number(Kdb.unwindingTensionOver).toFixed(2)//Kdb.unwindingTensionOver//"I9.00"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -770,7 +800,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.smallWinderTensionOver//"I0.10"
+                text:Number(Kdb.smallWinderTensionOver).toFixed(2)//Kdb.smallWinderTensionOver//"I0.10"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -829,7 +859,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.largeWinderTensionOver//"I0.11"
+                text:Number(Kdb.largeWinderTensionOver).toFixed(2)//Kdb.largeWinderTensionOver//"I0.11"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -889,7 +919,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.leftSelvedgeWinderAngleAlarm//"I0.12"
+                text:Number(Kdb.leftSelvedgeWinderAngleAlarm).toFixed(2)//Kdb.leftSelvedgeWinderAngleAlarm//"I0.12"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -948,7 +978,7 @@ Rectangle {
                 font.pixelSize: 20
                 horizontalAlignment: Text.AlignHCenter
                 x: 243
-                text:Kdb.rightSelvedgeWinderAngleAlarm//"I0.13"
+                text:Number(Kdb.rightSelvedgeWinderAngleAlarm).toFixed(2)//Kdb.rightSelvedgeWinderAngleAlarm//"I0.13"
                 color: "#aaaaaa"
                 //placeholderText: "請輸入內容"
                 focus: true
@@ -988,105 +1018,8 @@ Rectangle {
                 }
             }
         }
-    //     // //大捲收捲機左側門7開啟中
-    //     // Text {
-    //     //     id:text_3_14
-    //     //     anchors.top: text_3_13.bottom
-    //     //     anchors.topMargin: topMargin
-    //     //     x: 8
-    //     //     //y: 565
-    //     //     width: 223
-    //     //     height: 24
-    //     //     text: qsTr("大捲收捲機左側門7開啟中")
-    //     //     font.pixelSize: 19
-    //     //     horizontalAlignment: Text.AlignRight
 
-    //     //     TextInput {
-    //     //         id: input3_14_1
-    //     //         width: 100
-    //     //         font.pixelSize: 20
-    //     //         horizontalAlignment: Text.AlignHCenter
-    //     //         x: 243
-    //     //         y: parent.top
-    //     //         //placeholderText: "請輸入內容"
-    //     //         focus: true
-
-    //     //         Rectangle {
-    //     //             height: 2
-    //     //             y:22
-    //     //             width: input3_14_1.width
-    //     //             color: "#aaaaaa"
-    //     //         }
-    //     //     }
-    //     //     TextInput {
-    //     //         id: input3_14_2
-    //     //         width: 100
-    //     //         font.pixelSize: 20
-    //     //         horizontalAlignment: Text.AlignHCenter
-    //     //         x: 365
-    //     //         y: 0
-    //     //         //placeholderText: "請輸入內容"
-    //     //         focus: true
-
-    //     //         Rectangle {
-    //     //             height: 2
-    //     //             y:22
-    //     //             width: input3_14_2.width
-    //     //             color: "#aaaaaa"
-    //     //         }
-    //     //     }
-    //     // }
-    //     // //大捲收捲機左側門8開啟中
-    //     // Text {
-    //     //     id:text_3_15
-    //     //     x: 8
-    //     //     anchors.top: text_3_14.bottom
-    //     //     anchors.topMargin: topMargin
-    //     //     width: 223
-    //     //     height: 24
-    //     //     text: qsTr("大捲收捲機左側門8開啟中")
-    //     //     font.pixelSize: 19
-    //     //     horizontalAlignment: Text.AlignRight
-
-    //     //     TextInput {
-    //     //         id: input3_15_1
-    //     //         width: 100
-    //     //         font.pixelSize: 20
-    //     //         horizontalAlignment: Text.AlignHCenter
-    //     //         x: 243
-    //     //         y: parent.top
-    //     //         //placeholderText: "請輸入內容"
-    //     //         focus: true
-
-    //     //         Rectangle {
-    //     //             height: 2
-    //     //             y:22
-    //     //             width: input3_15_1.width
-    //     //             color: "#aaaaaa"
-    //     //         }
-    //     //     }
-    //     //     TextInput {
-    //     //         id: input3_15_2
-    //     //         width: 100
-    //     //         font.pixelSize: 20
-    //     //         horizontalAlignment: Text.AlignHCenter
-    //     //         x: 365
-    //     //         y: 0
-    //     //         //placeholderText: "請輸入內容"
-    //     //         focus: true
-
-    //     //         Rectangle {
-    //     //             height: 2
-    //     //             y:22
-    //     //             width: input3_15_2.width
-    //     //             color: "#aaaaaa"
-    //     //         }
-    //     //     }
-        // }
     }
-    ParameterSetting3{
-        id: parameterSetting3
-        visible: false
-    }
+
 
 }

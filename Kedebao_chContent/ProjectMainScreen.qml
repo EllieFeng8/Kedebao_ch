@@ -1,13 +1,12 @@
 import QtQuick
 import QtQuick.Controls
-
+import Core 1.0
+import Kedebao_ch
 ProjectMainScreenUI {
     id: mainSwitch
 
-
-
     resetMouseArea.onClicked: {
-        console.log("resetMouseAreaonClicked")
+        //console.log("resetMouseAreaonClicked")
         lengthSet.text = "0"
         speedSet.text = "0"
         brakeDistance.text = "0"
@@ -16,67 +15,43 @@ ProjectMainScreenUI {
         bigCoilTension.text = "0"
     }
 
-    lenthSettingmouseArea.onClicked: {
-        //lenthSettingButton.scale = 1.5
-        console.log("lenthSettingmouseAreaonClicked")
-    }
-
-    speedSettingmouseArea.onClicked: {
-        //speedSettingButton.scale = 1.5
-        console.log("speedSettingmouseAreaonClicked")
-    }
-
-    brakingDistanceMouseArea.onClicked: {
-        console.log("brakingDistanceMouseAreaonClicked")
-    }
-
-    unwindingTensionMouseArea.onClicked: {
-        console.log("unwindingTensionMouseAreaonClicked")
-    }
-
-    smallCoilTensionMouseArea.onClicked: {
-        console.log("smallCoilTensionMouseAreaonClicked")
-    }
-    bigCoilTensionMouseArea.onClicked: {
-        console.log("bigCoilTensionMouseAreaonClicked")
-    }
-
     settingMouseArea.onClicked: {
         modeScreen.visible = true
-        //bigRollTensionSetting.visible = modeScreen.isBig ? false : true
-        //smallRollTensionSetting.visible =modeScreen.isBig ? true : false
-        //modelPic.source = modeScreen.isBig ? "assets/bigpic.png" : "assets/smallpic.png"
-        console.log("modeScreen.isBig:",modeScreen.isBig)
-
     }
 
     uvLampMouseArea.onClicked: {
-        clicked = !clicked
-        uvLampUI.source = clicked ?"assets/Group11.png" : "assets/Group 34.png"
+        Kdb.uvLight = !Kdb.uvLight
+        // uvLampUI.source = Kdb.uvLight ?"assets/Group11.png" : "assets/Group 34.png"
     }
     whiteLightMouseArea.onClicked: {
-        clicked1 = !clicked1
-        whiteLightUI.source = clicked1 ?"assets/Group11.png" : "assets/Group 34.png"
+        Kdb.whiteLight = !Kdb.whiteLight
+        //whiteLightUI.source = Kdb.whiteLight ?"assets/Group11.png" : "assets/Group 34.png"
     }
     lightBelowUIMouseArea.onClicked: {
-        clicked2 = !clicked2
-        lightBelowUI.source = clicked2 ?"assets/Group11.png" : "assets/Group 34.png"
+        Kdb.bottomLight = !Kdb.bottomLight
+        // lightBelowUI.source = Kdb.bottomLight ?"assets/Group11.png" : "assets/Group 34.png"
+    }
+    bigRollCutterSwitchMouseArea.onClicked: {
+        Kdb.bigRollCutter = !Kdb.bigRollCutter
+    //console.log("Kdb.bigRollCutter",Kdb.bigRollCutter)
     }
 
     flipImgMouseArea.onClicked: {
-        clicked3 = !clicked3
-        modelPic.source = clicked3 ? "assets/bigpic.png" : "assets/image 5.png"
-        bigRollTensionSetting.x =clicked3 ? 415 :  1596
-        bigRollTensionSetting.y =clicked3 ? 311 :  411
-        unWindingTension.x = clicked3 ? 1295  : 445
-        smallRollTensionSetting.x =clicked3 ? 723  :  1229
+        isFlip = !isFlip
+        //console.log("isFlip:",isFlip)
+        //modelPic.source = clicked3 ? "assets/bigpic.png" : "assets/image 5.png"
+        bigRollTensionSetting.x =isFlip ? 1596 :  422
+        bigmodelPic.x = isFlip ? -1100 :  0
+        bigRollTensionSetting.y =isFlip ? 580 :  612
+        unWindingTensionPosition.x =isFlip ? 445 :  1535
+        unWindingTensionPosition.y =isFlip ? 640 :  641
 
     }
     ModeSwitch{
         id: modeScreen
-
         visible: false
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
     }
+
 }

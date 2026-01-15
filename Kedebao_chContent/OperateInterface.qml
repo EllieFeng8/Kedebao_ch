@@ -21,10 +21,13 @@ Rectangle {
     property int textInputLeft2:335
 
     property int textLeft: 90
-    property bool isClicked: true
 
+    property int fontSize: 28
+    property int inputTextSize:24
+    property int dashPos: 28
+    property int btnPos:-15
 
-    Text {
+        Text {
         id: title
         x:935
         y:49
@@ -97,8 +100,8 @@ Rectangle {
                 id: switchText
                 x:110
                 y:10
-                text: qsTr("單動模式開啟")
-                color: "red"
+                text: Kdb.singleActionMode ? qsTr("單動模式開啟") : qsTr("單動模式關閉")
+                color: Kdb.singleActionMode ? "black" : "red"
                 font.weight: Font.Bold
                 font.pointSize: 13
                 //anchors.verticalCenter:  parent.verticalCenter
@@ -106,7 +109,7 @@ Rectangle {
             Image{
                 id: singleActionSwitch
                 anchors.verticalCenter:  parent.verticalCenter
-                source: "assets/Group11.png"
+                source: Kdb.singleActionMode ?  "assets/Group11.png" : "assets/Group 34.png"
 
 
                 MouseArea{
@@ -115,32 +118,30 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        isClicked = !isClicked
-                        singleActionSwitch.source = isClicked ? "assets/Group11.png" : "assets/Group 34.png"
-                        switchText.text = isClicked ? qsTr("單動模式開啟") : qsTr("單動模式關閉")
-                        switchText.color = isClicked ?  "red" : "black"
-                        btnMouseArea.enabled=isClicked ? true :false
-                        btnMainMouseArea.enabled=isClicked ? true :false
-                        btnLargeMouseArea.enabled=isClicked ? true :false
-                        btnWasteBMouseArea.enabled=isClicked ? true :false
-                        unwindingMouseArea.enabled=isClicked ? true :false
-                        btnOppositeMouseArea.enabled=isClicked ? true :false
-                        btnCutterMouseArea.enabled=isClicked ? true :false
-                        btnWasteAMouseArea.enabled=isClicked ? true :false
-                        btnTensionMouseArea.enabled=isClicked ? true :false
-                        btnSmallRollTensioMouseArea.enabled=isClicked ? true :false
-                        btnLargeRollTensioMouseArea.enabled=isClicked ? true :false
-                        output0_1.enabled = isClicked ? true :false
-                        output1_1.enabled = isClicked ? true :false
-                        output2_1.enabled = isClicked ? true :false
-                        output3_1.enabled = isClicked ? true :false
-                        output4_1.enabled = isClicked ? true :false
-                        output5_1.enabled = isClicked ? true :false
-                        output6_1.enabled = isClicked ? true :false
-                        output7_1.enabled = isClicked ? true :false
-                        output8_1.enabled = isClicked ? true :false
-                        output9_1.enabled = isClicked ? true :false
-                        output10_1.enabled = isClicked ? true :false
+                        Kdb.singleActionMode = !Kdb.singleActionMode
+
+                        btnMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        btnMainMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        btnLargeMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        btnWasteBMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        unwindingMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        btnOppositeMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        btnCutterMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        btnWasteAMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        btnTensionMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        btnSmallRollTensioMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        btnLargeRollTensioMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        output0_1.enabled = Kdb.singleActionMode ? true :false
+                        output1_1.enabled = Kdb.singleActionMode ? true :false
+                        output2_1.enabled = Kdb.singleActionMode ? true :false
+                        output3_1.enabled = Kdb.singleActionMode ? true :false
+                        output4_1.enabled = Kdb.singleActionMode ? true :false
+                        output5_1.enabled = Kdb.singleActionMode ? true :false
+                        output6_1.enabled = Kdb.singleActionMode ? true :false
+                        output7_1.enabled = Kdb.singleActionMode ? true :false
+                        output8_1.enabled = Kdb.singleActionMode ? true :false
+                        output9_1.enabled = Kdb.singleActionMode ? true :false
+                        output10_1.enabled = Kdb.singleActionMode ? true :false
 
                     }
                 }
@@ -155,23 +156,24 @@ Rectangle {
             width: setWidth1
             height: 24
             text: qsTr("小捲馬達")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output0_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.smallRollMotor
+                text:Number(Kdb.smallRollMotor).toFixed(2)//Kdb.smallRollMotor
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:22
+                    y:dashPos
                     width: output0_1.width
                     color: "#aaaaaa"
                 }
@@ -179,7 +181,7 @@ Rectangle {
             Image {
                 id: btnSmallMotor
                 x:350
-                y:-20
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: btName
@@ -200,6 +202,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.smallRollMotor !== Number(output0_1.text)) {
+                            Kdb.smallRollMotor = output0_1.text
+                            //console.log("11 smallRollMotor changed~~~", Kdb.smallRollMotor);
+                        }
+                    }
                     //onClicked: root.visible = false
                 }
             }
@@ -214,23 +222,24 @@ Rectangle {
             width: setWidth1
             height: 24
             text: qsTr("主傳馬達")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output1_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.mainDriveMotor
+                text:Number(Kdb.mainDriveMotor).toFixed(2)//Kdb.mainDriveMotor
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:22
+                    y:dashPos
                     width: output1_1.width
                     color: "#aaaaaa"
                 }
@@ -238,7 +247,7 @@ Rectangle {
             Image {
                 id: btnMainMotor
                 x:350
-                y:-20
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: btnMainName
@@ -260,7 +269,12 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     enabled: true
-                    onClicked: { console.log("btnMainMouseArea clicked")}
+                    onClicked: {
+                        if(Kdb.mainDriveMotor !== Number(output1_1.text)) {
+                            Kdb.mainDriveMotor = output1_1.text
+                            //console.log("11 mainDriveMotor changed~~~", Kdb.mainDriveMotor);
+                        }
+                    }
                 }
             }
         }
@@ -273,23 +287,24 @@ Rectangle {
             width: setWidth1
             height: 24
             text: qsTr("大捲馬達")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output2_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.largeRollMotor
+                text:Number(Kdb.largeRollMotor).toFixed(2)//Kdb.largeRollMotor
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:22
+                    y:dashPos
                     width: output2_1.width
                     color: "#aaaaaa"
                 }
@@ -297,7 +312,7 @@ Rectangle {
             Image {
                 id: btnLargeMotor
                 x:350
-                y:-20
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: btnLargeName
@@ -318,7 +333,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked: {
+                        if(Kdb.largeRollMotor !== Number(output2_1.text)) {
+                            Kdb.largeRollMotor = output2_1.text
+                            //console.log("11 largeRollMotor changed~~~", Kdb.largeRollMotor);
+                        }
+                    }
                 }
             }
         }
@@ -331,23 +351,24 @@ Rectangle {
     width: setWidth1
     height: 24
     text: qsTr("捲廢料馬達B")
-    font.pixelSize: 24
+    font.pixelSize: fontSize
     horizontalAlignment: Text.AlignRight
 
     TextInput {
         id: output3_1
         width: 100
-        font.pixelSize: 20
+        font.pixelSize: inputTextSize
         horizontalAlignment: Text.AlignHCenter
         x: textInputLeft
         y: 0
-        text:Kdb.wasteRollMotorB
+        text:Number(Kdb.wasteRollMotorB).toFixed(2)//Kdb.wasteRollMotorB
+        validator: DoubleValidator {}//限制只能輸入整數/double
         //placeholderText: "請輸入內容"
         focus: true
 
         Rectangle {
             height: 2
-            y:22
+            y:dashPos
             width: output3_1.width
             color: "#aaaaaa"
         }
@@ -355,7 +376,7 @@ Rectangle {
     Image {
         id: btnWasteBMotor
         x:350
-        y:-20
+        y:btnPos
         source: "assets/rectangle_35.png"
         Text {
             id: btnWasteBName
@@ -376,7 +397,12 @@ Rectangle {
             anchors.fill: parent
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            //onClicked: root.visible = false
+            onClicked: {
+                if(Kdb.wasteRollMotorB !== Number(output3_1.text)) {
+                    Kdb.wasteRollMotorB = output3_1.text
+                    //console.log("11 wasteRollMotorB changed~~~", Kdb.wasteRollMotorB);
+                }
+            }
         }
     }
 }
@@ -389,23 +415,24 @@ Rectangle {
             width: setWidth1
             height: 24
             text: qsTr("放布馬達")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output4_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.unwindingMotor
+                text:Number(Kdb.unwindingMotor).toFixed(2)//Kdb.unwindingMotor
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:22
+                    y:dashPos
                     width: output4_1.width
                     color: "#aaaaaa"
                 }
@@ -413,7 +440,7 @@ Rectangle {
             Image {
                 id: unwindingMotor
                 x:350
-                y:-20
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: unwindingName
@@ -434,7 +461,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked: {
+                        if(Kdb.unwindingMotor !== Number(output4_1.text)) {
+                            Kdb.unwindingMotor = output4_1.text
+                            //console.log("11 unwindingMotor changed~~~", Kdb.unwindingMotor);
+                        }
+                    }
                 }
             }
         }
@@ -447,23 +479,24 @@ Rectangle {
             width: setWidth1
             //height: 24
             text: qsTr("對邊馬達")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output5_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
                 y: 0
-                text:Kdb.edgeAlignMotor
+                text:Number(Kdb.edgeAlignMotor).toFixed(2)//Kdb.edgeAlignMotor
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:32
+                    y:dashPos
                     width: output5_1.width
                     color: "#aaaaaa"
                 }
@@ -471,7 +504,7 @@ Rectangle {
             Image {
                 id: btnOppositeMotor
                 x:350
-                y:-10
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: btnOppositeName
@@ -492,7 +525,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked: {
+                        if(Kdb.edgeAlignMotor !== Number(output5_1.text)) {
+                            Kdb.edgeAlignMotor = output5_1.text
+                            //console.log("11 edgeAlignMotor changed~~~", Kdb.edgeAlignMotor);
+                        }
+                    }
                 }
             }
         }
@@ -506,23 +544,24 @@ Rectangle {
             width: setWidth1
             //height: 24
             text: qsTr("切刀輪馬達")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output6_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
-                y: 10
-                text:Kdb.cutterWheelMotor
+                y: 0
+                text:Number(Kdb.cutterWheelMotor).toFixed(2)//Kdb.cutterWheelMotor
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:22
+                    y:dashPos
                     width: output5_1.width
                     color: "#aaaaaa"
                 }
@@ -530,7 +569,7 @@ Rectangle {
             Image {
                 id: btnCutterMotor
                 x:350
-                y:-10
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: btnCutterName
@@ -551,7 +590,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked:{
+                        if(Kdb.cutterWheelMotor !== Number(output6_1.text)) {
+                            Kdb.cutterWheelMotor = output6_1.text
+                            //console.log("11 cutterWheelMotor changed~~~", Kdb.cutterWheelMotor);
+                        }
+                    }
                 }
             }
         }
@@ -565,23 +609,24 @@ Rectangle {
             width: setWidth1
             height: 24
             text: qsTr("捲廢料馬達A")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output7_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
-                y: 10
-                text:Kdb.wasteRollMotorA
+                y: 0
+                text:Number(Kdb.wasteRollMotorA).toFixed(2)//Kdb.wasteRollMotorA
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:22
+                    y:dashPos
                     width: output5_1.width
                     color: "#aaaaaa"
                 }
@@ -589,7 +634,7 @@ Rectangle {
             Image {
                 id: btnWasteAMotor
                 x:350
-                y:-10
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: btnWasteAName
@@ -610,7 +655,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked: {
+                        if(Kdb.wasteRollMotorA !== Number(output7_1.text)) {
+                            Kdb.wasteRollMotorA = output7_1.text
+                            //console.log("11 wasteRollMotorA changed~~~", Kdb.wasteRollMotorA);
+                        }
+                    }
                 }
             }
         }
@@ -625,23 +675,24 @@ Rectangle {
             width: setWidth1
             //height: 24
             text: qsTr("放捲張力")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output8_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
-                y: 10
-                text:Kdb.unwindingTension
+                y: 0
+                text:Number(Kdb.unwindingTension).toFixed(2)//Kdb.unwindingTension
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:22
+                    y:dashPos
                     width: output8_1.width
                     color: "#aaaaaa"
                 }
@@ -649,7 +700,7 @@ Rectangle {
             Image {
                 id: btnTensionMotor
                 x:350
-                y:-10
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: btnTensionName
@@ -670,7 +721,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked: {
+                        if(Kdb.unwindingTension !== Number(output8_1.text)){
+                            Kdb.unwindingTension = output8_1.text
+                            //console.log("11 unwindingTension changed~~~",Kdb.unwindingTension);
+                        }
+                    }
                 }
             }
         }
@@ -685,23 +741,24 @@ Rectangle {
             width: setWidth1
             //height: 24
             text: qsTr("小捲張力")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output9_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
-                y: 10
-                text:Kdb.smallRollTension
+                y: 0
+                text:Number(Kdb.smallRollTension).toFixed(2)//Kdb.smallRollTension
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:22
+                    y:dashPos
                     width: output9_1.width
                     color: "#aaaaaa"
                 }
@@ -709,7 +766,7 @@ Rectangle {
             Image {
                 id: btnSmallRollTensionMotor
                 x:350
-                y:-10
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: btnSmallRollTensioName
@@ -730,7 +787,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked: {
+                        if(Kdb.smallRollTension !== Number(output9_1.text)) {
+                            Kdb.smallRollTension = output9_1.text
+                            //console.log("11 smallRollTension changed~~~", Kdb.smallRollTension);
+                        }
+                    }
                 }
             }
         }
@@ -744,23 +806,24 @@ Rectangle {
             width: setWidth1
             //height: 24
             text: qsTr("大捲張力")
-            font.pixelSize: 24
+            font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
             TextInput {
                 id: output10_1
                 width: 100
-                font.pixelSize: 20
+                font.pixelSize: inputTextSize
                 horizontalAlignment: Text.AlignHCenter
                 x: textInputLeft
-                y: 10
-                text:Kdb.largeRollTension
+                y: 0
+                text:Number(Kdb.largeRollTension).toFixed(2)//Kdb.largeRollTension
+                validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
 
                 Rectangle {
                     height: 2
-                    y:22
+                    y:dashPos
                     width: output10_1.width
                     color: "#aaaaaa"
                 }
@@ -768,7 +831,7 @@ Rectangle {
             Image {
                 id: btnLargeRollTensionMotor
                 x:350
-                y:-10
+                y:btnPos
                 source: "assets/rectangle_35.png"
                 Text {
                     id: btnLargeRollTensioName
@@ -789,7 +852,12 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    //onClicked: root.visible = false
+                    onClicked: {
+                        if(Kdb.largeRollTension !== Number(output10_1.text)) {
+                            Kdb.largeRollTension = output10_1.text
+                            //console.log("11 largeRollTension changed~~~", Kdb.largeRollTension);
+                        }
+                    }
                 }
             }
         }

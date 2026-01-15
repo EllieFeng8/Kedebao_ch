@@ -1,4 +1,5 @@
 module Kedebao_ch
 singleton Constants 1.0 Constants.qml
+singleton AppStatus 1.0 ../Kedebao_chContent/AppState.qml
 EventListSimulator 1.0 EventListSimulator.qml
 EventListModel 1.0 EventListModel.qml
