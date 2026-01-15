@@ -99,11 +99,11 @@ Rectangle {
             Text {
                 id: switchText
                 x:110
-                y:10
+                y:15
                 text: Kdb.singleActionMode ? qsTr("單動模式開啟") : qsTr("單動模式關閉")
                 color: Kdb.singleActionMode ? "black" : "red"
                 font.weight: Font.Bold
-                font.pointSize: 13
+                font.pointSize: 15
                 //anchors.verticalCenter:  parent.verticalCenter
             }
             Image{
