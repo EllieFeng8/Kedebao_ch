@@ -1,0 +1,4 @@
+module Kedebao_chContent
+
+singleton AppState 1.0 AppState.qml
+
