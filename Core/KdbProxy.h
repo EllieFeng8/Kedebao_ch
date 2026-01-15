@@ -26,16 +26,16 @@ class KdbProxy : public QObject
     Q_PROPERTY(int doorHSignal READ getDoorHSignal NOTIFY doorHSignalChanged)
     Q_PROPERTY(int doorISignal READ getDoorISignal NOTIFY doorISignalChanged)
 
-    Q_PROPERTY(int uvLight READ getUvLight NOTIFY uvLightChanged)
-    Q_PROPERTY(int whiteLight READ getWhiteLight NOTIFY whiteLightChanged)
-    Q_PROPERTY(int bottomLight READ getBottomLight NOTIFY bottomLightChanged)
+    Q_PROPERTY(int uvLight READ getUvLight WRITE setUvLight NOTIFY uvLightChanged)
+    Q_PROPERTY(int whiteLight READ getWhiteLight WRITE setWhiteLight NOTIFY whiteLightChanged)
+    Q_PROPERTY(int bottomLight READ getBottomLight WRITE setBottomLight NOTIFY bottomLightChanged)
 
     Q_PROPERTY(double currentLength READ getCurrentLength NOTIFY currentLengthChanged)
     Q_PROPERTY(double speed READ getSpeed NOTIFY speedChanged)
     Q_PROPERTY(double brakingDistance READ getBrakingDistance NOTIFY brakingDistanceChanged)
 
-    Q_PROPERTY(double modifyCurrentLength READ getModifyCurrentLength WRITE setModifyCurrentLength NOTIFY modifyCurrentLengthChanged)
-    Q_PROPERTY(double modifySpeed READ getModifySpeed WRITE setModifySpeed NOTIFY modifySpeedChanged)
+    Q_PROPERTY(int modifyCurrentLength READ getModifyCurrentLength WRITE setModifyCurrentLength NOTIFY modifyCurrentLengthChanged)
+    Q_PROPERTY(int modifySpeed READ getModifySpeed WRITE setModifySpeed NOTIFY modifySpeedChanged)
     Q_PROPERTY(double modifyBrakingDistance READ getModifyBrakingDistance WRITE setModifyBrakingDistance NOTIFY modifyBrakingDistanceChanged)
 
     Q_PROPERTY(double modifyUnwindingTension READ getModifyUnwindingTension WRITE setModifyUnwindingTension NOTIFY modifyUnwindingTensionChanged)
@@ -428,7 +428,20 @@ class KdbProxy : public QObject
     Q_PROPERTY(int smallRollTensionSwitch READ getSmallRollTensionSwitch WRITE setSmallRollTensionSwitch NOTIFY smallRollTensionSwitchChanged)
     Q_PROPERTY(int largeRollTensionSwitch READ getLargeRollTensionSwitch WRITE setLargeRollTensionSwitch NOTIFY largeRollTensionSwitchChanged)
 
+    // ===== cutter=====
+    Q_PROPERTY(int smallRollCutter1 READ getSmallRollCutter1 WRITE setSmallRollCutter1 NOTIFY smallRollCutter1Changed)
+    Q_PROPERTY(int smallRollCutter2 READ getSmallRollCutter2 WRITE setSmallRollCutter2 NOTIFY smallRollCutter2Changed)
+    Q_PROPERTY(int smallRollCutter3 READ getSmallRollCutter3 WRITE setSmallRollCutter3 NOTIFY smallRollCutter3Changed)
+    Q_PROPERTY(int smallRollCutter4 READ getSmallRollCutter4 WRITE setSmallRollCutter4 NOTIFY smallRollCutter4Changed)
+    Q_PROPERTY(int smallRollCutter5 READ getSmallRollCutter5 WRITE setSmallRollCutter5 NOTIFY smallRollCutter5Changed)
+    Q_PROPERTY(int bigRollCutter READ getBigRollCutter WRITE setBigRollCutter NOTIFY bigRollCutterChanged)
+
+    // ===== Single Action Mode=====
+    Q_PROPERTY(int singleActionMode READ getSingleActionMode WRITE setSingleActionMode NOTIFY singleActionModeChanged)
+
+
 public:
+    explicit KdbProxy(QObject* parent = nullptr) : QObject(parent) {}
      Q_INVOKABLE int getMetalDetector() const { return m_metalDetector; }
      Q_INVOKABLE int getGratingDetection() const { return m_gratingDetection; }
      Q_INVOKABLE int getOppositeSide() const { return m_OppositeSideSignal; }
@@ -444,18 +457,35 @@ public:
      Q_INVOKABLE int getDoorISignal() const { return m_doorISignal; }
 
      Q_INVOKABLE int getUvLight() const { return m_uvLight; }
-     Q_INVOKABLE int getWhiteLight() const { return m_whiteLight; }
-     Q_INVOKABLE int getBottomLight() const { return m_bottomLight; }
-
+    void setUvLight(int value)
+    {
+        if (m_uvLight != value)
+            m_uvLight = value;
+        emit uvLightChanged(m_uvLight);
+    }
+    Q_INVOKABLE int getWhiteLight() const { return m_whiteLight; }
+    void setWhiteLight(int value)
+    {
+        if (m_whiteLight != value)
+            m_whiteLight = value;
+        emit whiteLightChanged(m_whiteLight);
+    }
+    Q_INVOKABLE int getBottomLight() const { return m_bottomLight; }
+    void setBottomLight(int value)
+    {
+        if (m_bottomLight != value)
+            m_bottomLight = value;
+        emit bottomLightChanged(m_bottomLight);
+    }
      Q_INVOKABLE double getCurrentLength() const { return m_currentLength; }
      Q_INVOKABLE double getSpeed() const { return m_speed; }
      Q_INVOKABLE double getBrakingDistance() const { return m_brakingDistance;}
 
-     Q_INVOKABLE double getModifyCurrentLength() const { return m_modifycurrentLength; }
-     Q_INVOKABLE double getModifySpeed() const { return m_modifyspeed; }
+     Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
+     Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
      Q_INVOKABLE double getModifyBrakingDistance() const { return m_modifybrakingDistance;}
-     void setModifyCurrentLength(double value){m_modifycurrentLength = value; emit modifyCurrentLengthChanged(m_brakingDistance);};
-     void setModifySpeed(double value){m_modifyspeed = value; emit modifySpeedChanged(m_modifyspeed);};
+     void setModifyCurrentLength(int value){m_modifycurrentLength = value; emit modifyCurrentLengthChanged(m_brakingDistance);};
+     void setModifySpeed(int value){m_modifyspeed = value; emit modifySpeedChanged(m_modifyspeed);};
      void setModifyBrakingDistance(double value){m_modifybrakingDistance = value; emit modifyBrakingDistanceChanged(m_modifybrakingDistance);};
 
     Q_INVOKABLE double getModifyUnwindingTension() const { return m_modifyUnwindingTension; }
@@ -466,170 +496,995 @@ public:
     void setModifyLargeWinderTensionOver(double value){m_modifyLargeWinderTensionOver = value; emit modifyLargeWinderTensionOverChanged(m_modifyLargeWinderTensionOver);};
 
      //=====INPUT-1 READ functions =====
-     Q_INVOKABLE double getUnwinderVfdFreqAlarm() const { return m_unwinderVfdFreqAlarm; }
-     Q_INVOKABLE double getMainDriveVfdFreqAlarm() const { return m_mainDriveVfdFreqAlarm; }
-     Q_INVOKABLE double getSmallWinderVfdFreqAlarm() const { return m_smallWinderVfdFreqAlarm; }
-     Q_INVOKABLE double getLargeWinderVfdFreqAlarm() const { return m_largeWinderVfdFreqAlarm; }
-     Q_INVOKABLE double getSmallCutterVfdFreqAlarm() const { return m_smallCutterVfdFreqAlarm; }
-     Q_INVOKABLE double getSelvedgeFanVfdFreqAlarm() const { return m_selvedgeFanVfdFreqAlarm; }
+     //=====INPUT-1 READ functions =====
+    Q_INVOKABLE double getUnwinderVfdFreqAlarm() const { return m_unwinderVfdFreqAlarm; }
+    void setUnwinderVfdFreqAlarm(double value)
+    {
+        if (m_unwinderVfdFreqAlarm == value)
+            return;
+        m_unwinderVfdFreqAlarm = value;
+        emit unwinderVfdFreqAlarmChanged(m_unwinderVfdFreqAlarm);
+    }
+    Q_INVOKABLE double getMainDriveVfdFreqAlarm() const { return m_mainDriveVfdFreqAlarm; }
+    void setMainDriveVfdFreqAlarm(double value)
+    {
+        if (m_mainDriveVfdFreqAlarm == value)
+            return;
+        m_mainDriveVfdFreqAlarm = value;
+        emit mainDriveVfdFreqAlarmChanged(m_mainDriveVfdFreqAlarm);
+    }
+    Q_INVOKABLE double getSmallWinderVfdFreqAlarm() const { return m_smallWinderVfdFreqAlarm; }
+    void setSmallWinderVfdFreqAlarm(double value)
+    {
+        if (m_smallWinderVfdFreqAlarm == value)
+            return;
+        m_smallWinderVfdFreqAlarm = value;
+        emit smallWinderVfdFreqAlarmChanged(m_smallWinderVfdFreqAlarm);
+    }
+    Q_INVOKABLE double getLargeWinderVfdFreqAlarm() const { return m_largeWinderVfdFreqAlarm; }
+    void setLargeWinderVfdFreqAlarm(double value)
+    {
+        if (m_largeWinderVfdFreqAlarm == value)
+            return;
+        m_largeWinderVfdFreqAlarm = value;
+        emit largeWinderVfdFreqAlarmChanged(m_largeWinderVfdFreqAlarm);
+    }
+    Q_INVOKABLE double getSmallCutterVfdFreqAlarm() const { return m_smallCutterVfdFreqAlarm; }
+    void setSmallCutterVfdFreqAlarm(double value)
+    {
+        if (m_smallCutterVfdFreqAlarm == value)
+            return;
+        m_smallCutterVfdFreqAlarm = value;
+        emit smallCutterVfdFreqAlarmChanged(m_smallCutterVfdFreqAlarm);
+    }
+    Q_INVOKABLE double getSelvedgeFanVfdFreqAlarm() const { return m_selvedgeFanVfdFreqAlarm; }
+    void setSelvedgeFanVfdFreqAlarm(double value)
+    {
+        if (m_selvedgeFanVfdFreqAlarm == value)
+            return;
+        m_selvedgeFanVfdFreqAlarm = value;
+        emit selvedgeFanVfdFreqAlarmChanged(m_selvedgeFanVfdFreqAlarm);
+    }
+    Q_INVOKABLE double getLeftFanOverloadAlarm() const { return m_leftFanOverloadAlarm; }
+    void setLeftFanOverloadAlarm(double value)
+    {
+        if (m_leftFanOverloadAlarm == value)
+            return;
+        m_leftFanOverloadAlarm = value;
+        emit leftFanOverloadAlarmChanged(m_leftFanOverloadAlarm);
+    }
 
-     Q_INVOKABLE double getLeftFanOverloadAlarm() const { return m_leftFanOverloadAlarm; }
-     Q_INVOKABLE double getRightFanOverloadAlarm() const { return m_rightFanOverloadAlarm; }
+    Q_INVOKABLE double getRightFanOverloadAlarm() const { return m_rightFanOverloadAlarm; }
+    void setRightFanOverloadAlarm(double value)
+    {
+        if (m_rightFanOverloadAlarm == value)
+            return;
+        m_rightFanOverloadAlarm = value;
+        emit rightFanOverloadAlarmChanged(m_rightFanOverloadAlarm);
+    }
+    Q_INVOKABLE double getLargeCutterVfdFreqAlarm() const { return m_largeCutterVfdFreqAlarm; }
+    void setLargeCutterVfdFreqAlarm(double value)
+    {
+        if (m_largeCutterVfdFreqAlarm == value)
+            return;
+        m_largeCutterVfdFreqAlarm = value;
+        emit largeCutterVfdFreqAlarmChanged(m_largeCutterVfdFreqAlarm);
+    }
+    Q_INVOKABLE double getLeftSelvedgeWinderVfdAlarm() const { return m_leftSelvedgeWinderVfdAlarm; }
+    void setLeftSelvedgeWinderVfdAlarm(double value)
+    {
+        if (m_leftSelvedgeWinderVfdAlarm == value)
+            return;
+        m_leftSelvedgeWinderVfdAlarm = value;
+        emit leftSelvedgeWinderVfdAlarmChanged(m_leftSelvedgeWinderVfdAlarm);
+    }
+    Q_INVOKABLE double getRightSelvedgeWinderVfdAlarm() const { return m_rightSelvedgeWinderVfdAlarm; }
+    void setRightSelvedgeWinderVfdAlarm(double value)
+    {
+        if (m_rightSelvedgeWinderVfdAlarm == value)
+            return;
+        m_rightSelvedgeWinderVfdAlarm = value;
+        emit rightSelvedgeWinderVfdAlarmChanged(m_rightSelvedgeWinderVfdAlarm);
+    }
 
-     Q_INVOKABLE double getLargeCutterVfdFreqAlarm() const { return m_largeCutterVfdFreqAlarm; }
-     Q_INVOKABLE double getLeftSelvedgeWinderVfdAlarm() const { return m_leftSelvedgeWinderVfdAlarm; }
-     Q_INVOKABLE double getRightSelvedgeWinderVfdAlarm() const { return m_rightSelvedgeWinderVfdAlarm; }
+    Q_INVOKABLE double getWebAlignerVfdFreqAlarm() const { return m_webAlignerVfdFreqAlarm; }
+    void setWebAlignerVfdFreqAlarm(double value)
+    {
+        if (m_webAlignerVfdFreqAlarm == value)
+            return;
+        m_webAlignerVfdFreqAlarm = value;
+        emit webAlignerVfdFreqAlarmChanged(m_webAlignerVfdFreqAlarm);
+    }
 
-     Q_INVOKABLE double getWebAlignerVfdFreqAlarm() const { return m_webAlignerVfdFreqAlarm; }
+    Q_INVOKABLE double getUnwinderPowerLoss() const { return m_unwinderPowerLoss; }
+    void setUnwinderPowerLoss(double value)
+    {
+        if (m_unwinderPowerLoss == value)
+            return;
+        m_unwinderPowerLoss = value;
+        emit unwinderPowerLossChanged(m_unwinderPowerLoss);
+    }
+    Q_INVOKABLE double getMainDrivePowerLoss() const { return m_mainDrivePowerLoss; }
+    void setMainDrivePowerLoss(double value)
+    {
+        if (m_mainDrivePowerLoss == value)
+            return;
+        m_mainDrivePowerLoss = value;
+        emit mainDrivePowerLossChanged(m_mainDrivePowerLoss);
+    }
 
-     Q_INVOKABLE double getUnwinderPowerLoss() const { return m_unwinderPowerLoss; }
-     Q_INVOKABLE double getMainDrivePowerLoss() const { return m_mainDrivePowerLoss; }
-     Q_INVOKABLE double getSmallWinderPowerLoss() const { return m_smallWinderPowerLoss; }
-     Q_INVOKABLE double getLargeWinderPowerLoss() const { return m_largeWinderPowerLoss; }
+    Q_INVOKABLE double getSmallWinderPowerLoss() const { return m_smallWinderPowerLoss; }
+    void setSmallWinderPowerLoss(double value)
+    {
+        if (m_smallWinderPowerLoss == value)
+            return;
+        m_smallWinderPowerLoss = value;
+        emit smallWinderPowerLossChanged(m_smallWinderPowerLoss);
+    }
 
-     Q_INVOKABLE int getUnwinderVfdFreqAlarmLight() const { return m_unwinderVfdFreqAlarmLight; }
-     Q_INVOKABLE int getMainDriveVfdFreqAlarmLight() const { return m_mainDriveVfdFreqAlarmLight; }
-     Q_INVOKABLE int getSmallWinderVfdFreqAlarmLight() const { return m_smallWinderVfdFreqAlarmLight; }
-     Q_INVOKABLE int getLargeWinderVfdFreqAlarmLight() const { return m_largeWinderVfdFreqAlarmLight; }
-     Q_INVOKABLE int getSmallCutterVfdFreqAlarmLight() const { return m_smallCutterVfdFreqAlarmLight; }
-     Q_INVOKABLE int getSelvedgeFanVfdFreqAlarmLight() const { return m_selvedgeFanVfdFreqAlarmLight; }
+    Q_INVOKABLE double getLargeWinderPowerLoss() const { return m_largeWinderPowerLoss; }
+    void setLargeWinderPowerLoss(double value)
+    {
+        if (m_largeWinderPowerLoss == value)
+            return;
+        m_largeWinderPowerLoss = value;
+        emit largeWinderPowerLossChanged(m_largeWinderPowerLoss);
+    }
 
-     Q_INVOKABLE int getLeftFanOverloadAlarmLight() const { return m_leftFanOverloadAlarmLight; }
-     Q_INVOKABLE int getRightFanOverloadAlarmLight() const { return m_rightFanOverloadAlarmLight; }
+    Q_INVOKABLE int getUnwinderVfdFreqAlarmLight() const { return m_unwinderVfdFreqAlarmLight; }
+    void setUnwinderVfdFreqAlarmLight(int value)
+    {
+        if (m_unwinderVfdFreqAlarmLight != value)
+            m_unwinderVfdFreqAlarmLight = value;
+        emit unwinderVfdFreqAlarmLightChanged(m_unwinderVfdFreqAlarmLight);
+    }
+    Q_INVOKABLE int getMainDriveVfdFreqAlarmLight() const { return m_mainDriveVfdFreqAlarmLight; }
+    void setMainDriveVfdFreqAlarmLight(int value)
+    {
+        if (m_mainDriveVfdFreqAlarmLight != value)
+            m_mainDriveVfdFreqAlarmLight = value;
+        emit mainDriveVfdFreqAlarmLightChanged(m_mainDriveVfdFreqAlarmLight);
+    }
+    Q_INVOKABLE int getSmallWinderVfdFreqAlarmLight() const { return m_smallWinderVfdFreqAlarmLight; }
+    void setSmallWinderVfdFreqAlarmLight(int value)
+    {
+        if (m_smallWinderVfdFreqAlarmLight != value)
+            m_smallWinderVfdFreqAlarmLight = value;
+        emit smallWinderVfdFreqAlarmLightChanged(m_smallWinderVfdFreqAlarmLight);
+    }
+    Q_INVOKABLE int getLargeWinderVfdFreqAlarmLight() const { return m_largeWinderVfdFreqAlarmLight; }
+    void setLargeWinderVfdFreqAlarmLight(int value)
+    {
+        if (m_largeWinderVfdFreqAlarmLight != value)
+            m_largeWinderVfdFreqAlarmLight = value;
+        emit largeWinderVfdFreqAlarmLightChanged(m_largeWinderVfdFreqAlarmLight);
+    }
+    Q_INVOKABLE int getSmallCutterVfdFreqAlarmLight() const { return m_smallCutterVfdFreqAlarmLight; }
+    void setSmallCutterVfdFreqAlarmLight(int value)
+    {
+        if (m_smallCutterVfdFreqAlarmLight != value)
+            m_smallCutterVfdFreqAlarmLight = value;
+        emit smallCutterVfdFreqAlarmLightChanged(m_smallCutterVfdFreqAlarmLight);
+    }
+    Q_INVOKABLE int getSelvedgeFanVfdFreqAlarmLight() const { return m_selvedgeFanVfdFreqAlarmLight; }
+    void setSelvedgeFanVfdFreqAlarmLight(int value)
+    {
+        if (m_selvedgeFanVfdFreqAlarmLight != value)
+            m_selvedgeFanVfdFreqAlarmLight = value;
+        emit smallCutterVfdFreqAlarmLightChanged(m_selvedgeFanVfdFreqAlarmLight);
+    }
+    Q_INVOKABLE int getLeftFanOverloadAlarmLight() const { return m_leftFanOverloadAlarmLight; }
+    void setLeftFanOverloadAlarmLight(int value)
+    {
+        if (m_leftFanOverloadAlarmLight != value)
+            m_leftFanOverloadAlarmLight = value;
+        emit leftFanOverloadAlarmLightChanged(m_leftFanOverloadAlarmLight);
+    }
+    Q_INVOKABLE int getRightFanOverloadAlarmLight() const { return m_rightFanOverloadAlarmLight; }
+    void setRightFanOverloadAlarmLight(int value)
+    {
+        if (m_rightFanOverloadAlarmLight != value)
+            m_rightFanOverloadAlarmLight = value;
+        emit rightFanOverloadAlarmLightChanged(m_rightFanOverloadAlarmLight);
+    }
+    Q_INVOKABLE int getLargeCutterVfdFreqAlarmLight() const { return m_largeCutterVfdFreqAlarmLight; }
+    void setLargeCutterVfdFreqAlarmLight(int value)
+    {
+        if (m_largeCutterVfdFreqAlarmLight != value)
+            m_largeCutterVfdFreqAlarmLight = value;
+        emit largeCutterVfdFreqAlarmLightChanged(m_largeCutterVfdFreqAlarmLight);
+    }
+    Q_INVOKABLE int getLeftSelvedgeWinderVfdAlarmLight() const { return m_leftSelvedgeWinderVfdAlarmLight; }
+    void setLeftSelvedgeWinderVfdAlarmLight(int value)
+    {
+        if (m_leftSelvedgeWinderVfdAlarmLight != value)
+            m_leftSelvedgeWinderVfdAlarmLight = value;
+        emit leftSelvedgeWinderVfdAlarmLightChanged(m_leftSelvedgeWinderVfdAlarmLight);
+    }
+    Q_INVOKABLE int getRightSelvedgeWinderVfdAlarmLight() const { return m_rightSelvedgeWinderVfdAlarmLight; }
+    void setRightSelvedgeWinderVfdAlarmLight(int value)
+    {
+        if (m_rightSelvedgeWinderVfdAlarmLight != value)
+            m_rightSelvedgeWinderVfdAlarmLight = value;
+        emit rightSelvedgeWinderVfdAlarmLightChanged(m_rightSelvedgeWinderVfdAlarmLight);
+    }
+    Q_INVOKABLE int getWebAlignerVfdFreqAlarmLight() const { return m_webAlignerVfdFreqAlarmLight; }
+    void setWebAlignerVfdFreqAlarmLight(int value)
+    {
+        if (m_webAlignerVfdFreqAlarmLight != value)
+            m_webAlignerVfdFreqAlarmLight = value;
+        emit webAlignerVfdFreqAlarmLightChanged(m_webAlignerVfdFreqAlarmLight);
+    }
+    Q_INVOKABLE int getUnwinderPowerLossLight() const { return m_unwinderPowerLossLight; }
+    void setUnwinderPowerLossLight(int value)
+    {
+        if (m_unwinderPowerLossLight != value)
+            m_unwinderPowerLossLight = value;
+        emit unwinderPowerLossLightChanged(m_unwinderPowerLossLight);
+    }
+    Q_INVOKABLE int getMainDrivePowerLossLight() const { return m_mainDrivePowerLossLight; }
+    void setMainDrivePowerLossLight(int value)
+    {
+        if (m_mainDrivePowerLossLight != value)
+            m_mainDrivePowerLossLight = value;
+        emit mainDrivePowerLossLightChanged(m_mainDrivePowerLossLight);
+    }
+    Q_INVOKABLE int getSmallWinderPowerLossLight() const { return m_smallWinderPowerLossLight; }
+    void setSmallWinderPowerLossLight(int value)
+    {
+        if (m_smallWinderPowerLossLight != value)
+            m_smallWinderPowerLossLight = value;
+        emit smallWinderPowerLossLightChanged(m_smallWinderPowerLossLight);
+    }
+    Q_INVOKABLE int getLargeWinderPowerLossLight() const { return m_largeWinderPowerLossLight; }
+    void setLargeWinderPowerLossLight(int value)
+    {
+        if (m_largeWinderPowerLossLight != value)
+            m_largeWinderPowerLossLight = value;
+        emit largeWinderPowerLossLightChanged(m_largeWinderPowerLossLight);
+    }
+    //===== INPUT-2 : Power Loss =====
+    Q_INVOKABLE double getSmallCutterPowerLoss() const { return m_smallCutterPowerLoss; }
+    void setSmallCutterPowerLoss(double value)
+    {
+        if (m_smallCutterPowerLoss == value)
+            return;
+        m_smallCutterPowerLoss = value;
+        emit smallCutterPowerLossChanged(m_smallCutterPowerLoss);
+    }
 
-     Q_INVOKABLE int getLargeCutterVfdFreqAlarmLight() const { return m_largeCutterVfdFreqAlarmLight; }
-     Q_INVOKABLE int getLeftSelvedgeWinderVfdAlarmLight() const { return m_leftSelvedgeWinderVfdAlarmLight; }
-     Q_INVOKABLE int getRightSelvedgeWinderVfdAlarmLight() const { return m_rightSelvedgeWinderVfdAlarmLight; }
+    Q_INVOKABLE double getSelvedgeFanPowerLoss() const { return m_selvedgeFanPowerLoss; }
+    void setSelvedgeFanPowerLoss(double value)
+    {
+        if (m_selvedgeFanPowerLoss == value)
+            return;
+        m_selvedgeFanPowerLoss = value;
+        emit selvedgeFanPowerLossChanged(m_selvedgeFanPowerLoss);
+    }
 
-     Q_INVOKABLE int getWebAlignerVfdFreqAlarmLight() const { return m_webAlignerVfdFreqAlarmLight; }
+    Q_INVOKABLE double getLargeCutterPowerLoss() const { return m_largeCutterPowerLoss; }
+    void setLargeCutterPowerLoss(double value)
+    {
+        if (m_largeCutterPowerLoss == value)
+            return;
+        m_largeCutterPowerLoss = value;
+        emit largeCutterPowerLossChanged(m_largeCutterPowerLoss);
+    }
 
-     Q_INVOKABLE int getUnwinderPowerLossLight() const { return m_unwinderPowerLossLight; }
-     Q_INVOKABLE int getMainDrivePowerLossLight() const { return m_mainDrivePowerLossLight; }
-     Q_INVOKABLE int getSmallWinderPowerLossLight() const { return m_smallWinderPowerLossLight; }
-     Q_INVOKABLE int getLargeWinderPowerLossLight() const { return m_largeWinderPowerLossLight; }
+    Q_INVOKABLE double getLeftSelvedgeWinderPowerLoss() const { return m_leftSelvedgeWinderPowerLoss; }
+    void setLeftSelvedgeWinderPowerLoss(double value)
+    {
+        if (m_leftSelvedgeWinderPowerLoss == value)
+            return;
+        m_leftSelvedgeWinderPowerLoss = value;
+        emit leftSelvedgeWinderPowerLossChanged(m_leftSelvedgeWinderPowerLoss);
+    }
 
-     //===== INPUT-2 : Power Loss =====
-     Q_INVOKABLE double getSmallCutterPowerLoss() const { return m_smallCutterPowerLoss; }
-     Q_INVOKABLE double getSelvedgeFanPowerLoss() const { return m_selvedgeFanPowerLoss; }
-     Q_INVOKABLE double getLargeCutterPowerLoss() const { return m_largeCutterPowerLoss; }
-     Q_INVOKABLE double getLeftSelvedgeWinderPowerLoss() const { return m_leftSelvedgeWinderPowerLoss; }
-     Q_INVOKABLE double getRightSelvedgeWinderPowerLoss() const { return m_rightSelvedgeWinderPowerLoss; }
-     Q_INVOKABLE double getWebAlignerPowerLoss() const { return m_webAlignerPowerLoss; }
+    Q_INVOKABLE double getRightSelvedgeWinderPowerLoss() const { return m_rightSelvedgeWinderPowerLoss; }
+    void setRightSelvedgeWinderPowerLoss(double value)
+    {
+        if (m_rightSelvedgeWinderPowerLoss == value)
+            return;
+        m_rightSelvedgeWinderPowerLoss = value;
+        emit rightSelvedgeWinderPowerLossChanged(m_rightSelvedgeWinderPowerLoss);
+    }
+
+    Q_INVOKABLE double getWebAlignerPowerLoss() const { return m_webAlignerPowerLoss; }
+    void setWebAlignerPowerLoss(double value)
+    {
+        if (m_webAlignerPowerLoss == value)
+            return;
+        m_webAlignerPowerLoss = value;
+        emit webAlignerPowerLossChanged(m_webAlignerPowerLoss);
+    }
 
     Q_INVOKABLE double getUnwinderDisconnect() const { return m_unwinderDisconnect; }
+    void setUnwinderDisconnect(double value)
+    {
+        if (m_unwinderDisconnect == value)
+            return;
+        m_unwinderDisconnect = value;
+        emit unwinderDisconnectChanged(m_unwinderDisconnect);
+    }
+
     Q_INVOKABLE double getMainDriveDisconnect() const { return m_mainDriveDisconnect; }
+    void setMainDriveDisconnect(double value)
+    {
+        if (m_mainDriveDisconnect == value)
+            return;
+        m_mainDriveDisconnect = value;
+        emit mainDriveDisconnectChanged(m_mainDriveDisconnect);
+    }
+
     Q_INVOKABLE double getSmallWinderDisconnect() const { return m_smallWinderDisconnect; }
+    void setSmallWinderDisconnect(double value)
+    {
+        if (m_smallWinderDisconnect == value)
+            return;
+        m_smallWinderDisconnect = value;
+        emit smallWinderDisconnectChanged(m_smallWinderDisconnect);
+    }
+
     Q_INVOKABLE double getLargeWinderDisconnect() const { return m_largeWinderDisconnect; }
+    void setLargeWinderDisconnect(double value)
+    {
+        if (m_largeWinderDisconnect == value)
+            return;
+        m_largeWinderDisconnect = value;
+        emit largeWinderDisconnectChanged(m_largeWinderDisconnect);
+    }
+
     Q_INVOKABLE double getSmallCutterDisconnect() const { return m_smallCutterDisconnect; }
+    void setSmallCutterDisconnect(double value)
+    {
+        if (m_smallCutterDisconnect == value)
+            return;
+        m_smallCutterDisconnect = value;
+        emit smallCutterDisconnectChanged(m_smallCutterDisconnect);
+    }
     Q_INVOKABLE double getLeftFanDisconnect() const { return m_leftFanDisconnect; }
+    void setLeftFanDisconnect(double value)
+    {
+        if (m_leftFanDisconnect == value)
+            return;
+        m_leftFanDisconnect = value;
+        emit leftFanDisconnectChanged(m_leftFanDisconnect);
+    }
+
     Q_INVOKABLE double getRightFanDisconnect() const { return m_rightFanDisconnect; }
+    void setRightFanDisconnect(double value)
+    {
+        if (m_rightFanDisconnect == value)
+            return;
+        m_rightFanDisconnect = value;
+        emit rightFanDisconnectChanged(m_rightFanDisconnect);
+    }
+
     Q_INVOKABLE double getLargeCutterDisconnect() const { return m_largeCutterDisconnect; }
+    void setLargeCutterDisconnect(double value)
+    {
+        if (m_largeCutterDisconnect == value)
+            return;
+        m_largeCutterDisconnect = value;
+        emit largeCutterDisconnectChanged(m_largeCutterDisconnect);
+    }
+
     Q_INVOKABLE double getLeftSelvedgeWinderDisconnect() const { return m_leftSelvedgeWinderDisconnect; }
+    void setLeftSelvedgeWinderDisconnect(double value)
+    {
+        if (m_leftSelvedgeWinderDisconnect == value)
+            return;
+        m_leftSelvedgeWinderDisconnect = value;
+        emit leftSelvedgeWinderDisconnectChanged(m_leftSelvedgeWinderDisconnect);
+    }
+
     Q_INVOKABLE double getRightSelvedgeWinderDisconnect() const { return m_rightSelvedgeWinderDisconnect; }
+    void setRightSelvedgeWinderDisconnect(double value)
+    {
+        if (m_rightSelvedgeWinderDisconnect == value)
+            return;
+        m_rightSelvedgeWinderDisconnect = value;
+        emit rightSelvedgeWinderDisconnectChanged(m_rightSelvedgeWinderDisconnect);
+    }
 
     Q_INVOKABLE int getSmallCutterPowerLossLight() const { return m_smallCutterPowerLossLight; }
+    void setSmallCutterPowerLossLight(int value)
+    {
+        if (m_smallCutterPowerLossLight != value)
+            m_smallCutterPowerLossLight = value;
+        emit smallCutterPowerLossLightChanged(m_smallCutterPowerLossLight);
+    }
     Q_INVOKABLE int getSelvedgeFanPowerLossLight() const { return m_selvedgeFanPowerLossLight; }
+    void setSelvedgeFanPowerLossLight(int value)
+    {
+        if (m_selvedgeFanPowerLossLight != value)
+            m_selvedgeFanPowerLossLight = value;
+        emit selvedgeFanPowerLossLightChanged(m_selvedgeFanPowerLossLight);
+    }
     Q_INVOKABLE int getLargeCutterPowerLossLight() const { return m_largeCutterPowerLossLight; }
+    void setLargeCutterPowerLossLight(int value)
+    {
+        if (m_largeCutterPowerLossLight != value)
+            m_largeCutterPowerLossLight = value;
+        emit largeCutterPowerLossLightChanged(m_largeCutterPowerLossLight);
+    }
     Q_INVOKABLE int getLeftSelvedgeWinderPowerLossLight() const { return m_leftSelvedgeWinderPowerLossLight; }
+    void setLeftSelvedgeWinderPowerLossLight(int value)
+    {
+        if (m_leftSelvedgeWinderPowerLossLight != value)
+            m_leftSelvedgeWinderPowerLossLight = value;
+        emit leftSelvedgeWinderPowerLossLightChanged(m_leftSelvedgeWinderPowerLossLight);
+    }
     Q_INVOKABLE int getRightSelvedgeWinderPowerLossLight() const { return m_rightSelvedgeWinderPowerLossLight; }
+    void setRightSelvedgeWinderPowerLossLight(int value)
+    {
+        if (m_rightSelvedgeWinderPowerLossLight != value)
+            m_rightSelvedgeWinderPowerLossLight = value;
+        emit rightSelvedgeWinderPowerLossLightChanged(m_rightSelvedgeWinderPowerLossLight);
+    }
     Q_INVOKABLE int getWebAlignerPowerLossLight() const { return m_webAlignerPowerLossLight; }
-
+    void setWebAlignerPowerLossLight(int value)
+    {
+        if (m_webAlignerPowerLossLight != value)
+            m_webAlignerPowerLossLight = value;
+        emit webAlignerPowerLossLightChanged(m_webAlignerPowerLossLight);
+    }
     Q_INVOKABLE int getUnwinderDisconnectLight() const { return m_unwinderDisconnectLight; }
+    void setUnwinderDisconnectLight(int value)
+    {
+        if (m_unwinderDisconnectLight != value)
+            m_unwinderDisconnectLight = value;
+        emit webAlignerPowerLossLightChanged(m_unwinderDisconnectLight);
+    }
     Q_INVOKABLE int getMainDriveDisconnectLight() const { return m_mainDriveDisconnectLight; }
+    void setMainDriveDisconnectLight(int value)
+    {
+        if (m_mainDriveDisconnectLight != value)
+            m_mainDriveDisconnectLight = value;
+        emit mainDriveDisconnectLightChanged(m_mainDriveDisconnectLight);
+    }
     Q_INVOKABLE int getSmallWinderDisconnectLight() const { return m_smallWinderDisconnectLight; }
+    void setSmallWinderDisconnectLight(int value)
+    {
+        if (m_smallWinderDisconnectLight != value)
+            m_smallWinderDisconnectLight = value;
+        emit smallWinderDisconnectLightChanged(m_smallWinderDisconnectLight);
+    }
     Q_INVOKABLE int getLargeWinderDisconnectLight() const { return m_largeWinderDisconnectLight; }
+    void setLargeWinderDisconnectLight(int value)
+    {
+        if (m_largeWinderDisconnectLight != value)
+            m_largeWinderDisconnectLight = value;
+        emit largeWinderDisconnectLightChanged(m_largeWinderDisconnectLight);
+    }
     Q_INVOKABLE int getSmallCutterDisconnectLight() const { return m_smallCutterDisconnectLight; }
+    void setSmallCutterDisconnectLight(int value)
+    {
+        if (m_smallCutterDisconnectLight != value)
+            m_largeWinderDisconnectLight = value;
+        emit smallCutterDisconnectLightChanged(m_smallCutterDisconnectLight);
+    }
     Q_INVOKABLE int getLeftFanDisconnectLight() const { return m_leftFanDisconnectLight; }
+    void setLeftFanDisconnectLight(int value)
+    {
+        if (m_leftFanDisconnectLight != value)
+            m_leftFanDisconnectLight = value;
+        emit leftFanDisconnectLightChanged(m_leftFanDisconnectLight);
+    }
     Q_INVOKABLE int getRightFanDisconnectLight() const { return m_rightFanDisconnectLight; }
+    void setRightFanDisconnectLight(int value)
+    {
+        if (m_rightFanDisconnectLight != value)
+            m_rightFanDisconnectLight = value;
+        emit rightFanDisconnectLightChanged(m_rightFanDisconnectLight);
+    }
     Q_INVOKABLE int getLargeCutterDisconnectLight() const { return m_largeCutterDisconnectLight; }
+    void setLargeCutterDisconnectLight(int value)
+    {
+        if (m_largeCutterDisconnectLight != value)
+            m_largeCutterDisconnectLight = value;
+        emit largeCutterDisconnectLightChanged(m_largeCutterDisconnectLight);
+    }
     Q_INVOKABLE int getLeftSelvedgeWinderDisconnectLight() const { return m_leftSelvedgeWinderDisconnectLight; }
+    void setLeftSelvedgeWinderDisconnectLight(int value)
+    {
+        if (m_leftSelvedgeWinderDisconnectLight != value)
+            m_leftSelvedgeWinderDisconnectLight = value;
+        emit leftSelvedgeWinderDisconnectLightChanged(m_leftSelvedgeWinderDisconnectLight);
+    }
     Q_INVOKABLE int getRightSelvedgeWinderDisconnectLight() const { return m_rightSelvedgeWinderDisconnectLight; }
-
-     // ===== INPUT-3 =====
+    void setRightSelvedgeWinderDisconnectLight(int value)
+    {
+        if (m_rightSelvedgeWinderDisconnectLight != value)
+            m_rightSelvedgeWinderDisconnectLight = value;
+        emit rightSelvedgeWinderDisconnectLightChanged(m_rightSelvedgeWinderDisconnectLight);
+    }
+    // ===== INPUT-3 =====
     Q_INVOKABLE double getWebAlignerDisconnect() const { return m_webAlignerDisconnect; }
+    void setWebAlignerDisconnect(double value)
+    {
+        if (m_webAlignerDisconnect == value)
+            return;
+        m_webAlignerDisconnect = value;
+        emit webAlignerDisconnectChanged(m_webAlignerDisconnect);
+    }
 
     Q_INVOKABLE double getEmergencyStop1() const { return m_emergencyStop1; }
+    void setEmergencyStop1(double value)
+    {
+        if (m_emergencyStop1 == value)
+            return;
+        m_emergencyStop1 = value;
+        emit emergencyStop1Changed(m_emergencyStop1);
+    }
+
     Q_INVOKABLE double getEmergencyStop2() const { return m_emergencyStop2; }
+    void setEmergencyStop2(double value)
+    {
+        if (m_emergencyStop2 == value)
+            return;
+        m_emergencyStop2 = value;
+        emit emergencyStop2Changed(m_emergencyStop2);
+    }
+
     Q_INVOKABLE double getEmergencyStop3() const { return m_emergencyStop3; }
+    void setEmergencyStop3(double value)
+    {
+        if (m_emergencyStop3 == value)
+            return;
+        m_emergencyStop3 = value;
+        emit emergencyStop3Changed(m_emergencyStop3);
+    }
+
     Q_INVOKABLE double getEmergencyStop4() const { return m_emergencyStop4; }
+    void setEmergencyStop4(double value)
+    {
+        if (m_emergencyStop4 == value)
+            return;
+        m_emergencyStop4 = value;
+        emit emergencyStop4Changed(m_emergencyStop4);
+    }
+
     Q_INVOKABLE double getEmergencyStop5() const { return m_emergencyStop5; }
+    void setEmergencyStop5(double value)
+    {
+        if (m_emergencyStop5 == value)
+            return;
+        m_emergencyStop5 = value;
+        emit emergencyStop5Changed(m_emergencyStop5);
+    }
+
     Q_INVOKABLE double getEmergencyStop6() const { return m_emergencyStop6; }
+    void setEmergencyStop6(double value)
+    {
+        if (m_emergencyStop6 == value)
+            return;
+        m_emergencyStop6 = value;
+        emit emergencyStop6Changed(m_emergencyStop6);
+    }
+
     Q_INVOKABLE double getEmergencyStop7() const { return m_emergencyStop7; }
+    void setEmergencyStop7(double value)
+    {
+        if (m_emergencyStop7 == value)
+            return;
+        m_emergencyStop7 = value;
+        emit emergencyStop7Changed(m_emergencyStop7);
+    }
 
     Q_INVOKABLE double getMainDriveLeftDoor1Open() const { return m_mainDriveLeftDoor1Open; }
+    void setMainDriveLeftDoor1Open(double value)
+    {
+        if (m_mainDriveLeftDoor1Open == value)
+            return;
+        m_mainDriveLeftDoor1Open = value;
+        emit mainDriveLeftDoor1OpenChanged(m_mainDriveLeftDoor1Open);
+    }
+
     Q_INVOKABLE double getMainDriveLeftDoor2Open() const { return m_mainDriveLeftDoor2Open; }
+    void setMainDriveLeftDoor2Open(double value)
+    {
+        if (m_mainDriveLeftDoor2Open == value)
+            return;
+        m_mainDriveLeftDoor2Open = value;
+        emit mainDriveLeftDoor2OpenChanged(m_mainDriveLeftDoor2Open);
+    }
+
     Q_INVOKABLE double getMainDriveRightDoor3Open() const { return m_mainDriveRightDoor3Open; }
+    void setMainDriveRightDoor3Open(double value)
+    {
+        if (m_mainDriveRightDoor3Open == value)
+            return;
+        m_mainDriveRightDoor3Open = value;
+        emit mainDriveRightDoor3OpenChanged(m_mainDriveRightDoor3Open);
+    }
+
     Q_INVOKABLE double getMainDriveRightDoor4Open() const { return m_mainDriveRightDoor4Open; }
+    void setMainDriveRightDoor4Open(double value)
+    {
+        if (m_mainDriveRightDoor4Open == value)
+            return;
+        m_mainDriveRightDoor4Open = value;
+        emit mainDriveRightDoor4OpenChanged(m_mainDriveRightDoor4Open);
+    }
 
     Q_INVOKABLE double getLargeWinderLeftDoor5Open() const { return m_largeWinderLeftDoor5Open; }
+    void setLargeWinderLeftDoor5Open(double value)
+    {
+        if (m_largeWinderLeftDoor5Open == value)
+            return;
+        m_largeWinderLeftDoor5Open = value;
+        emit largeWinderLeftDoor5OpenChanged(m_largeWinderLeftDoor5Open);
+    }
+
     Q_INVOKABLE double getLargeWinderLeftDoor6Open() const { return m_largeWinderLeftDoor6Open; }
+    void setLargeWinderLeftDoor6Open(double value)
+    {
+        if (m_largeWinderLeftDoor6Open == value)
+            return;
+        m_largeWinderLeftDoor6Open = value;
+        emit largeWinderLeftDoor6OpenChanged(m_largeWinderLeftDoor6Open);
+    }
+
     Q_INVOKABLE double getLargeWinderRightDoor7Open() const { return m_largeWinderRightDoor7Open; }
+    void setLargeWinderRightDoor7Open(double value)
+    {
+        if (m_largeWinderRightDoor7Open == value)
+            return;
+        m_largeWinderRightDoor7Open = value;
+        emit largeWinderRightDoor7OpenChanged(m_largeWinderRightDoor7Open);
+    }
+
     Q_INVOKABLE double getLargeWinderRightDoor8Open() const { return m_largeWinderRightDoor8Open; }
+    void setLargeWinderRightDoor8Open(double value)
+    {
+        if (m_largeWinderRightDoor8Open == value)
+            return;
+        m_largeWinderRightDoor8Open = value;
+        emit largeWinderRightDoor8OpenChanged(m_largeWinderRightDoor8Open);
+    }
 
 
     Q_INVOKABLE int getWebAlignerDisconnectLight() const { return m_webAlignerDisconnectLight; }
-
+    void setWebAlignerDisconnectLight(int value)
+    {
+        if (m_webAlignerDisconnectLight != value)
+            m_webAlignerDisconnectLight = value;
+        emit webAlignerDisconnectLightChanged(m_webAlignerDisconnectLight);
+    }
     Q_INVOKABLE int getEmergencyStop1Light() const { return m_emergencyStop1Light; }
+    void setEmergencyStop1Light(int value)
+    {
+        if (m_emergencyStop1Light != value)
+            m_emergencyStop1Light = value;
+        emit emergencyStop1LightChanged(m_emergencyStop1Light);
+    }
     Q_INVOKABLE int getEmergencyStop2Light() const { return m_emergencyStop2Light; }
+    void setEmergencyStop2Light(int value)
+    {
+        if (m_emergencyStop2Light != value)
+            m_emergencyStop2Light = value;
+        emit emergencyStop2LightChanged(m_emergencyStop2Light);
+    }
     Q_INVOKABLE int getEmergencyStop3Light() const { return m_emergencyStop3Light; }
+    void setEmergencyStop3Light(int value)
+    {
+        if (m_emergencyStop3Light != value)
+            m_emergencyStop3Light = value;
+        emit emergencyStop3LightChanged(m_emergencyStop3Light);
+    }
     Q_INVOKABLE int getEmergencyStop4Light() const { return m_emergencyStop4Light; }
+    void setEmergencyStop4Light(int value)
+    {
+        if (m_emergencyStop4Light != value)
+            m_emergencyStop4Light = value;
+        emit emergencyStop4LightChanged(m_emergencyStop4Light);
+    }
     Q_INVOKABLE int getEmergencyStop5Light() const { return m_emergencyStop5Light; }
+    void setEmergencyStop5Light(int value)
+    {
+        if (m_emergencyStop5Light != value)
+            m_emergencyStop5Light = value;
+        emit emergencyStop5LightChanged(m_emergencyStop5Light);
+    }
     Q_INVOKABLE int getEmergencyStop6Light() const { return m_emergencyStop6Light; }
+    void setEmergencyStop6Light(int value)
+    {
+        if (m_emergencyStop6Light != value)
+            m_emergencyStop6Light = value;
+        emit emergencyStop1LightChanged(m_emergencyStop6Light);
+    }
     Q_INVOKABLE int getEmergencyStop7Light() const { return m_emergencyStop7Light; }
-
+    void setEmergencyStop7Light(int value)
+    {
+        if (m_emergencyStop7Light != value)
+            m_emergencyStop7Light = value;
+        emit emergencyStop1LightChanged(m_emergencyStop7Light);
+    }
     Q_INVOKABLE int getMainDriveLeftDoor1OpenLight() const { return m_mainDriveLeftDoor1OpenLight; }
+    void setMainDriveLeftDoor1OpenLight(int value)
+    {
+        if (m_mainDriveLeftDoor1OpenLight != value)
+            m_mainDriveLeftDoor1OpenLight = value;
+        emit mainDriveLeftDoor1OpenLightChanged(m_mainDriveLeftDoor1OpenLight);
+    }
     Q_INVOKABLE int getMainDriveLeftDoor2OpenLight() const { return m_mainDriveLeftDoor2OpenLight; }
+    void setMainDriveLeftDoor2OpenLight(int value)
+    {
+        if (m_mainDriveLeftDoor2OpenLight != value)
+            m_mainDriveLeftDoor2OpenLight = value;
+        emit mainDriveLeftDoor2OpenLightChanged(m_mainDriveLeftDoor2OpenLight);
+    }
     Q_INVOKABLE int getMainDriveRightDoor3OpenLight() const { return m_mainDriveRightDoor3OpenLight; }
+    void setMainDriveRightDoor3OpenLight(int value)
+    {
+        if (m_mainDriveRightDoor3OpenLight != value)
+            m_mainDriveRightDoor3OpenLight = value;
+        emit mainDriveRightDoor3OpenLightChanged(m_mainDriveRightDoor3OpenLight);
+    }
     Q_INVOKABLE int getMainDriveRightDoor4OpenLight() const { return m_mainDriveRightDoor4OpenLight; }
-
+    void setMainDriveRightDoor4OpenLight(int value)
+    {
+        if (m_mainDriveRightDoor4OpenLight != value)
+            m_mainDriveRightDoor4OpenLight = value;
+        emit mainDriveRightDoor4OpenLightChanged(m_mainDriveRightDoor4OpenLight);
+    }
     Q_INVOKABLE int getLargeWinderLeftDoor5OpenLight() const { return m_largeWinderLeftDoor5OpenLight; }
+    void setLargeWinderLeftDoor5OpenLight(int value)
+    {
+        if (m_largeWinderLeftDoor5OpenLight != value)
+            m_largeWinderLeftDoor5OpenLight = value;
+        emit largeWinderLeftDoor5OpenLightChanged(m_largeWinderLeftDoor5OpenLight);
+    }
     Q_INVOKABLE int getLargeWinderLeftDoor6OpenLight() const { return m_largeWinderLeftDoor6OpenLight; }
+    void setLargeWinderLeftDoor6OpenLight(int value)
+    {
+        if (m_largeWinderLeftDoor6OpenLight != value)
+            m_largeWinderLeftDoor6OpenLight = value;
+        emit largeWinderLeftDoor6OpenLightChanged(m_largeWinderLeftDoor6OpenLight);
+    }
     Q_INVOKABLE int getLargeWinderRightDoor7OpenLight() const { return m_largeWinderRightDoor7OpenLight; }
+    void setLargeWinderRightDoor7OpenLight(int value)
+    {
+        if (m_largeWinderRightDoor7OpenLight != value)
+            m_largeWinderRightDoor7OpenLight = value;
+        emit largeWinderRightDoor7OpenLightChanged(m_largeWinderRightDoor7OpenLight);
+    }
     Q_INVOKABLE int getLargeWinderRightDoor8OpenLight() const { return m_largeWinderRightDoor8OpenLight; }
-
+    void setLargeWinderRightDoor8OpenLight(int value)
+    {
+        if (m_largeWinderRightDoor8OpenLight != value)
+            m_largeWinderRightDoor8OpenLight = value;
+        emit largeWinderRightDoor8OpenLightChanged(m_largeWinderRightDoor8OpenLight);
+    }
     // =====INPUT-4 Fence Detect =====
     Q_INVOKABLE double getUnwindingFenceDetect1() const { return m_unwindingFenceDetect1; }
+    void setUnwindingFenceDetect1(double value)
+    {
+        if (m_unwindingFenceDetect1 == value)
+            return;
+        m_unwindingFenceDetect1 = value;
+        emit unwindingFenceDetect1Changed(m_unwindingFenceDetect1);
+    }
     Q_INVOKABLE double getUnwindingFenceDetect2() const { return m_unwindingFenceDetect2; }
+    void setUnwindingFenceDetect2(double value)
+    {
+        if (m_unwindingFenceDetect2 == value)
+            return;
+        m_unwindingFenceDetect2 = value;
+        emit unwindingFenceDetect2Changed(m_unwindingFenceDetect2);
+    }
+
     Q_INVOKABLE double getLargeWinderFenceDetect3() const { return m_largeWinderFenceDetect3; }
+    void setLargeWinderFenceDetect3(double value)
+    {
+        if (m_largeWinderFenceDetect3 == value)
+            return;
+        m_largeWinderFenceDetect3 = value;
+        emit largeWinderFenceDetect3Changed(m_largeWinderFenceDetect3);
+    }
+
     Q_INVOKABLE double getLargeWinderFenceDetect4() const { return m_largeWinderFenceDetect4; }
+    void setLargeWinderFenceDetect4(double value)
+    {
+        if (m_largeWinderFenceDetect4 == value)
+            return;
+        m_largeWinderFenceDetect4 = value;
+        emit largeWinderFenceDetect4Changed(m_largeWinderFenceDetect4);
+    }
 
     Q_INVOKABLE int getUnwindingFenceDetect1Light() const { return m_unwindingFenceDetect1Light; }
+    void setUnwindingFenceDetect1Light(int value)
+    {
+        if (m_unwindingFenceDetect1Light != value)
+            m_unwindingFenceDetect1Light = value;
+        emit unwindingFenceDetect1LightChanged(m_unwindingFenceDetect1Light);
+    }
     Q_INVOKABLE int getUnwindingFenceDetect2Light() const { return m_unwindingFenceDetect2Light; }
+    void setUnwindingFenceDetect2Light(int value)
+    {
+        if (m_unwindingFenceDetect2Light != value)
+            m_unwindingFenceDetect2Light = value;
+        emit unwindingFenceDetect2LightChanged(m_unwindingFenceDetect2Light);
+    }
     Q_INVOKABLE int getLargeWinderFenceDetect3Light() const { return m_largeWinderFenceDetect3Light; }
+    void setLargeWinderFenceDetect3Light(int value)
+    {
+        if (m_largeWinderFenceDetect3Light != value)
+            m_largeWinderFenceDetect3Light = value;
+        emit largeWinderFenceDetect3LightChanged(m_largeWinderFenceDetect3Light);
+    }
     Q_INVOKABLE int getLargeWinderFenceDetect4Light() const { return m_largeWinderFenceDetect4Light; }
-
+    void setLargeWinderFenceDetect4Light(int value)
+    {
+        if (m_largeWinderFenceDetect4Light != value)
+            m_largeWinderFenceDetect4Light = value;
+        emit largeWinderFenceDetect4LightChanged(m_largeWinderFenceDetect4Light);
+    }
     // =====INPUT-4 Safety Light Curtain =====
     Q_INVOKABLE double getUnwindingSafetyLightCurtainAlarm() const { return m_unwindingSafetyLightCurtainAlarm; }
+    void setUnwindingSafetyLightCurtainAlarm(double value)
+    {
+        if (m_unwindingSafetyLightCurtainAlarm == value)
+            return;
+        m_unwindingSafetyLightCurtainAlarm = value;
+        emit unwindingSafetyLightCurtainAlarmChanged(m_unwindingSafetyLightCurtainAlarm);
+    }
+
     Q_INVOKABLE double getInspectionSafetyLightCurtainAlarm() const { return m_inspectionSafetyLightCurtainAlarm; }
+    void setInspectionSafetyLightCurtainAlarm(double value)
+    {
+        if (m_inspectionSafetyLightCurtainAlarm == value)
+            return;
+        m_inspectionSafetyLightCurtainAlarm = value;
+        emit inspectionSafetyLightCurtainAlarmChanged(m_inspectionSafetyLightCurtainAlarm);
+    }
+
     Q_INVOKABLE double getLargeWinderSafetyLightCurtainAlarm() const { return m_largeWinderSafetyLightCurtainAlarm; }
+    void setLargeWinderSafetyLightCurtainAlarm(double value)
+    {
+        if (m_largeWinderSafetyLightCurtainAlarm == value)
+            return;
+        m_largeWinderSafetyLightCurtainAlarm = value;
+        emit largeWinderSafetyLightCurtainAlarmChanged(m_largeWinderSafetyLightCurtainAlarm);
+    }
 
     Q_INVOKABLE int getUnwindingSafetyLightCurtainAlarmLight() const { return m_unwindingSafetyLightCurtainAlarmLight; }
+    void setUnwindingSafetyLightCurtainAlarmLight(int value)
+    {
+        if (m_unwindingSafetyLightCurtainAlarmLight != value)
+            m_unwindingSafetyLightCurtainAlarmLight = value;
+        emit unwindingSafetyLightCurtainAlarmLightChanged(m_unwindingSafetyLightCurtainAlarmLight);
+    }
     Q_INVOKABLE int getInspectionSafetyLightCurtainAlarmLight() const { return m_inspectionSafetyLightCurtainAlarmLight; }
+    void setInspectionSafetyLightCurtainAlarmLight(int value)
+    {
+        if (m_inspectionSafetyLightCurtainAlarmLight != value)
+            m_inspectionSafetyLightCurtainAlarmLight = value;
+        emit inspectionSafetyLightCurtainAlarmLightChanged(m_inspectionSafetyLightCurtainAlarmLight);
+    }
     Q_INVOKABLE int getLargeWinderSafetyLightCurtainAlarmLight() const { return m_largeWinderSafetyLightCurtainAlarmLight; }
-
+    void setLargeWinderSafetyLightCurtainAlarmLight(int value)
+    {
+        if (m_largeWinderSafetyLightCurtainAlarmLight != value)
+            m_largeWinderSafetyLightCurtainAlarmLight = value;
+        emit largeWinderSafetyLightCurtainAlarmLightChanged(m_largeWinderSafetyLightCurtainAlarmLight);
+    }
     // =====INPUT-4 Zero Speed Detect =====
     Q_INVOKABLE double getSmallWinderZeroSpeedDetect() const { return m_smallWinderZeroSpeedDetect; }
+    void setSmallWinderZeroSpeedDetect(double value)
+    {
+        if (m_smallWinderZeroSpeedDetect == value)
+            return;
+        m_smallWinderZeroSpeedDetect = value;
+        emit smallWinderZeroSpeedDetectChanged(m_smallWinderZeroSpeedDetect);
+    }
+
     Q_INVOKABLE double getLargeWinderZeroSpeedDetect() const { return m_largeWinderZeroSpeedDetect; }
+    void setLargeWinderZeroSpeedDetect(double value)
+    {
+        if (m_largeWinderZeroSpeedDetect == value)
+            return;
+        m_largeWinderZeroSpeedDetect = value;
+        emit largeWinderZeroSpeedDetectChanged(m_largeWinderZeroSpeedDetect);
+    }
 
     Q_INVOKABLE int getSmallWinderZeroSpeedDetectLight() const { return m_smallWinderZeroSpeedDetectLight; }
+    void setSmallWinderZeroSpeedDetectLight(int value)
+    {
+        if (m_smallWinderZeroSpeedDetectLight != value)
+            m_smallWinderZeroSpeedDetectLight = value;
+        emit smallWinderZeroSpeedDetectLightChanged(m_smallWinderZeroSpeedDetectLight);
+    }
     Q_INVOKABLE int getLargeWinderZeroSpeedDetectLight() const { return m_largeWinderZeroSpeedDetectLight; }
-
+    void setLargeWinderZeroSpeedDetectLight(int value)
+    {
+        if (m_largeWinderZeroSpeedDetectLight != value)
+            m_largeWinderZeroSpeedDetectLight = value;
+        emit largeWinderZeroSpeedDetectLightChanged(m_largeWinderZeroSpeedDetectLight);
+    }
     // =====INPUT-4 Tension Over =====
     Q_INVOKABLE double getUnwindingTensionOver() const { return m_unwindingTensionOver; }
+    void setUnwindingTensionOver(double value)
+    {
+        if (m_unwindingTensionOver == value)
+            return;
+        m_unwindingTensionOver = value;
+        emit unwindingTensionOverChanged(m_unwindingTensionOver);
+    }
+
     Q_INVOKABLE double getSmallWinderTensionOver() const { return m_smallWinderTensionOver; }
+    void setSmallWinderTensionOver(double value)
+    {
+        if (m_smallWinderTensionOver == value)
+            return;
+        m_smallWinderTensionOver = value;
+        emit smallWinderTensionOverChanged(m_smallWinderTensionOver);
+    }
+
     Q_INVOKABLE double getLargeWinderTensionOver() const { return m_largeWinderTensionOver; }
+    void setLargeWinderTensionOver(double value)
+    {
+        if (m_largeWinderTensionOver == value)
+            return;
+        m_largeWinderTensionOver = value;
+        emit largeWinderTensionOverChanged(m_largeWinderTensionOver);
+    }
 
     Q_INVOKABLE int getUnwindingTensionOverLight() const { return m_unwindingTensionOverLight; }
+    void setUnwindingTensionOverLight(int value)
+    {
+        if (m_unwindingTensionOverLight != value)
+            m_unwindingTensionOverLight = value;
+        emit unwindingTensionOverLightChanged(m_unwindingTensionOverLight);
+    }
     Q_INVOKABLE int getSmallWinderTensionOverLight() const { return m_smallWinderTensionOverLight; }
+    void setSmallWinderTensionOverLight(int value)
+    {
+        if (m_smallWinderTensionOverLight != value)
+            m_smallWinderTensionOverLight = value;
+        emit unwindingTensionOverLightChanged(m_smallWinderTensionOverLight);
+    }
     Q_INVOKABLE int getLargeWinderTensionOverLight() const { return m_largeWinderTensionOverLight; }
-
+    void setLargeWinderTensionOverLight(int value)
+    {
+        if (m_largeWinderTensionOverLight != value)
+            m_largeWinderTensionOverLight = value;
+        emit largeWinderTensionOverLightChanged(m_largeWinderTensionOverLight);
+    }
     // =====INPUT-4 Angle Alarm =====
     Q_INVOKABLE double getLeftSelvedgeWinderAngleAlarm() const { return m_leftSelvedgeWinderAngleAlarm; }
+    void setLeftSelvedgeWinderAngleAlarm(double value)
+    {
+        if (m_leftSelvedgeWinderAngleAlarm == value)
+            return;
+        m_leftSelvedgeWinderAngleAlarm = value;
+        emit leftSelvedgeWinderAngleAlarmChanged(m_leftSelvedgeWinderAngleAlarm);
+    }
+
     Q_INVOKABLE double getRightSelvedgeWinderAngleAlarm() const { return m_rightSelvedgeWinderAngleAlarm; }
+    void setRightSelvedgeWinderAngleAlarm(double value)
+    {
+        if (m_rightSelvedgeWinderAngleAlarm == value)
+            return;
+        m_rightSelvedgeWinderAngleAlarm = value;
+        emit rightSelvedgeWinderAngleAlarmChanged(m_rightSelvedgeWinderAngleAlarm);
+    }
 
     Q_INVOKABLE int getLeftSelvedgeWinderAngleAlarmLight() const { return m_leftSelvedgeWinderAngleAlarmLight; }
+    void setLeftSelvedgeWinderAngleAlarmLight(int value)
+    {
+        if (m_leftSelvedgeWinderAngleAlarmLight != value)
+            m_leftSelvedgeWinderAngleAlarmLight = value;
+        emit leftSelvedgeWinderAngleAlarmLightChanged(m_leftSelvedgeWinderAngleAlarmLight);
+    }
     Q_INVOKABLE int getRightSelvedgeWinderAngleAlarmLight() const { return m_rightSelvedgeWinderAngleAlarmLight; }
-
+    void setRightSelvedgeWinderAngleAlarmLight(int value)
+    {
+        if (m_rightSelvedgeWinderAngleAlarmLight != value)
+            m_rightSelvedgeWinderAngleAlarmLight = value;
+        emit rightSelvedgeWinderAngleAlarmLightChanged(m_rightSelvedgeWinderAngleAlarmLight);
+    }
     //===== OUTPUT-1 READ =====
     // =====OUTPUT-1 Alarm Reset =====
     Q_INVOKABLE double getVfdAlarmReset() const { return m_vfdAlarmReset; }
@@ -1423,15 +2278,16 @@ public:
     void setModifyAnalogOutSelvedgeWinder(double value)
     {
         if (m_modifyAnalogOutSelvedgeWinder != value)
-            m_analogOutSelvedgeWinder = value;
+            m_modifyAnalogOutSelvedgeWinder = value;
         emit modifyAnalogOutSelvedgeWinderChanged(m_modifyAnalogOutSelvedgeWinder);
+        qDebug()<<"get setModifyAnalogOutSelvedgeWinder"<<m_modifyAnalogOutSelvedgeWinder;
     }
     //switch
     Q_INVOKABLE int getModifyAnalogOutSelvedgeWinderSwitch() const { return m_modifyAnalogOutSelvedgeWinderSwitch;}
     void setModifyAnalogOutSelvedgeWinderSwitch(int value)
     {
         if (m_modifyAnalogOutSelvedgeWinderSwitch != value)
-            m_analogOutSelvedgeWinderSwitch = value;
+            m_modifyAnalogOutSelvedgeWinderSwitch = value;
         emit modifyAnalogOutSelvedgeWinderSwitchChanged(m_modifyAnalogOutSelvedgeWinderSwitch);
     }
 
@@ -1653,8 +2509,59 @@ public:
         emit largeRollTensionSwitchChanged(m_largeRollTensionSwitch);
     }
 
+    // ===== cutter=====
+    Q_INVOKABLE int getSmallRollCutter1() const { return m_smallRollCutter1; }
+    void setSmallRollCutter1(int value)
+    {
+        if (m_smallRollCutter1 != value)
+            m_smallRollCutter1 = value;
+        emit smallRollCutter1Changed(m_smallRollCutter1);
+    }
 
+    Q_INVOKABLE int getSmallRollCutter2() const { return m_smallRollCutter2; }
+    void setSmallRollCutter2(int value)
+    {
+        if (m_smallRollCutter2 != value)
+            m_smallRollCutter2 = value;
+        emit smallRollCutter2Changed(m_smallRollCutter2);
+    }
+    Q_INVOKABLE int getSmallRollCutter3() const { return m_smallRollCutter3; }
+    void setSmallRollCutter3(int value)
+    {
+        if (m_smallRollCutter3 != value)
+            m_smallRollCutter3 = value;
+        emit smallRollCutter3Changed(m_smallRollCutter3);
+    }
+    Q_INVOKABLE int getSmallRollCutter4() const { return m_smallRollCutter4; }
+    void setSmallRollCutter4(int value)
+    {
+        if (m_smallRollCutter4 != value)
+            m_smallRollCutter4 = value;
+        emit smallRollCutter4Changed(m_smallRollCutter4);
+    }
+    Q_INVOKABLE int getSmallRollCutter5() const { return m_smallRollCutter5; }
+    void setSmallRollCutter5(int value)
+    {
+        if (m_smallRollCutter5 != value)
+            m_smallRollCutter5 = value;
+        emit smallRollCutter5Changed(m_smallRollCutter5);
+    }
+    Q_INVOKABLE int getBigRollCutter() const { return m_bigRollCutter; }
+    void setBigRollCutter(int value)
+    {
+        if (m_bigRollCutter != value)
+            m_bigRollCutter = value;
+        emit bigRollCutterChanged(m_bigRollCutter);
+    }
 
+    // ===== Single Action Mode=====
+    Q_INVOKABLE int getSingleActionMode() const { return m_singleActionMode; }
+    void setSingleActionMode(int value)
+    {
+        if (m_singleActionMode != value)
+            m_singleActionMode = value;
+        emit singleActionModeChanged(m_singleActionMode);
+    }
     signals:
     void metalDetectorChanged(int value);
     void gratingDetectionChanged(int value);
@@ -1678,8 +2585,8 @@ public:
     void speedChanged(double value);
     void brakingDistanceChanged(double value);
 
-    void modifyCurrentLengthChanged(double value);
-    void modifySpeedChanged(double value);
+    void modifyCurrentLengthChanged(int value);
+    void modifySpeedChanged(int value);
     void modifyBrakingDistanceChanged(double value);
 
     void modifyUnwindingTensionChanged(double value);
@@ -2054,10 +2961,19 @@ public:
     void smallRollTensionSwitchChanged(int value);
     void largeRollTensionSwitchChanged(int value);
 
+    // ===== cutter=====
+    void smallRollCutter1Changed(int value);
+    void smallRollCutter2Changed(int value);
+    void smallRollCutter3Changed(int value);
+    void smallRollCutter4Changed(int value);
+    void smallRollCutter5Changed(int value);
+    void bigRollCutterChanged(int value);
 
-
+    // ===== Single Action Mode=====
+    void singleActionModeChanged(int value);
 
 private:
+
     int m_metalDetector = 0;
     int m_gratingDetection = 0;
     int m_OppositeSideSignal = 0;
@@ -2076,17 +2992,25 @@ private:
     int m_whiteLight = 0;
     int m_bottomLight = 0;
 
-    double m_currentLength = 2560;
-    double m_speed = 60;
-    double m_brakingDistance = 10;
+    double m_currentLength = 0;
+    double m_speed = 0;
+    double m_brakingDistance = 0;
 
-    double m_modifycurrentLength = 2560;
-    double m_modifyspeed = 60;
-    double m_modifybrakingDistance = 10;
+    int m_modifycurrentLength = 0;
+    int m_modifyspeed = 0;
+    double m_modifybrakingDistance = 0;
 
-    double m_modifyUnwindingTension = 1.4;
-    double m_modifySmallWinderTensionOver = 1.5;
-    double m_modifyLargeWinderTensionOver = 10;
+    double m_modifyUnwindingTension = 0.0;
+    double m_modifySmallWinderTensionOver = 0.0;
+    double m_modifyLargeWinderTensionOver = 0.0;
+
+    // ===== cutter=====
+    int m_smallRollCutter1 = 0;
+    int m_smallRollCutter2 = 0;
+    int m_smallRollCutter3 = 0;
+    int m_smallRollCutter4 = 0;
+    int m_smallRollCutter5 = 0;
+    int m_bigRollCutter = 0;
 
     //=====INPUT-1 READ functions =====
     double m_unwinderVfdFreqAlarm = 0.0;
@@ -2220,7 +3144,7 @@ private:
     int m_largeWinderFenceDetect4Light = 0;
     // =====INPUT-4 Safety Light Curtain =====
     int m_unwindingSafetyLightCurtainAlarm = 0;
-    int m_inspectionSafetyLightCurtainAlarm = 0;
+    int m_inspectionSafetyLightCurtainAlarm =0;
     int m_largeWinderSafetyLightCurtainAlarm = 0;
 
     int m_unwindingSafetyLightCurtainAlarmLight = 0;
@@ -2247,8 +3171,8 @@ private:
     double m_leftSelvedgeWinderAngleAlarm = 0.0;
     double m_rightSelvedgeWinderAngleAlarm = 0.0;
 
-    int m_leftSelvedgeWinderAngleAlarmLight = 0.0;
-    int m_rightSelvedgeWinderAngleAlarmLight = 0.0;
+    int m_leftSelvedgeWinderAngleAlarmLight = 0;
+    int m_rightSelvedgeWinderAngleAlarmLight = 0;
     // =====OUTPUT-1 Angle Alarm =====
     double m_vfdAlarmReset = 0.0;
 
@@ -2432,9 +3356,9 @@ private:
     double m_cutterWheelMotor = 0.0;
     double m_wasteRollMotorA = 0.0;
 
-    double m_unwindingTension = 1.3;
-    double m_smallRollTension = 1.2;
-    double m_largeRollTension = 1.4;
+    double m_unwindingTension = 0.0;
+    double m_smallRollTension = 0.0;
+    double m_largeRollTension = 0.0;
     // ===== 控制介面 switch=====
     int m_smallRollMotorSwitch = 0;
     int m_mainDriveMotorSwitch = 0;
@@ -2445,9 +3369,13 @@ private:
     int m_cutterWheelMotorSwitch = 0;
     int m_wasteRollMotorASwitch = 0;
 
-    int m_unwindingTensionSwitch = 1;
-    int m_smallRollTensionSwitch = 1;
-    int m_largeRollTensionSwitch = 1;
+    int m_unwindingTensionSwitch = 0;
+    int m_smallRollTensionSwitch = 0;
+    int m_largeRollTensionSwitch = 0;
+
+    // ===== Single Action Mode=====
+    int m_singleActionMode = 0;
+
 };
 
 
