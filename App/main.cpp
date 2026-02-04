@@ -11,7 +11,9 @@ int main(int argc, char *argv[])
     set_qt_environment();
     QApplication app(argc, argv);
 
-    KdbProxy *Kdb = new KdbProxy();
+    Core& core = Core::instance();
+    core.init();
+    KdbProxy* Kdb = core.m_proxy;
     qmlRegisterSingletonInstance<KdbProxy>("Core", 1, 0, "Kdb", Kdb);
 
     QQmlApplicationEngine engine;

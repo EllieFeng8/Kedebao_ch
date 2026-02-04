@@ -480,6 +480,7 @@ public:
      Q_INVOKABLE double getCurrentLength() const { return m_currentLength; }
      Q_INVOKABLE double getSpeed() const { return m_speed; }
      Q_INVOKABLE double getBrakingDistance() const { return m_brakingDistance;}
+     void setSpeed(int value) { m_speed = value; emit speedChanged(m_speed); };
 
      Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
      Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
@@ -2295,22 +2296,94 @@ public:
     Q_INVOKABLE double getIpcStart() const { return m_ipcStart; }
     Q_INVOKABLE double getIpcStop() const { return m_ipcStop; }
     Q_INVOKABLE double getIpcAlarmReset() const { return m_ipcAlarmReset; }
-
+    void setIpcStart(double value)
+    {
+        if (m_ipcStart != value)
+            m_ipcStart = value;
+        emit ipcStartChanged(m_ipcStart);
+    }
+    void setIpcStop(double value)
+    {
+        if (m_ipcStop != value)
+            m_ipcStop = value;
+        emit ipcStopChanged(m_ipcStop);
+    }
+    void setIpcAlarmReset(double value)
+    {
+        if (m_ipcAlarmReset != value)
+            m_ipcAlarmReset = value;
+        emit ipcAlarmResetChanged(m_ipcAlarmReset);
+    }
     Q_INVOKABLE double getMainJogForward() const { return m_mainJogForward; }
     Q_INVOKABLE double getMainJogReverse() const { return m_mainJogReverse; }
-
+    void setMainJogForward(double value)
+    {
+        if (m_mainJogForward != value)
+            m_mainJogForward = value;
+        emit mainJogForwardChanged(m_mainJogForward);
+    }
+    void setMainJogReverse(double value)
+    {
+        if (m_mainJogReverse != value)
+            m_mainJogReverse = value;
+        emit mainJogReverseChanged(m_mainJogReverse);
+    }
     Q_INVOKABLE double getSmallWinderJogForward() const { return m_smallWinderJogForward; }
     Q_INVOKABLE double getSmallWinderJogReverse() const { return m_smallWinderJogReverse; }
-
+    void setSmallWinderJogForward(double value)
+    {
+        if (m_smallWinderJogForward != value)
+            m_smallWinderJogForward = value;
+        emit smallWinderJogForwardChanged(m_smallWinderJogForward);
+    }
+    void setSmallWinderJogReverse(double value)
+    {
+        if (m_smallWinderJogReverse != value)
+            m_smallWinderJogReverse = value;
+        emit smallWinderJogReverseChanged(m_smallWinderJogReverse);
+    }
     Q_INVOKABLE double getUnwinderJogReverseSelect() const { return m_unwinderJogReverseSelect; }
     Q_INVOKABLE double getUnwinderJogStart() const { return m_unwinderJogStart; }
-
+    void setUnwinderJogReverseSelect(double value)
+    {
+        if (m_unwinderJogReverseSelect != value)
+            m_unwinderJogReverseSelect = value;
+        emit unwinderJogReverseSelectChanged(m_unwinderJogReverseSelect);
+    }
+    void setUnwinderJogStart(double value)
+    {
+        if (m_unwinderJogStart != value)
+            m_unwinderJogStart = value;
+        emit unwinderJogStartChanged(m_unwinderJogStart);
+    }
     Q_INVOKABLE double getWinderJogReverseSelect() const { return m_winderJogReverseSelect; }
     Q_INVOKABLE double getWinderJogStart() const { return m_winderJogStart; }
-
+    void setWinderJogReverseSelect(double value)
+    {
+        if (m_winderJogReverseSelect != value)
+            m_winderJogReverseSelect = value;
+        emit winderJogReverseSelectChanged(m_winderJogReverseSelect);
+    }
+    void setWinderJogStart(double value)
+    {
+        if (m_winderJogStart != value)
+            m_winderJogStart = value;
+        emit winderJogStartChanged(m_winderJogStart);
+    }
     Q_INVOKABLE double getLeftSelvedgeWinderSelect() const { return m_leftSelvedgeWinderSelect; }
     Q_INVOKABLE double getRightSelvedgeWinderSelect() const { return m_rightSelvedgeWinderSelect; }
-
+    void setLeftSelvedgeWinderSelect(double value)
+    {
+        if (m_leftSelvedgeWinderSelect != value)
+            m_leftSelvedgeWinderSelect = value;
+        emit leftSelvedgeWinderSelectChanged(m_leftSelvedgeWinderSelect);
+    }
+    void setRightSelvedgeWinderSelect(double value)
+    {
+        if (m_rightSelvedgeWinderSelect != value)
+            m_rightSelvedgeWinderSelect = value;
+        emit rightSelvedgeWinderSelectChanged(m_rightSelvedgeWinderSelect);
+    }
      // ===== IPC INPUT WRITE Light=====
     Q_INVOKABLE int getIpcStartLight() const { return m_ipcStartLight; }
     Q_INVOKABLE int getIpcStopLight() const { return m_ipcStopLight; }
