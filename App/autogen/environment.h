@@ -32,7 +32,9 @@ inline void set_qt_environment() {
     qputenv("QT_IM_MODULE", "qtvirtualkeyboard");
     qputenv("QT_LOGGING_RULES", "qt.qml.connections=false");
     qputenv("QT_QUICK_CONTROLS_CONF", ":/qtquickcontrols2.conf");
-    qputenv("QT_VIRTUALKEYBOARD_DESKTOP_DISABLE", "");
+    // qputenv("QT_VIRTUALKEYBOARD_DESKTOP_DISABLE", "");
+    // qputenv("QT_VIRTUALKEYBOARD_STYLE", "floating");
+    // qputenv("QT_VIRTUALKEYBOARD_LAYOUT_PATH", QByteArray(""));
 }
 
 #endif // APP_ENVIRONMENT_H
