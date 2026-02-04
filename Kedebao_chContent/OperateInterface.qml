@@ -170,7 +170,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -236,7 +236,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -301,7 +301,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -365,7 +365,7 @@ Rectangle {
         validator: DoubleValidator {}//限制只能輸入整數/double
         //placeholderText: "請輸入內容"
         focus: true
-
+        inputMethodHints: Qt.ImhDigitsOnly
         Rectangle {
             height: 2
             y:dashPos
@@ -429,7 +429,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -493,7 +493,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -558,7 +558,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -623,7 +623,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -689,7 +689,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -755,7 +755,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -820,7 +820,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos

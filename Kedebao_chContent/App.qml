@@ -11,7 +11,6 @@ Window {
     title: "Kedebao_ch"
     //property bool isBig: false
 
-
     ProjectMainScreen {
         id: mainScreen
         anchors.horizontalCenter: parent.horizontalCenter
