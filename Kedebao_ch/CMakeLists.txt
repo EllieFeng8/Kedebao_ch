@@ -6,6 +6,11 @@ set_source_files_properties(Constants.qml
         QT_QML_SINGLETON_TYPE true
 )
 
+set_source_files_properties(AppState.qml
+    PROPERTIES
+        QT_QML_SINGLETON_TYPE true
+)
+
 
 
 qt_add_library(Kedebao_ch STATIC)

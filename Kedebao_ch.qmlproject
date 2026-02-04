@@ -80,6 +80,8 @@ Project {
     Environment {
         QT_QUICK_CONTROLS_CONF: "qtquickcontrols2.conf"
         QML_COMPAT_RESOLVE_URLS_ON_ASSIGNMENT: "1"
+        QT_IM_MODULE: "qtvirtualkeyboard"
+        QT_VIRTUALKEYBOARD_DESKTOP_DISABLE: 1
         QT_LOGGING_RULES: "qt.qml.connections=false"
         QT_ENABLE_HIGHDPI_SCALING: "0"
         /* Useful for debugging

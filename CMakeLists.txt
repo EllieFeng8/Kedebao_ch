@@ -16,7 +16,7 @@ set(QML_IMPORT_PATH ${QT_QML_OUTPUT_DIRECTORY}
     FORCE
 )
 
-find_package(Qt6 6.8 REQUIRED COMPONENTS core Gui Widgets Qml Quick QuickTimeline ShaderTools SerialBus Concurrent Network)
+find_package(Qt6 6.8 REQUIRED COMPONENTS core Gui Widgets Qml Quick QuickTimeline ShaderTools SerialBus Concurrent Network VirtualKeyboard)
 qt_standard_project_setup()
 
 add_subdirectory(Core)
