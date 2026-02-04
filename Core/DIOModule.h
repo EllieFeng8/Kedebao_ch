@@ -26,7 +26,7 @@ public:
 public slots:
     void process();
     bool setOutput(int bit, bool high);
-    void stop() { m_timer->stop(); }
+    void stop() { if(m_timer)m_timer->stop(); }
 signals:
     void dioUpdated(uint8_t p0, uint8_t p1, uint8_t out);
     void errorOccurred(QString msg);
