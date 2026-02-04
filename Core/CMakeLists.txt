@@ -3,7 +3,19 @@ qt_add_qml_module(Core STATIC
         VERSION 1.0
         SOURCES
         KdbProxy.h
-
+        bdaqctrl.h
+        core.h
+        core.cpp
+        DIOModule.h
+        DIOModule.cpp
+        ModbusManager.h        
+        ModbusManager.cpp
+        ModbusWorker.h
+        ModbusWorker.cpp
+        MS300.h 
+        MS300.cpp
+        Tension.h
+        Tension.cpp
 )
 
 target_include_directories(Core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -20,6 +32,6 @@ target_link_libraries(Core
         Qt${QT_VERSION_MAJOR}::ShaderTools
         Qt${QT_VERSION_MAJOR}::Network
         Qt${QT_VERSION_MAJOR}::Concurrent
-#        Qt${QT_VERSION_MAJOR}::SerialBus
+        Qt${QT_VERSION_MAJOR}::SerialBus
 #        Qt${QT_VERSION_MAJOR}::OpcUa
 )

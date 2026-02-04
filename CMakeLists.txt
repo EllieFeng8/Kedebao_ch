@@ -16,14 +16,12 @@ set(QML_IMPORT_PATH ${QT_QML_OUTPUT_DIRECTORY}
     FORCE
 )
 
-find_package(Qt6 6.8 REQUIRED COMPONENTS core Gui Widgets Qml Quick QuickTimeline ShaderTools)
+find_package(Qt6 6.8 REQUIRED COMPONENTS core Gui Widgets Qml Quick QuickTimeline ShaderTools SerialBus Concurrent Network)
 qt_standard_project_setup()
 
 add_subdirectory(Core)
 
-qt_add_executable(${CMAKE_PROJECT_NAME}
-        core/KdbProxy.cpp
-        core/kdbProxy.h)
+qt_add_executable(${CMAKE_PROJECT_NAME})
 qt_add_resources(${CMAKE_PROJECT_NAME} "configuration"
     PREFIX "/"
     FILES
