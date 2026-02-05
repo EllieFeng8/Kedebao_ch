@@ -32,9 +32,6 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
 
-
-
-
     }
     // 鍵盤快捷鍵：對目前滑鼠點擊(Active)的視窗切換全螢幕
     Shortcut {
@@ -42,28 +39,28 @@ Window {
         onActivated: root.toggleFullscreenForActiveWindow()
     }
 
-    // 取消輸入focus的 MouseArea
-    MouseArea {
-        anchors.fill: parent
-        z: 0
-        // 只想在空白處點到才觸發，所以不攔截內容的點擊
-        propagateComposedEvents: true
-
-        onPressed: (mouse) => {
-            // 如果點到的是 TextInput/TextField 就不要清（讓它正常取得 focus）
-            const o = root.contentItem.childAt(mouse.x, mouse.y)
-            console.log(o.acceptsInputMethod,o.inputMethodComposing);
-            if (o && (o.acceptsInputMethod || o.inputMethodComposing !== undefined)) {
-                mouse.accepted = false
-                return
-            }
-
-            // 清掉 focus + 收鍵盤
-            root.contentItem.forceActiveFocus()
-            Qt.inputMethod.hide()
-            mouse.accepted = false
-        }
-    }
+    // // 取消輸入focus的 MouseArea
+    // MouseArea {
+    //     anchors.fill: parent
+    //     z: 0
+    //     // 只想在空白處點到才觸發，所以不攔截內容的點擊
+    //     propagateComposedEvents: true
+    //
+    //     onPressed: (mouse) => {
+    //         // 如果點到的是 TextInput/TextField 就不要清（讓它正常取得 focus）
+    //         const o = root.contentItem.childAt(mouse.x, mouse.y)
+    //         console.log(o.acceptsInputMethod,o.inputMethodComposing);
+    //         if (o && (o.acceptsInputMethod || o.inputMethodComposing !== undefined)) {
+    //             mouse.accepted = false
+    //             return
+    //         }
+    //
+    //         // 清掉 focus + 收鍵盤
+    //         root.contentItem.forceActiveFocus()
+    //         Qt.inputMethod.hide()
+    //         mouse.accepted = false
+    //     }
+    // }
 
 
     // InputPanel {
