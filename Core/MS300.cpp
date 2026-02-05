@@ -57,8 +57,17 @@ void MS300::onPollTimeout()
                     const QModbusDataUnit res = reply->result();
                     if (id == 2)
                     {
+
+                        double val = static_cast<double>(res.value(0)) / 100.0;
+                        double maxHz = 60.0;
+                        double maxLinearSpeed = 130.0;
+                        double ratio = maxLinearSpeed / maxHz;
+
+                        // 3. 計算線速度
+                        double linearSpeed = val * ratio;
+
                         //qDebug() << "COM4 MS300: " << id << " Frequency= " << res.value(0);
-                        emit dataUpdated(id, res.value(0));
+                        emit dataUpdated(id, linearSpeed);
                     }
 
                 }

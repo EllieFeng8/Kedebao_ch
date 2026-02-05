@@ -332,8 +332,16 @@ void Core::setMS300Run(int id, int mode) {
     m_ms300->updateControlCache(id, cmd);
 }
 
+void Core::onlength(double v)
+{
+    m_proxy->setCurrentLength(v);
+}
+
+
+
 void Core::onMS300Data(int id, double v)
 {
+    double speed = v;//TODO 換算 頻率->線速度 
     m_proxy->setSpeed(v);
 }
 

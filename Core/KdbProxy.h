@@ -481,7 +481,7 @@ public:
      Q_INVOKABLE double getSpeed() const { return m_speed; }
      Q_INVOKABLE double getBrakingDistance() const { return m_brakingDistance;}
      void setSpeed(int value) { m_speed = value; emit speedChanged(m_speed); };
-
+     void setCurrentLength(int v) { m_currentLength = v; emit currentLengthChanged(m_currentLength); }
      Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
      Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
      Q_INVOKABLE double getModifyBrakingDistance() const { return m_modifybrakingDistance;}

@@ -16,7 +16,7 @@ void Modbus485::initPort() {
         qDebug() << "COM3 connet";
         m_pollTimer = new QTimer(this);
         connect(m_pollTimer, &QTimer::timeout, this, &Modbus485::onPollTimeout);
-        m_pollTimer->start(300);
+        m_pollTimer->start(50);
         //Test set SV
 
     }
@@ -66,10 +66,11 @@ void Modbus485::onPollTimeout() {
         // 處理 TC-3050 (ID 1, 2, 3)
         readUnit = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 752, 6);
     }
-    else {
-        // 處理 YTMC-5318 (ID 4, 5)
-        // 假設讀取從 0x0001 開始的 2 個暫存器
-        readUnit = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0x294, 2);
+    else if (id == 6)
+    {
+        // 處理 碼輪控制器
+      
+        readUnit = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0, 2);
     }
 
     if (auto* reply = m_modbus->sendReadRequest(readUnit, id)) {
@@ -85,13 +86,22 @@ void Modbus485::onPollTimeout() {
                         qDebug() << "TC-3050 ID:" << id << "PV:" << pv ;
                         emit dataUpdated(id, pv, tqo);
                     }
-                    else if(id>=4){
-                        // --- YTMC-5318  ---
-                        // 假設 YTMC 的數值就是強度 (0-1000)
-                        double val = res.value(0);
-                        //qDebug() << "YTMC-5318 ID:" << id << "Value:" << val;
-                        // 您可以視需求發送不同的信號或共用 dataUpdated
-                        emit dataUpdated(id, val, 0);
+                    //else if(id>=4){
+                    //    // --- YTMC-5318  ---
+                    //    // 假設 YTMC 的數值就是強度 (0-1000)
+                    //    double val = res.value(0);
+                    //    //qDebug() << "YTMC-5318 ID:" << id << "Value:" << val;
+                    //    // 您可以視需求發送不同的信號或共用 dataUpdated
+                    //    emit dataUpdated(id, val, 0);
+                    //}
+                    else if (id == 6) {
+                        int32_t high = res.value(0);
+                        int32_t low = res.value(1);
+                        int32_t rawPv = (high << 16) | (low & 0xFFFF);
+                        // 根據說明書，PV 範圍可達 -199999
+                        double pv = static_cast<double>(rawPv);
+                        qDebug() << "Slave 6 PV (32bit):" << pv;                  
+                        emit lengthupdate(pv);
                     }
                 }   
                 else
@@ -120,3 +130,13 @@ void Modbus485::setTargetTension(int id, double kg) {
     }
 }
 
+void Modbus485::lengthReset()
+{
+    QModbusDataUnit writeUnit(QModbusDataUnit::Coils, 0, 1);
+    writeUnit.setValue(0, true);
+
+    if (m_modbus && m_modbus->state() == QModbusDevice::ConnectedState) {
+        m_modbus->sendWriteRequest(writeUnit, 6);
+        qDebug() << "length Reset";
+    }
+}

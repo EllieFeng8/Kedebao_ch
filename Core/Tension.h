@@ -40,8 +40,8 @@ public:
     void readPV(int slaveId);
 signals:
     void dataUpdated(int id,double pv,double tqo);
-
-
+    void lengthupdate(double val);
+    
     void errorOccurred(int id, QString error);
 
 public slots:
@@ -61,7 +61,7 @@ public slots:
         QThread::currentThread()->quit();
         qDebug() << "MS300 resources cleaned up.";
     }
-
+    void lengthReset();
 private slots:
     void onPollTimeout();
 
@@ -73,6 +73,6 @@ private:
 
     QTimer* m_pollTimer = nullptr;
 
-    QList<int> m_slaveIds = { 1,2,3,4,5}; 
+    QList<int> m_slaveIds = { 1,2,3,6}; 
     int m_currentIndex = 0;
 };

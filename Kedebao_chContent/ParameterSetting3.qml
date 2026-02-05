@@ -279,6 +279,7 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked0 = !root.clicked0
+                        Kdb.vfdAlarmReset = root.clicked0 ? 1.0 : 0.0
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -328,6 +329,7 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked = !root.clicked
+                        Kdb.unwinderForward = root.clicked ? 1.0 : 0.0   
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -377,6 +379,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked1 = !root.clicked1
+                        Kdb.unwinderReverse = root.clicked1 ? 1.0 : 0.0   
+                        
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -427,6 +431,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked2 = !root.clicked2
+                        Kdb.mainDriveForward = root.clicked2 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -477,6 +483,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked3 = !root.clicked3
+                        Kdb.mainDriveReverse = root.clicked3 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -526,6 +534,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked4 = !root.clicked4
+                        Kdb.smallWinderForward = root.clicked4 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -575,6 +585,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked5 = !root.clicked5
+                        Kdb.smallWinderReverse = root.clicked5 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -624,6 +636,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked6 = !root.clicked6
+                        Kdb.largeWinderForward = root.clicked6 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -673,6 +687,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked7 = !root.clicked7
+                        Kdb.largeWinderReverse = root.clicked7 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -722,6 +738,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked8 = !root.clicked8
+                        Kdb.smallCutterStart = root.clicked8 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -771,6 +789,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked9 = !root.clicked9
+                        Kdb.selvedgeFanStart = root.clicked9 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -820,6 +840,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked10 = !root.clicked10
+                        Kdb.largeCutterStart = root.clicked10 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -869,6 +891,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked11 = !root.clicked11
+                        Kdb.leftSelvedgeWinderForward = root.clicked11 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -918,6 +942,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked12 = !root.clicked12
+                        Kdb.leftSelvedgeWinderReverse = root.clicked12 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -967,6 +993,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked13 = !root.clicked13
+                        Kdb.rightSelvedgeWinderForward = root.clicked13 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1016,6 +1044,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked14 = !root.clicked14
+                        Kdb.rightSelvedgeWinderReverse = root.clicked14 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1104,6 +1134,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked15 = !root.clicked15
+                        Kdb.webAlignerStart = root.clicked15 ? 1.0 : 0.0   
+
                         //source: root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1152,6 +1184,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked16 = !root.clicked16
+                        Kdb.unwindingTensionAuto = root.clicked16 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1201,6 +1235,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked17 = !root.clicked17
+                        Kdb.unwindingDiameterReset = root.clicked17 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1250,6 +1286,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked18 = !root.clicked18
+                        Kdb.smallWinderTensionAuto = root.clicked18 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1298,6 +1336,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked19 = !root.clicked19
+                        Kdb.smallWinderDiameterReset = root.clicked19 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1346,6 +1386,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked20 = !root.clicked20
+                        Kdb.largeWinderTensionAuto = root.clicked20 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1394,6 +1436,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked21 = !root.clicked21
+                        Kdb.largeWinderDiameterReset = root.clicked21 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1442,6 +1486,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked22 = !root.clicked22
+                        Kdb.leftSelvedgeWinderAuto = root.clicked22 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1490,6 +1536,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked23 = !root.clicked23
+                        Kdb.rightSelvedgeWinderAuto = root.clicked23 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1538,6 +1586,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked24 = !root.clicked24
+                        Kdb.nipRollUp = root.clicked24 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1586,6 +1636,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked25 = !root.clicked25
+                        Kdb.nipRollDown = root.clicked25 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1634,6 +1686,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked26 = !root.clicked26
+                        Kdb.leftPressPlateForward = root.clicked26 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1682,6 +1736,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked27 = !root.clicked27
+                        Kdb.leftPressPlateBackward = root.clicked27 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1730,6 +1786,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked28 = !root.clicked28
+                        Kdb.rightPressPlateForward = root.clicked28 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1778,6 +1836,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked29 = !root.clicked29
+                        Kdb.rightPressPlateBackward = root.clicked29 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1825,6 +1885,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked30 = !root.clicked30
+                        Kdb.smallCutterIn = root.clicked30 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1912,6 +1974,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked31 = !root.clicked31
+                        Kdb.largeCutterIn = root.clicked31 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -1961,6 +2025,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked32 = !root.clicked32
+                        Kdb.modeSelect = root.clicked32 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -2009,6 +2075,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked33 = !root.clicked33
+                        Kdb.runIndicator = root.clicked33 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -2058,6 +2126,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked34 = !root.clicked34
+                        Kdb.alarmIndicator = root.clicked34 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -2108,6 +2178,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked35 = !root.clicked35
+                        Kdb.stopIndicator = root.clicked35 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -2157,6 +2229,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked36 = !root.clicked36
+                        Kdb.buzzer = root.clicked36 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }
@@ -2206,6 +2280,8 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
                         root.clicked37 = !root.clicked37
+                        Kdb.smallRollModeSelect = root.clicked37 ? 1.0 : 0.0   
+
                         //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
                     }
                 }

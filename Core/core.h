@@ -102,7 +102,8 @@ public:
 
         connect(m_tension, &Modbus485::dataUpdated,
             this, &Core::on485Data);
-
+        connect(m_tension, &Modbus485::lengthupdate,
+            this, &Core::onlength);
         connect(m_manager, &ModbusManager::workerData,
             this, &Core::onWorkerData);
         connect(m_manager, &ModbusManager::workerData2,
@@ -243,6 +244,7 @@ signals:
 
 private slots:
     // ¨Ó¦Û ModbusManager
+    void onlength(double v);
     void onholdingRegisterReady(QVector<quint16> values);
     void onWorkerData(QVector<quint16> values);
     void onWorkerData2(QVector<quint16> values);
