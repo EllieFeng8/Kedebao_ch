@@ -323,6 +323,27 @@ class KdbProxy : public QObject
     Q_PROPERTY(double buzzer READ getBuzzer WRITE setBuzzer NOTIFY buzzerChanged)
     Q_PROPERTY(double smallRollModeSelect READ getSmallRollModeSelect WRITE setSmallRollModeSelect NOTIFY smallRollModeSelectChanged)
 
+    //8
+    Q_PROPERTY(double output8 READ getOutput8 WRITE setOutput8 NOTIFY output8Changed)
+    //9
+    Q_PROPERTY(double output9 READ getOutput9 WRITE setOutput9 NOTIFY output9Changed)
+    //10
+    Q_PROPERTY(double output10 READ getOutput10 WRITE setOutput10 NOTIFY output10Changed)
+    //11
+    Q_PROPERTY(double output11 READ getOutput11 WRITE setOutput11 NOTIFY output11Changed)
+    //12
+    Q_PROPERTY(double output12 READ getOutput12 WRITE setOutput12 NOTIFY output12Changed)
+    //13
+    Q_PROPERTY(double output13 READ getOutput13 WRITE setOutput13 NOTIFY output13Changed)
+    //14
+    Q_PROPERTY(double output14 READ getOutput14 WRITE setOutput14 NOTIFY output14Changed)
+    //15
+    Q_PROPERTY(double output15 READ getOutput15 WRITE setOutput15 NOTIFY output15Changed)
+    //16
+    Q_PROPERTY(double output16 READ getOutput16 WRITE setOutput16 NOTIFY output16Changed)
+    //17
+    Q_PROPERTY(double output17 READ getOutput17 WRITE setOutput17 NOTIFY output17Changed)
+
     // ===== OUTPUT-3 Switch =====
     Q_PROPERTY(int largeCutterInSwitch READ getLargeCutterInSwitch WRITE setLargeCutterInSwitch NOTIFY largeCutterInSwitchChanged)
     Q_PROPERTY(int modeSelectSwitch READ getModeSelectSwitch WRITE setModeSelectSwitch NOTIFY modeSelectSwitchChanged)
@@ -334,6 +355,26 @@ class KdbProxy : public QObject
     Q_PROPERTY(int buzzerSwitch READ getBuzzerSwitch WRITE setBuzzerSwitch NOTIFY buzzerSwitchChanged)
     Q_PROPERTY(int smallRollModeSelectSwitch READ getSmallRollModeSelectSwitch WRITE setSmallRollModeSelectSwitch NOTIFY smallRollModeSelectSwitchChanged)
 
+    //8
+    Q_PROPERTY(int output8Switch READ getOutput8Switch WRITE setOutput8Switch NOTIFY output8SwitchChanged)
+    //9
+    Q_PROPERTY(int output9Switch READ getOutput9Switch WRITE setOutput9Switch NOTIFY output9SwitchChanged)
+    //10
+    Q_PROPERTY(int output10Switch READ getOutput10Switch WRITE setOutput10Switch NOTIFY output10SwitchChanged)
+    //11
+    Q_PROPERTY(int output11Switch READ getOutput11Switch WRITE setOutput11Switch NOTIFY output11SwitchChanged)
+    //12
+    Q_PROPERTY(int output12Switch READ getOutput12Switch WRITE setOutput12Switch NOTIFY output12SwitchChanged)
+    //13
+    Q_PROPERTY(int output13Switch READ getOutput13Switch WRITE setOutput13Switch NOTIFY output13SwitchChanged)
+    //14
+    Q_PROPERTY(int output14Switch READ getOutput14Switch WRITE setOutput14Switch NOTIFY output14SwitchChanged)
+    //15
+    Q_PROPERTY(int output15Switch READ getOutput15Switch WRITE setOutput15Switch NOTIFY output15SwitchChanged)
+    //16
+    Q_PROPERTY(int output16Switch READ getOutput16Switch WRITE setOutput16Switch NOTIFY output16SwitchChanged)
+    //17
+    Q_PROPERTY(int output17Switch READ getOutput17Switch WRITE setOutput17Switch NOTIFY output17SwitchChanged)
 
     // ===== ANALOG OUTPUT =====
     Q_PROPERTY(double analogOutUnwinderMainDrive READ getAnalogOutUnwinderMainDrive WRITE setAnalogOutUnwinderMainDrive NOTIFY analogOutUnwinderMainDriveChanged)
@@ -2161,6 +2202,168 @@ public:
             m_smallRollModeSelectSwitch = value;
         emit smallRollModeSelectSwitchChanged(m_smallRollModeSelectSwitch);
     }
+    //8
+    Q_INVOKABLE double getOutput8() const { return m_output8; }
+    void setOutput8(double value)
+    {
+        if (m_output8 != value)
+            m_output8 = value;
+        emit output8Changed(m_output8);
+    }
+    //8switch
+    Q_INVOKABLE int getOutput8Switch() const { return output8Switch; }
+    void setOutput8Switch(int value)
+    {
+        if (output8Switch != value)
+            output8Switch = value;
+        emit output8SwitchChanged(output8Switch);
+    }
+
+    //9
+    Q_INVOKABLE double getOutput9() const { return m_output9; }
+    void setOutput9(double value)
+    {
+        if (m_output9 != value)
+            m_output9 = value;
+        emit output9Changed(m_output9);
+    }
+    //9switch
+    Q_INVOKABLE int getOutput9Switch() const { return output9Switch; }
+    void setOutput9Switch(int value)
+    {
+        if (output9Switch != value)
+            output9Switch = value;
+        emit output9SwitchChanged(output9Switch);
+    }
+    //10
+    Q_INVOKABLE double getOutput10() const { return m_output10; }
+    void setOutput10(double value)
+    {
+        if (m_output10 != value)
+            m_output10 = value;
+        emit output10Changed(m_output10);
+    }
+    //10switch
+    Q_INVOKABLE int getOutput10Switch() const { return output10Switch; }
+    void setOutput10Switch(int value)
+    {
+        if (output10Switch != value)
+            output10Switch = value;
+        emit output10SwitchChanged(output10Switch);
+    }
+    //11
+    Q_INVOKABLE double getOutput11() const { return m_output11; }
+    void setOutput11(double value)
+    {
+        if (m_output11 != value)
+            m_output11 = value;
+        emit output11Changed(m_output11);
+    }
+    //11switch
+    Q_INVOKABLE int getOutput11Switch() const { return output11Switch; }
+    void setOutput11Switch(int value)
+    {
+        if (output11Switch != value)
+            output11Switch = value;
+        emit output11SwitchChanged(output11Switch);
+    }
+    //12
+    Q_INVOKABLE double getOutput12() const { return m_output12; }
+    void setOutput12(double value)
+    {
+        if (m_output12 != value)
+            m_output12 = value;
+        emit output12Changed(m_output12);
+    }
+    //12switch
+    Q_INVOKABLE int getOutput12Switch() const { return output12Switch; }
+    void setOutput12Switch(int value)
+    {
+        if (output12Switch != value)
+            output12Switch = value;
+        emit output12SwitchChanged(output12Switch);
+    }
+    //13
+    Q_INVOKABLE double getOutput13() const { return m_output13; }
+    void setOutput13(double value)
+    {
+        if (m_output13 != value)
+            m_output13 = value;
+        emit output13Changed(m_output13);
+    }
+    //13switch
+    Q_INVOKABLE int getOutput13Switch() const { return output13Switch; }
+    void setOutput13Switch(int value)
+    {
+        if (output13Switch != value)
+            output13Switch = value;
+        emit output13SwitchChanged(output13Switch);
+    }
+    //14
+    Q_INVOKABLE double getOutput14() const { return m_output14; }
+    void setOutput14(double value)
+    {
+        if (m_output14 != value)
+            m_output14 = value;
+        emit output14Changed(m_output14);
+    }
+    //14switch
+    Q_INVOKABLE int getOutput14Switch() const { return output14Switch; }
+    void setOutput14Switch(int value)
+    {
+        if (output14Switch != value)
+            output14Switch = value;
+        emit output14SwitchChanged(output14Switch);
+    }
+    //15
+    Q_INVOKABLE double getOutput15() const { return m_output15; }
+    void setOutput15(double value)
+    {
+        if (m_output15 != value)
+            m_output15 = value;
+        emit output15Changed(m_output15);
+    }
+    //15switch
+    Q_INVOKABLE int getOutput15Switch() const { return output15Switch; }
+    void setOutput15Switch(int value)
+    {
+        if (output15Switch != value)
+            output15Switch = value;
+        emit output15SwitchChanged(output15Switch);
+    }
+    //16
+    Q_INVOKABLE double getOutput16() const { return m_output16; }
+    void setOutput16(double value)
+    {
+        if (m_output16 != value)
+            m_output16 = value;
+        emit output16Changed(m_output16);
+    }
+    //16switch
+    Q_INVOKABLE int getOutput16Switch() const { return output16Switch; }
+    void setOutput16Switch(int value)
+    {
+        if (output16Switch != value)
+            output16Switch = value;
+        emit output16SwitchChanged(output16Switch);
+    }
+    //17
+    Q_INVOKABLE double getOutput17() const { return m_output17; }
+    void setOutput17(double value)
+    {
+        if (m_output17 != value)
+            m_output17 = value;
+        emit output17Changed(m_output17);
+    }
+    //17switch
+    Q_INVOKABLE int getOutput17Switch() const { return output17Switch; }
+    void setOutput17Switch(int value)
+    {
+        if (output17Switch != value)
+            output17Switch = value;
+        emit output17SwitchChanged(output17Switch);
+    }
+
      
     // ===== ANALOG OUTPUT READ =====
     Q_INVOKABLE double getAnalogOutUnwinderMainDrive() const{ return m_analogOutUnwinderMainDrive;}
@@ -2863,6 +3066,18 @@ public:
 
     void buzzerChanged(double value);
     void smallRollModeSelectChanged(double value);
+
+    void output8Changed(double value);
+    void output9Changed(double value);
+    void output10Changed(double value);
+    void output11Changed(double value);
+    void output12Changed(double value);
+    void output13Changed(double value);
+    void output14Changed(double value);
+    void output15Changed(double value);
+    void output16Changed(double value);
+    void output17Changed(double value);
+
     //===== OUTPUT-3 switch=====
     void largeCutterInSwitchChanged(int value);
     void modeSelectSwitchChanged(int value);
@@ -2873,6 +3088,18 @@ public:
 
     void buzzerSwitchChanged(int value);
     void smallRollModeSelectSwitchChanged(int value);
+
+    void output8SwitchChanged(int value);
+    void output9SwitchChanged(int value);
+    void output10SwitchChanged(int value);
+    void output11SwitchChanged(int value);
+    void output12SwitchChanged(int value);
+    void output13SwitchChanged(int value);
+    void output14SwitchChanged(int value);
+    void output15SwitchChanged(int value);
+    void output16SwitchChanged(int value);
+    void output17SwitchChanged(int value);
+
 
     //===== ANALOG OUTPUT =====
     void analogOutUnwinderMainDriveChanged(double value);
@@ -3274,6 +3501,18 @@ private:
 
     double m_buzzer = 0.0;
     double m_smallRollModeSelect = 0.0;
+
+    double m_output8 = 0.0;
+    double m_output9 = 0.0;
+    double m_output10 = 0.0;
+    double m_output11 = 0.0;
+    double m_output12 = 0.0;
+    double m_output13 = 0.0;
+    double m_output14 = 0.0;
+    double m_output15 = 0.0;
+    double m_output16 = 0.0;
+    double m_output17 = 0.0;
+
     //===OUTPUT3 switch=====
     int m_largeCutterInSwitch = 0;
     int m_modeSelectSwitch = 0;
@@ -3284,6 +3523,17 @@ private:
 
     int m_buzzerSwitch = 0;
     int m_smallRollModeSelectSwitch = 0;
+
+    int output8Switch = 0;
+    int output9Switch = 0;
+    int output10Switch = 0;
+    int output11Switch = 0;
+    int output12Switch = 0;
+    int output13Switch = 0;
+    int output14Switch = 0;
+    int output15Switch = 0;
+    int output16Switch = 0;
+    int output17Switch = 0;
 
     // ===== ANALOG OUTPUT =====
     double m_analogOutUnwinderMainDrive = 0.0;

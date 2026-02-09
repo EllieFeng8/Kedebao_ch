@@ -56,6 +56,16 @@ Rectangle {
     property bool clicked35:Kdb.stopIndicatorSwitch
     property bool clicked36:Kdb.buzzerSwitch
     property bool clicked37:Kdb.smallRollModeSelectSwitch
+    property bool clicked38:Kdb.output8Switch
+    property bool clicked39:Kdb.output9Switch
+    property bool clicked40:Kdb.output10Switch
+    property bool clicked41:Kdb.output11Switch
+    property bool clicked42:Kdb.output12Switch
+    property bool clicked43:Kdb.output13Switch
+    property bool clicked44:Kdb.output14Switch
+    property bool clicked45:Kdb.output15Switch
+    property bool clicked46:Kdb.output16Switch
+    property bool clicked47:Kdb.output17Switch
 
     property int topMargin: 25
     property int groupLeftMargin: 100
@@ -2211,6 +2221,497 @@ Rectangle {
                 }
             }
         }
+        //8
+        Text {
+            id:text_3_7
+            anchors.top: text_3_6.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("8")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_08
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output8).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_8
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked38 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_8MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked38 = !root.clicked38
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+        //9
+        Text {
+            id:text_3_8
+            anchors.top: text_3_7.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("9")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_09
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output9).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_9
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked39 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_9MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked39 = !root.clicked39
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+        //10
+        Text {
+            id:text_3_9
+            anchors.top: text_3_8.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("10")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_10
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output10).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_10
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked40 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_10MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked40 = !root.clicked40
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+        //11
+        Text {
+            id:text_3_10
+            anchors.top: text_3_9.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("11")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_11
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output11).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_11
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked41 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_11MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked41 = !root.clicked41
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+        //12
+        Text {
+            id:text_3_11
+            anchors.top: text_3_10.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("12")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_12
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output12).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_12
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked42 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_12MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked42 = !root.clicked42
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+        //13
+        Text {
+            id:text_3_12
+            anchors.top: text_3_11.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("13")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_13
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output13).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_13
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked43 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_13MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked43 = !root.clicked43
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+        //14
+        Text {
+            id:text_3_13
+            anchors.top: text_3_12.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("14")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_14
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output14).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_14
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked44 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_14MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked44 = !root.clicked44
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+        //15
+        Text {
+            id:text_3_14
+            anchors.top: text_3_13.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("15")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_15
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output15).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_15
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked45 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_15MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked45 = !root.clicked45
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+        //16
+        Text {
+            id:text_3_15
+            anchors.top: text_3_14.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("16")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_16
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output16).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_16
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked46 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_16MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked46 = !root.clicked46
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+        //17
+        Text {
+            id:text_3_16
+            anchors.top: text_3_15.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            y: 205
+            width: 223
+            height: 24
+            text: qsTr("17")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            Text {
+                id: output03_17
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                x: textLeft2
+                y: 0
+                text:Number(Kdb.output17).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
+                color: "#aaaaaa"
+                //placeholderText: "請輸入內容"
+                focus: true
+
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output03_05.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: switch3_17
+                x:switchLeft2
+                y:-16
+                scale: 0.5
+                source: root.clicked47 ?"assets/Group11.png" : "assets/Group 34.png"
+                MouseArea{
+                    id:switch3_17MouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        root.clicked47 = !root.clicked47
+                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+                    }
+                }
+            }
+        }
+
 
     }
 
