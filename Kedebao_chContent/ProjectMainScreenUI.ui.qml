@@ -2048,7 +2048,7 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    Kdb.getPressureRoller = Kdb.pressureRoller-5;
+                    Kdb.pressureRoller = Kdb.pressureRoller-5;
                     console.log("11 Kdb.pressureRoller changed~~~", Kdb.pressureRoller);
                 }
             }
