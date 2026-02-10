@@ -182,6 +182,11 @@ qt6_add_qml_module(Kedebao_chContent
         "assets/smallpic.png"
         "assets/speedometer_1.png"
         "assets/speedometer_1@2x.png"
+        "assets/Group 42.png"
+        "assets/Group 61.png"
+        "assets/Group1 42.png"
+        "assets/Group1 61.png"
+        "assets/Rectangle 15.png"
 )
 
 

@@ -42,6 +42,11 @@ class KdbProxy : public QObject
     Q_PROPERTY(double modifySmallWinderTensionOver READ getModifySmallWinderTensionOver WRITE setModifySmallWinderTensionOver NOTIFY modifySmallWinderTensionOverChanged)
     Q_PROPERTY(double modifyLargeWinderTensionOver READ getModifyLargeWinderTensionOver WRITE setModifyLargeWinderTensionOver NOTIFY modifyLargeWinderTensionOverChanged)
 
+    //壓板
+    Q_PROPERTY(double pressurePlate READ getPressurePlate WRITE setPressurePlate NOTIFY pressurePlateChanged)
+    //壓輪
+    Q_PROPERTY(double pressureRoller READ getPressureRoller WRITE setPressureRoller NOTIFY pressureRollerChanged)
+
 
     // ===== INPUT-1 Alarm Signals =====
     Q_PROPERTY(double unwinderVfdFreqAlarm READ getUnwinderVfdFreqAlarm NOTIFY unwinderVfdFreqAlarmChanged)
@@ -535,6 +540,11 @@ public:
     void setModifyUnwindingTension(double value){m_modifyUnwindingTension = value; emit modifyUnwindingTensionChanged(m_modifyUnwindingTension);};
     void setModifySmallWinderTensionOver(double value){m_modifySmallWinderTensionOver = value; emit modifySmallWinderTensionOverChanged(m_modifySmallWinderTensionOver);};
     void setModifyLargeWinderTensionOver(double value){m_modifyLargeWinderTensionOver = value; emit modifyLargeWinderTensionOverChanged(m_modifyLargeWinderTensionOver);};
+
+    Q_INVOKABLE double getPressurePlate() const { return m_pressurePlate; }
+    Q_INVOKABLE double getPressureRoller() const { return m_pressureRoller; }
+    void setPressurePlate(double value){m_pressurePlate = value; emit pressurePlateChanged(m_pressurePlate);};
+    void setPressureRoller(double value){m_pressureRoller = value; emit pressureRollerChanged(m_pressureRoller);};
 
      //=====INPUT-1 READ functions =====
      //=====INPUT-1 READ functions =====
@@ -3174,6 +3184,9 @@ public:
     void unwindingTensionChanged(double value);
     void smallRollTensionChanged(double value);
     void largeRollTensionChanged(double value);
+
+    void pressurePlateChanged(double value);
+    void pressureRollerChanged(double value);
     // =====控制介面 Motor switch=====
     void smallRollMotorSwitchChanged(int value);
     void mainDriveMotorSwitchChanged(int value);
@@ -3187,6 +3200,8 @@ public:
     void unwindingTensionSwitchChanged(int value);
     void smallRollTensionSwitchChanged(int value);
     void largeRollTensionSwitchChanged(int value);
+
+
 
     // ===== cutter=====
     void smallRollCutter1Changed(int value);
@@ -3609,6 +3624,10 @@ private:
     double m_unwindingTension = 0.0;
     double m_smallRollTension = 0.0;
     double m_largeRollTension = 0.0;
+    //壓板
+    double m_pressurePlate = 5.0;
+    //壓輪
+    double m_pressureRoller = 6.0;
     // ===== 控制介面 switch=====
     int m_smallRollMotorSwitch = 0;
     int m_mainDriveMotorSwitch = 0;
