@@ -43,9 +43,13 @@ class KdbProxy : public QObject
     Q_PROPERTY(double modifyLargeWinderTensionOver READ getModifyLargeWinderTensionOver WRITE setModifyLargeWinderTensionOver NOTIFY modifyLargeWinderTensionOverChanged)
 
     //壓板
-    Q_PROPERTY(double pressurePlate READ getPressurePlate WRITE setPressurePlate NOTIFY pressurePlateChanged)
+    Q_PROPERTY(int pressurePlate READ getPressurePlate WRITE setPressurePlate NOTIFY pressurePlateChanged)
+    //壓板
+    Q_PROPERTY(int pressurePlateBack READ getPressurePlateBack WRITE setPressurePlateBack NOTIFY pressurePlateBackChanged)
     //壓輪
-    Q_PROPERTY(double pressureRoller READ getPressureRoller WRITE setPressureRoller NOTIFY pressureRollerChanged)
+    Q_PROPERTY(int pressureRoller READ getPressureRoller WRITE setPressureRoller NOTIFY pressureRollerChanged)
+    //壓輪
+    Q_PROPERTY(int pressureRollerDown READ getPressureRollerDown WRITE setPressureRollerDown NOTIFY pressureRollerDownChanged)
 
 
     // ===== INPUT-1 Alarm Signals =====
@@ -548,10 +552,15 @@ public:
     void setModifySmallWinderTensionOver(double value){m_modifySmallWinderTensionOver = value; emit modifySmallWinderTensionOverChanged(m_modifySmallWinderTensionOver);};
     void setModifyLargeWinderTensionOver(double value){m_modifyLargeWinderTensionOver = value; emit modifyLargeWinderTensionOverChanged(m_modifyLargeWinderTensionOver);};
 
-    Q_INVOKABLE double getPressurePlate() const { return m_pressurePlate; }
-    Q_INVOKABLE double getPressureRoller() const { return m_pressureRoller; }
-    void setPressurePlate(double value){m_pressurePlate = value; emit pressurePlateChanged(m_pressurePlate);};
-    void setPressureRoller(double value){m_pressureRoller = value; emit pressureRollerChanged(m_pressureRoller);};
+    Q_INVOKABLE int getPressurePlate() const { return m_pressurePlate; }
+    Q_INVOKABLE int getPressureRoller() const { return m_pressureRoller; }
+    void setPressurePlate(int value){m_pressurePlate = value; emit pressurePlateChanged(m_pressurePlate);};
+    void setPressureRoller(int value){m_pressureRoller = value; emit pressureRollerChanged(m_pressureRoller);};
+
+    Q_INVOKABLE int getPressurePlateBack() const { return m_pressurePlateBack; }
+    Q_INVOKABLE int getPressureRollerDown() const { return m_pressureRollerDown; }
+    void setPressurePlateBack(int value){m_pressurePlateBack = value; emit pressurePlateBackChanged(m_pressurePlateBack);};
+    void setPressureRollerDown(int value){m_pressureRollerDown = value; emit pressureRollerDownChanged(m_pressureRollerDown);};
 
      //=====INPUT-1 READ functions =====
      //=====INPUT-1 READ functions =====
@@ -3218,8 +3227,10 @@ public:
     void smallRollTensionChanged(double value);
     void largeRollTensionChanged(double value);
 
-    void pressurePlateChanged(double value);
-    void pressureRollerChanged(double value);
+    void pressurePlateChanged(int value);
+    void pressureRollerChanged(int value);
+    void pressurePlateBackChanged(int value);
+    void pressureRollerDownChanged(int value);
     // =====控制介面 Motor switch=====
     void smallRollMotorSwitchChanged(int value);
     void mainDriveMotorSwitchChanged(int value);
@@ -3664,9 +3675,13 @@ private:
     double m_smallRollTension = 0.0;
     double m_largeRollTension = 0.0;
     //壓板
-    double m_pressurePlate = 5.0;
+    int m_pressurePlate = 0;
     //壓輪
-    double m_pressureRoller = 6.0;
+    int m_pressureRoller = 0;
+    //壓板
+    int m_pressurePlateBack = 0;
+    //壓輪
+    int m_pressureRollerDown = 0;
     // ===== 控制介面 switch=====
     int m_smallRollMotorSwitch = 0;
     int m_mainDriveMotorSwitch = 0;

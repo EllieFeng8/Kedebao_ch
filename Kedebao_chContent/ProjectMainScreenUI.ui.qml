@@ -1775,8 +1775,8 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                        Kdb.pressurePlate = Kdb.pressurePlate-5;
-                        console.log("11 Kdb.pressurePlate changed~~~", Kdb.pressurePlate);
+                        Kdb.pressurePlateBack = !Kdb.pressurePlateBack;
+                        console.log("11 Kdb.pressurePlateBack changed~~~", Kdb.pressurePlateBack);
                 }
             }
         }
@@ -1800,7 +1800,7 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    Kdb.pressurePlate = Kdb.pressurePlate+5;
+                    Kdb.pressurePlate = !Kdb.pressurePlate;
                     console.log("11 Kdb.pressurePlate changed~~~", Kdb.pressurePlate);
                 }
 
@@ -1859,8 +1859,8 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    Kdb.pressureRoller = Kdb.pressureRoller+5;
-                    console.log("11 Kdb.getPressurePlate changed~~~", Kdb.pressureRoller);
+                    Kdb.pressureRoller = !Kdb.pressureRoller;
+                    console.log("11 Kdb.pressureRoller changed~~~", Kdb.pressureRoller);
                 }
 
             }
@@ -1885,8 +1885,8 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    Kdb.pressureRoller = Kdb.pressureRoller-5;
-                    console.log("11 Kdb.pressureRoller changed~~~", Kdb.pressureRoller);
+                    Kdb.pressureRollerDown = !Kdb.pressureRollerDown;
+                    console.log("11 Kdb.pressureRollerDown changed~~~", Kdb.pressureRollerDown);
                 }
             }
         }
@@ -1940,8 +1940,8 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    Kdb.pressurePlate = Kdb.pressurePlate-5;
-                    console.log("11 Kdb.pressurePlate changed~~~", Kdb.pressurePlate);
+                    Kdb.pressurePlateBack = !Kdb.pressurePlateBack;
+                    console.log("11 Kdb.pressurePlateBack changed~~~", Kdb.pressurePlateBack);
                 }
             }
         }
@@ -1965,7 +1965,7 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    Kdb.pressurePlate = Kdb.pressurePlate+5;
+                    Kdb.pressurePlate = !Kdb.pressurePlate;
                     console.log("11 Kdb.pressurePlate changed~~~", Kdb.pressurePlate);
                 }
             }
@@ -2048,8 +2048,8 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    Kdb.getPressureRoller = Kdb.pressureRoller-5;
-                    console.log("11 Kdb.pressureRoller changed~~~", Kdb.pressureRoller);
+                    Kdb.pressureRollerDown = !Kdb.pressureRollerDown;
+                    console.log("11 Kdb.pressureRollerDown changed~~~", Kdb.pressureRollerDown);
                 }
             }
         }
