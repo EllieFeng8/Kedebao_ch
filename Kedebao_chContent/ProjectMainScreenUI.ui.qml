@@ -1727,7 +1727,7 @@ Rectangle {
             }
         }
     }
-    //壓板前進大
+    //檔板前進大
     Item {
         id: pressurePlateBig
         x:795
@@ -1752,7 +1752,7 @@ Rectangle {
             horizontalAlignment: Text.AlignLeft
             lineHeight: 22
             lineHeightMode: Text.FixedHeight
-            text: "壓板前進"
+            text: "檔板前進"
             verticalAlignment: Text.AlignVCenter
         }
         Image {
@@ -1892,7 +1892,7 @@ Rectangle {
         }
     }
 
-    //壓板前進小
+    //檔板前進小
     Item {
         id: pressurePlate
         x:370
@@ -1917,7 +1917,7 @@ Rectangle {
             horizontalAlignment: Text.AlignLeft
             lineHeight: 22
             lineHeightMode: Text.FixedHeight
-            text: "壓板前進"
+            text: "檔板前進"
             verticalAlignment: Text.AlignVCenter
         }
         Image {
@@ -2048,7 +2048,7 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    Kdb.pressureRoller = Kdb.pressureRoller-5;
+                    Kdb.getPressureRoller = Kdb.pressureRoller-5;
                     console.log("11 Kdb.pressureRoller changed~~~", Kdb.pressureRoller);
                 }
             }

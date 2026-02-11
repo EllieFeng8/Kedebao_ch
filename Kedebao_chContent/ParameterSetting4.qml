@@ -125,7 +125,7 @@ Rectangle {
         id: output4Rec
         x:groupLeftMargin
         y:142
-        width: 548
+        width: 713
         height: 908
         radius: 40
 
@@ -260,6 +260,63 @@ Rectangle {
                     }
                 }
             }
+            TextInput {
+                id: output0_20
+                width: 60
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                text:Number(Kdb.analogOutUnwinderMainDrivePc).toFixed(2)//Kdb.modifyAnalogOutUnwinderMainDrive
+                x: 531
+                y: 20
+                focus: true
+                validator: DoubleValidator {}//限制只能輸入整數/double
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output0_2.width
+                    color: "#aaaaaa"
+                }
+
+            }
+            Text {
+                id:output0_201
+                anchors.left:output0_20.right
+                y: 23
+                text:"%"
+            }
+            Image {
+                id: btn00
+                anchors.left:output0_201.right
+                anchors.leftMargin:10
+                y:5
+                scale: 0.8
+                source: "assets/rectangle_35.png"
+                Text {
+                    text: qsTr("OK")
+                    color: "#aaaaaa"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+                    font.bold: true
+                }
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btn00MouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: btn00MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.analogOutUnwinderMainDrivePc !== Number(output0_20.text)) {
+                            Kdb.analogOutUnwinderMainDrivePc = Number(output0_20.text)
+                            console.log("11 analogOutUnwinderMainDrivePc changed~~~", Kdb.analogOutUnwinderMainDrivePc);
+                        }
+                    }
+                }
+            }
         }
         //類比電壓輸出-2
         //大、小收卷軸
@@ -360,6 +417,63 @@ Rectangle {
                         if(Kdb.modifyAnalogOutWinder !== Number(output0_3.text)) {
                             Kdb.modifyAnalogOutWinder = output0_3.text
                             console.log("11 modifyAnalogOutWinder changed~~~", Kdb.modifyAnalogOutWinder);
+                        }
+                    }
+                }
+            }
+            TextInput {
+                id: output0_21
+                width: 60
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                text:Number(Kdb.analogOutWinderPc).toFixed(2)//Kdb.modifyAnalogOutUnwinderMainDrive
+                x: 531
+                y: 20
+                focus: true
+                validator: DoubleValidator {}//限制只能輸入整數/double
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output0_2.width
+                    color: "#aaaaaa"
+                }
+
+            }
+            Text {
+                id:output0_202
+                anchors.left:output0_21.right
+                y: 23
+                text:"%"
+            }
+            Image {
+                id: btn01
+                anchors.left:output0_202.right
+                anchors.leftMargin:10
+                y:6
+                scale: 0.8
+                source: "assets/rectangle_35.png"
+                Text {
+                    text: qsTr("OK")
+                    color: "#aaaaaa"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+                    font.bold: true
+                }
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btn01MouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: btn01MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.analogOutWinderPc !== Number(output0_21.text)) {
+                            Kdb.analogOutWinderPc = output0_21.text
+                            console.log("11 analogOutWinderPc changed~~~", Kdb.analogOutWinderPc);
                         }
                     }
                 }
@@ -467,6 +581,63 @@ Rectangle {
                     }
                 }
             }
+            TextInput {
+                id: output0_22
+                width: 60
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                text:Number(Kdb.analogOutCutterPc).toFixed(2)//Kdb.modifyAnalogOutUnwinderMainDrive
+                x: 531
+                y: 20
+                focus: true
+                validator: DoubleValidator {}//限制只能輸入整數/double
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output0_2.width
+                    color: "#aaaaaa"
+                }
+
+            }
+            Text {
+                id:output0_203
+                anchors.left:output0_22.right
+                y: 23
+                text:"%"
+            }
+            Image {
+                id: btn02
+                anchors.left:output0_203.right
+                anchors.leftMargin:10
+                y:6
+                scale: 0.8
+                source: "assets/rectangle_35.png"
+                Text {
+                    text: qsTr("OK")
+                    color: "#aaaaaa"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+                    font.bold: true
+                }
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btn02MouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: btn02MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.analogOutCutterPc !== Number(output0_22.text)) {
+                            Kdb.analogOutCutterPc = output0_22.text
+                            console.log("11 analogOutCutterPc changed~~~", Kdb.analogOutCutterPc);
+                        }
+                    }
+                }
+            }
         }
 
         //類比電壓輸出-4
@@ -567,6 +738,63 @@ Rectangle {
                         if(Kdb.modifyAnalogOutSelvedgeWinder !== Number(output0_5.text)) {
                             Kdb.modifyAnalogOutSelvedgeWinder = output0_5.text
                             console.log("11 modifyAnalogOutSelvedgeWinder changed~~~", Kdb.modifyAnalogOutSelvedgeWinder);
+                        }
+                    }
+                }
+            }
+            TextInput {
+                id: output0_23
+                width: 60
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                text:Number(Kdb.analogOutSelvedgeWinderPc).toFixed(2)//Kdb.modifyAnalogOutUnwinderMainDrive
+                x: 531
+                y: 20
+                focus: true
+                validator: DoubleValidator {}//限制只能輸入整數/double
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output0_2.width
+                    color: "#aaaaaa"
+                }
+
+            }
+            Text {
+                id:output0_204
+                anchors.left:output0_23.right
+                y: 23
+                text:"%"
+            }
+            Image {
+                id: btn03
+                anchors.left:output0_204.right
+                anchors.leftMargin:10
+                y:6
+                scale: 0.8
+                source: "assets/rectangle_35.png"
+                Text {
+                    text: qsTr("OK")
+                    color: "#aaaaaa"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+                    font.bold: true
+                }
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btn03MouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: btn03MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.analogOutSelvedgeWinderPc !== Number(output0_23.text)) {
+                            Kdb.analogOutSelvedgeWinderPc = output0_23.text
+                            console.log("11 analogOutSelvedgeWinderPc changed~~~", Kdb.analogOutSelvedgeWinderPc);
                         }
                     }
                 }

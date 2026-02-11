@@ -387,6 +387,13 @@ class KdbProxy : public QObject
     Q_PROPERTY(double analogOutCutter READ getAnalogOutCutter WRITE setAnalogOutCutter NOTIFY analogOutCutterChanged)
     Q_PROPERTY(double analogOutSelvedgeWinder READ getAnalogOutSelvedgeWinder WRITE setAnalogOutSelvedgeWinder NOTIFY analogOutSelvedgeWinderChanged)
 
+    //%
+    Q_PROPERTY(double analogOutUnwinderMainDrivePc READ getAnalogOutUnwinderMainDrivePc WRITE setAnalogOutUnwinderMainDrivePc NOTIFY analogOutUnwinderMainDrivePcChanged)
+    Q_PROPERTY(double analogOutWinderPc READ getAnalogOutWinderPc WRITE setAnalogOutWinderPc NOTIFY analogOutWinderPcChanged)
+    Q_PROPERTY(double analogOutCutterPc READ getAnalogOutCutterPc WRITE setAnalogOutCutterPc NOTIFY analogOutCutterPcChanged)
+    Q_PROPERTY(double analogOutSelvedgeWinderPc READ getAnalogOutSelvedgeWinderPc WRITE setAnalogOutSelvedgeWinderPc NOTIFY analogOutSelvedgeWinderPcChanged)
+
+
     Q_PROPERTY(double modifyAnalogOutUnwinderMainDrive READ getModifyAnalogOutUnwinderMainDrive WRITE setModifyAnalogOutUnwinderMainDrive NOTIFY modifyAnalogOutUnwinderMainDriveChanged)
     Q_PROPERTY(double modifyAnalogOutWinder READ getModifyAnalogOutWinder WRITE setModifyAnalogOutWinder NOTIFY modifyAnalogOutWinderChanged)
     Q_PROPERTY(double modifyAnalogOutCutter READ getModifyAnalogOutCutter WRITE setModifyAnalogOutCutter NOTIFY modifyAnalogOutCutterChanged)
@@ -2383,6 +2390,11 @@ public:
             m_analogOutUnwinderMainDrive = value;
         emit analogOutUnwinderMainDriveChanged(m_analogOutUnwinderMainDrive);
     }
+
+    //%
+    Q_INVOKABLE double getAnalogOutUnwinderMainDrivePc() const{ return m_analogOutUnwinderMainDrivePc;}
+    void setAnalogOutUnwinderMainDrivePc(double value){m_analogOutUnwinderMainDrivePc = value;emit analogOutUnwinderMainDrivePcChanged(m_analogOutUnwinderMainDrivePc);}
+
     // ===== ANALOG OUTPUT READ switch=====
     Q_INVOKABLE int getAnalogOutUnwinderMainDriveSwitch() const{ return m_analogOutUnwinderMainDriveSwitch;}
     void setAnalogOutUnwinderMainDriveSwitch(int value)
@@ -2399,6 +2411,12 @@ public:
             m_analogOutWinder = value;
         emit analogOutWinderChanged(m_analogOutWinder);
     }
+
+    //%
+    Q_INVOKABLE double getAnalogOutWinderPc() const{ return m_analogOutWinderPc;}
+    void setAnalogOutWinderPc(double value){m_analogOutWinderPc = value;emit analogOutWinderPcChanged(m_analogOutWinderPc);}
+
+
     Q_INVOKABLE int getAnalogOutWinderSwitch() const{ return m_analogOutWinderSwitch;}
     void setAnalogOutWinderSwitch(int value)
     {
@@ -2414,6 +2432,10 @@ public:
             m_analogOutCutter = value;
         emit analogOutCutterChanged(m_analogOutCutter);
     }
+    //%
+    Q_INVOKABLE double getAnalogOutCutterPc() const{ return m_analogOutCutterPc;}
+    void setAnalogOutCutterPc(double value){m_analogOutCutterPc = value;emit analogOutCutterPcChanged(m_analogOutCutterPc);}
+
     //switch
     Q_INVOKABLE int getAnalogOutCutterSwitch() const { return m_analogOutCutterSwitch;}
     void setAnalogOutCutterSwitch(int value)
@@ -2430,6 +2452,11 @@ public:
             m_analogOutSelvedgeWinder = value;
         emit analogOutSelvedgeWinderChanged(m_analogOutSelvedgeWinder);
     }
+
+    //%
+    Q_INVOKABLE double getAnalogOutSelvedgeWinderPc() const{ return m_analogOutSelvedgeWinderPc;}
+    void setAnalogOutSelvedgeWinderPc(double value){ m_analogOutSelvedgeWinderPc = value;emit analogOutSelvedgeWinderPcChanged(m_analogOutSelvedgeWinderPc);}
+
     //switch
     Q_INVOKABLE int getAnalogOutSelvedgeWinderSwitch() const{ return m_analogOutSelvedgeWinderSwitch;}
     void setAnalogOutSelvedgeWinderSwitch(int value)
@@ -3117,6 +3144,12 @@ public:
     void analogOutCutterChanged(double value);
     void analogOutSelvedgeWinderChanged(double value);
 
+    //%
+    void analogOutUnwinderMainDrivePcChanged(double value);
+    void analogOutWinderPcChanged(double value);
+    void analogOutCutterPcChanged(double value);
+    void analogOutSelvedgeWinderPcChanged(double value);
+
     void modifyAnalogOutUnwinderMainDriveChanged(double value);
     void modifyAnalogOutWinderChanged(double value);
     void modifyAnalogOutCutterChanged(double value);
@@ -3555,6 +3588,12 @@ private:
     double m_analogOutWinder = 0.0;
     double m_analogOutCutter = 0.0;
     double m_analogOutSelvedgeWinder = 0.0;
+
+    //%
+    double m_analogOutUnwinderMainDrivePc = 1.0;
+    double m_analogOutWinderPc = 2.0;
+    double m_analogOutCutterPc = 3.0;
+    double m_analogOutSelvedgeWinderPc = 4.0;
 
     double m_modifyAnalogOutUnwinderMainDrive = 0.0;
     double m_modifyAnalogOutWinder = 0.0;
