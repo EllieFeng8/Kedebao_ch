@@ -12,6 +12,10 @@ class KdbProxy : public QObject
     Q_OBJECT
     QML_ELEMENT
 
+    //默認大捲模式(1大捲模式,0小捲模式)
+    Q_PROPERTY(int bigRollMode READ getBigRollMode WRITE setBigRollMode NOTIFY bigRollModeChanged)
+    Q_PROPERTY(int restBtn READ getRestBtn WRITE setRestBtn NOTIFY restBtnChanged)
+
     Q_PROPERTY(int metalDetector READ getMetalDetector NOTIFY metalDetectorChanged)
     Q_PROPERTY(int gratingDetection READ getGratingDetection NOTIFY gratingDetectionChanged)
     Q_PROPERTY(int oppositeSide READ getOppositeSide NOTIFY oppositeSideChanged)
@@ -499,6 +503,14 @@ class KdbProxy : public QObject
 
 public:
     explicit KdbProxy(QObject* parent = nullptr) : QObject(parent) {}
+    //默認大捲模式(m_bigRollMode = 1大捲模式,0小捲模式)
+    Q_INVOKABLE int getBigRollMode() const { return m_bigRollMode; }
+    void setBigRollMode(int value) { m_bigRollMode = value; emit bigRollModeChanged(m_bigRollMode);}
+
+    Q_INVOKABLE int getRestBtn() const { return m_restBtn; }
+    void setRestBtn(int value) { m_restBtn = value; emit restBtnChanged(m_restBtn);}
+
+
      Q_INVOKABLE int getMetalDetector() const { return m_metalDetector; }
      Q_INVOKABLE int getGratingDetection() const { return m_gratingDetection; }
      Q_INVOKABLE int getOppositeSide() const { return m_OppositeSideSignal; }
@@ -2812,6 +2824,11 @@ public:
         emit singleActionModeChanged(m_singleActionMode);
     }
     signals:
+
+    void bigRollModeChanged(int value);
+    void smallRollModeChanged(int value);
+    void restBtnChanged(int value);
+
     void metalDetectorChanged(int value);
     void gratingDetectionChanged(int value);
     void oppositeSideChanged(int value);
@@ -3259,6 +3276,8 @@ public:
     void singleActionModeChanged(int value);
 
 private:
+    int m_bigRollMode = 1;//默認大捲模式(1大捲模式,0小捲模式)
+    int m_restBtn = 0;//主畫面長度reset btn
 
     int m_metalDetector = 0;
     int m_gratingDetection = 0;

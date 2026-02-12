@@ -2,13 +2,15 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
 import Kedebao_chContent
+import Core 1.0
 
 ModeSwitchUI {
     id: modeSwitch
     //property int pageNum = 1;
     basicSwitchbigMouseArea.onClicked: {
         AppState.isBig = !AppState.isBig
-        //console.log("mode isbig",AppState.isBig)
+        Kdb.bigRollMode = !Kdb.bigRollMode
+        console.log("Kdb.bigRollMode",Kdb.bigRollMode)
         modeSwitch.visible = false
     }
     backMouseArea.onClicked: {

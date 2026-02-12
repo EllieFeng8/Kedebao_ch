@@ -13,6 +13,8 @@ ProjectMainScreenUI {
         unwindingTension.text = "0"
         smallCoilTension.text = "0"
         bigCoilTension.text = "0"
+        Kdb.restBtn = !Kdb.restBtn
+        console.log("restBtn",Kdb.restBtn)
     }
 
     settingMouseArea.onClicked: {
