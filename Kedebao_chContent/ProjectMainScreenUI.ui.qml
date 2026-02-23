@@ -1530,6 +1530,10 @@ Rectangle {
                 icon.height: 10
                 spacing: 15
                 checkState: Kdb.smallRollCutter1//Qt.Checked
+                onToggled:{
+                    Kdb.smallRollCutter1 = Kdb.smallRollCutter1 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter1",Kdb.smallRollCutter1)
+                }
             }
             CheckBox {
                 id: checkBox2
@@ -1551,6 +1555,10 @@ Rectangle {
                 icon.height: 10
                 spacing: 15
                 checkState: Kdb.smallRollCutter2
+                onToggled:{
+                    Kdb.smallRollCutter2 = Kdb.smallRollCutter2 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter2",Kdb.smallRollCutter2)
+                }
             }
             CheckBox {
                 id: checkBox3
@@ -1571,6 +1579,10 @@ Rectangle {
                 icon.height: 10
                 spacing: 15
                 checkState: Kdb.smallRollCutter3
+                onToggled:{
+                    Kdb.smallRollCutter3 = Kdb.smallRollCutter3 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter3",Kdb.smallRollCutter3)
+                }
             }
             CheckBox {
                 id: checkBox4
@@ -1591,6 +1603,10 @@ Rectangle {
                 icon.height: 10
                 spacing: 15
                 checkState: Kdb.smallRollCutter4
+                onToggled:{
+                    Kdb.smallRollCutter4 = Kdb.smallRollCutter4 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter4",Kdb.smallRollCutter4)
+                }
             }
             CheckBox {
                 id: checkBox5
@@ -1612,6 +1628,10 @@ Rectangle {
                 spacing: 15
 
                 checkState: Kdb.smallRollCutter5
+                onToggled:{
+                    Kdb.smallRollCutter5 = Kdb.smallRollCutter5 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter5",Kdb.smallRollCutter5)
+                }
             }
         }
 
