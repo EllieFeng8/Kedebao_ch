@@ -10,7 +10,7 @@ ModeSwitchUI {
     basicSwitchbigMouseArea.onClicked: {
         AppState.isBig = !AppState.isBig
         Kdb.bigRollMode = !Kdb.bigRollMode
-        console.log("Kdb.bigRollMode",Kdb.bigRollMode)
+        //console.log("Kdb.bigRollMode",Kdb.bigRollMode)
         modeSwitch.visible = false
     }
     backMouseArea.onClicked: {
@@ -19,6 +19,7 @@ ModeSwitchUI {
     parameterMouseArea.onClicked: {
         // parameterSetting.visible = true
         setParameterInterface(1);
+
     }
 
     controlMouseArea.onClicked: {
@@ -29,6 +30,7 @@ ModeSwitchUI {
     ParameterSetting{
         id: parameterSetting
         visible: false
+
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
     }
@@ -63,7 +65,9 @@ ModeSwitchUI {
 
     function setParameterInterface(pageNum){
         if(pageNum ==1){
+
             parameterSetting.visible = true
+
             parameterSetting2.visible = false
             parameterSetting3.visible = false
             parameterSetting4.visible = false

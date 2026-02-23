@@ -27,6 +27,10 @@ Rectangle {
     property int dashPos: 28
     property int btnPos:-15
 
+    MouseArea {
+        anchors.fill: parent
+    }
+
         Text {
         id: title
         x:935

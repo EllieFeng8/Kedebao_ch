@@ -17,6 +17,8 @@ ProjectMainScreenUI {
         console.log("restBtn",Kdb.restBtn)
     }
 
+
+
     settingMouseArea.onClicked: {
         modeScreen.visible = true
     }
@@ -55,11 +57,13 @@ ProjectMainScreenUI {
 
 
     }
+
     ModeSwitch{
         id: modeScreen
         visible: false
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
     }
+
 
 }

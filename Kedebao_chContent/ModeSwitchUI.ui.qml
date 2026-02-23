@@ -20,6 +20,9 @@ Rectangle {
     property alias basicSwitchbigMouseArea: basicSwitchbigMouseArea
 
     property alias backMouseArea: backMouseArea
+    MouseArea {
+        anchors.fill: parent
+    }
 
     Image {
         id: back
