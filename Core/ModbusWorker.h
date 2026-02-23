@@ -150,6 +150,16 @@ public:
 
     bool flag_buzzer = false;              //101
     bool flag_smallRollModeSelect = false; //102
+    bool flag_IO103 = false;
+    bool flag_IO104 = false;
+    bool flag_IO105 = false;
+    bool flag_IO106 = false;
+    bool flag_IO107 = false;
+    bool flag_IO108 = false;
+    bool flag_IO109 = false;
+    bool flag_IO110 = false;
+    bool flag_IO111 = false;
+    bool flag_IO112 = false;
 
     //OUTPUT Value 
     double m_vfdAlarmReset = 0.0;
@@ -211,6 +221,17 @@ public:
 
     double m_buzzer = 0.0;
     double m_smallRollModeSelect = 0.0;
+
+    double m_IO103 = 0.0;
+    double m_IO104 = 0.0;
+    double m_IO105 = 0.0;
+    double m_IO106 = 0.0;
+    double m_IO107 = 0.0;
+    double m_IO108 = 0.0;
+    double m_IO109 = 0.0;
+    double m_IO110 = 0.0;
+    double m_IO111 = 0.0;
+    double m_IO112 = 0.0;
 
     QVector<bool> startAuto = { 1,0,1,0,1,0,1,1 };
     QVector<bool> stopAuto = { 0,0,0,0,0,0,0,0 };
@@ -276,6 +297,16 @@ public slots:
     void set_StopIndicator(double value);
     void set_Buzzer(double value);
     void set_SmallRollModeSelect(double value);
+    void set_IO103(double);
+    void set_IO104(double);
+    void set_IO105(double);
+    void set_IO106(double);
+    void set_IO107(double);
+    void set_IO108(double);
+    void set_IO109(double);
+    void set_IO110(double);
+    void set_IO111(double);
+    void set_IO112(double);
 
 signals:
     void writeDone(int address, bool ok, QString msg);

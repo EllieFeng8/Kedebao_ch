@@ -73,6 +73,6 @@ private:
 
     QTimer* m_pollTimer = nullptr;
 
-    QList<int> m_slaveIds = { 1,2,3,6}; 
+    QList<int> m_slaveIds = { 1,2}; 
     int m_currentIndex = 0;
 };

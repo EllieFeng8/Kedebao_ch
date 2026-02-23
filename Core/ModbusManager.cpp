@@ -44,11 +44,14 @@ void ModbusManager::createWorker()
     connect(m_worker, &ModbusWorker::dataReady,
         this, [this](QVector<quint16> v) {
             emit workerData(v);
+            QVector<bool> stop(24, false);
+            hasAlarmFunc(v);
             bool hasAlarm = hasAlarmFunc(v);
             if (hasAlarm && !m_alarmActive)
             {
+                qDebug() << "has alarm";
                 QMetaObject::invokeMethod(
-                    m_worker, [this, v] { m_worker->writeCoils(81, m_worker->stopAuto); },
+                    m_worker, [this, v,stop] { m_worker->writeCoils(65,stop); },
                     Qt::QueuedConnection
                 ); // 直接呼叫
                 m_alarmActive = true; // 標記已處理
@@ -79,6 +82,11 @@ void ModbusManager::createWorker()
     // 處理讀取 Holding Registers 的回傳數據
     connect(m_worker, &ModbusWorker::holdingRegisterReady,
         this, [this]( QVector<quint16> values) {
+            for (int i=0 ; i < values.size(); ++i) 
+            { 
+                //qDebug() << values[i]/409.5 ; 
+            }
+            
             emit holdingRegisterReady(values);
         });
 
@@ -178,12 +186,13 @@ void ModbusManager::writeRegisters( const QVector<double>& values)
     for (int i = 0; i < values.size(); ++i)
     {
         v[i] = (values[i] / 13);
-        qDebug() << "set Analog Output = " << v[i];
+        //qDebug() << "set Analog Output = " << v[i];
     }
     
     QMetaObject::invokeMethod(
         m_worker, [this, v] { m_worker->writeRegisters(56, v); },
         Qt::QueuedConnection
+
     );
 }
 
@@ -392,72 +401,230 @@ void ModbusManager::RightPressPlateBackward(double value)
 void ModbusManager::SmallCutterIn(double value)
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "SmallCutterIn" << v;
+    qDebug() << "SmallCutter1" << v;
     m_worker->set_SmallCutterIn(value);
 }
 void ModbusManager::LargeCutterIn(double value)
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "LargeCutterIn" << v;
+    qDebug() << "SmallCutter2" << v;
     m_worker->set_LargeCutterIn(value);
 }
 void ModbusManager::ModeSelect(double value)
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "ModeSelect" << v;
+    qDebug() << "SmallCutter3" << v;
     m_worker->set_ModeSelect(value);
 }
 void ModbusManager::RunIndicator(double value)
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "RunIndicator" << v;
+    qDebug() << "SmallCutter4" << v;
     m_worker->set_RunIndicator(value);
 }
 void ModbusManager::AlarmIndicator(double value)
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "AlarmIndicator" << v;
+    qDebug() << "SmallCutter5" << v;
     m_worker->set_AlarmIndicator(value);
 }
 void ModbusManager::StopIndicator(double value)
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "StopIndicator" << v;
+    qDebug() << "LargeCutterIn" << v;
     m_worker->set_StopIndicator(value);
 }
 void ModbusManager::Buzzer(double value)
-
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "Buzzer" << v;
+    qDebug() << "RunIndicator" << v;
     m_worker->set_Buzzer(value);
 }
 void ModbusManager::SmallRollModeSelect(double value)
 {
 
     bool v = (value > 0.0) ? true : false;
-    m_ModeSelet = v;
-    qDebug() << "SmallRollModeSelect" << v;
+    qDebug() << "AlarmIndicator" << v;
     m_worker->set_SmallRollModeSelect(value);
 }
+void ModbusManager::io103(double value)//o8
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "StopIndicator" << v;
+    m_worker->set_IO103(value);
+}
+void ModbusManager::io104(double value)//o9
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "Buzzer" << v;
+    m_worker->set_IO104(value);
 
+}
+void ModbusManager::io105(double value)//o10
+{
+    bool v = (value > 0.0) ? true : false;
+    m_ModeSelet = v;
+    qDebug() << "ModeSelect" << v;
+    m_worker->set_IO105(value);
+
+}
+void ModbusManager::io106(double value)//o11
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "I/O 106 = " << v;
+    m_worker->set_IO106(value);
+
+}
+void ModbusManager::io107(double value)//o12
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "I/O 107 = " << v;
+    m_worker->set_IO107(value);
+
+}
+void ModbusManager::io108(double value)//o13
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "I/O 108 = " << v;
+    m_worker->set_IO108(value);
+
+}
+void ModbusManager::io109(double value)//o14
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "I/O 109 = " << v;
+    m_worker->set_IO109(value);
+
+}
+void ModbusManager::io110(double value)//o15
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "I/O 110 = " << v;
+    m_worker->set_IO110(value);
+
+}
+void ModbusManager::io111(double value)//o16
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "I/O 111 = " << v;
+    m_worker->set_IO111(value);
+
+}
+void ModbusManager::io112(double value)//o17
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "I/O 112 = " << v;
+    m_worker->set_IO112(value);
+
+}
 void ModbusManager::IpcStart(bool v)
 {
     //writeCoils(81, m_worker->startAuto);
     
     if (m_ModeSelet)
     {
-        writeCoils(65, {1,0,1,0,0,1,0,0,1,1,0,0,0,0,0,0,1,0,1,0,1,0,1,1}); //小卷模式 正轉啟動
+        writeCoils(65, {0,0,1,0,0,1,0,0,1,1,0,0,0,0,0,1,1,0,1,0,1,0,1,1}); //小卷模式 正轉啟動
     }
     else
     {
-        writeCoils(65, {1,0,1,0,0,0,1,0,0,0,1,1,0,1,0,0,1,0,1,0,1,0,1,1});//大捲模式 正轉啟動
+
+        writeCoils(65, {0,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,1});//大捲模式 正轉啟動
     }
 }
-void ModbusManager::IpcStop(bool v)
+void ModbusManager::IpcStop(double val, bool v)
 {
-    qDebug() << "IpcStop";
     QVector<bool> stop(24, false);
+    bool StopBtn = true;
+    qDebug() << "IpcStop"; 
+        if (val <= 0.05)
+        {
 
-    writeCoils(65, stop);
+            writeCoils(65, stop);
+            StopBtn = false;
+        }
+        else
+        {
+            qDebug()<<" NowSpeed != 0";
+        }
+}
+//void ModbusManager::PressPlate(double value)
+//{
+//    bool v = (value > 0.0) ? true : false;
+//    if (v)
+//    {
+//        writeCoils(91, { 1,0,1,0 });
+//        
+//    }
+//    else 
+//    {
+//        writeCoils(91, { 0,1,0,1 });
+//    }
+//    QTimer::singleShot(1000, this, [this]() {
+//        writeCoils(91, { 0, 0, 0, 0 });
+//        });
+//}
+void ModbusManager::PressRoll(double v)
+{
+    {
+        writeSingleCoil(89,true);
+    }
+    QTimer::singleShot(500, this, 
+        [this]() 
+        {
+             writeSingleCoil(89, false);
+        });
+}
+void ModbusManager::PressRollDown(double v)
+{
+    {
+        writeSingleCoil(90, true);
+    }
+    QTimer::singleShot(500, this,
+        [this]()
+        {
+            writeSingleCoil(90, false);
+        });
+}
+void ModbusManager::PressPlate(double value)
+{
+    if (value == 1) 
+    {
+        writeCoils(91, { 0,0,1,0 });
+        QTimer::singleShot(500, this,
+            [this]()
+            {
+                writeCoils(91, { 0, 0, 0, 0 });
+            });
+    }
+    else if(value ==0)
+    {
+        writeCoils(91, { 0,1,0,1 });
+        QTimer::singleShot(500, this,
+            [this]()
+            {
+                writeCoils(91, { 0, 0, 0, 0 });
+            });
+    }
+}
+void ModbusManager::PressPlateBack(double value)
+{
+    if (value == 1)
+    {
+        writeCoils(91, { 1,0,0,0 });
+        QTimer::singleShot(500, this,
+            [this]()
+            {
+                writeCoils(91, { 0, 0, 0, 0 });
+            });
+    }
+    else if (value == 0)
+    {
+        writeCoils(91, { 0,1,0,1 });
+        QTimer::singleShot(500, this,
+            [this]()
+            {
+                writeCoils(91, { 0, 0, 0, 0 });
+            });
+
+    }
 }

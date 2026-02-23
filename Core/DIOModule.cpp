@@ -158,7 +158,7 @@ void DIOModule::process() {
             uint16_t currentState = (static_cast<uint16_t>(p1) << 8) | p0;
             QString binaryStr = QString("%1").arg(currentState, 16, 2, QChar('0'));
 
-            qDebug() << "Current DI State: [" << binaryStr.mid(0, 8) << "|" << binaryStr.mid(8, 8) << "]";
+            //qDebug() << "Current DI State: [" << binaryStr.mid(0, 8) << "|" << binaryStr.mid(8, 8) << "]";
             uint16_t changed = currentState ^ lastState;
 
             for (int i = 0; i < 16; ++i) 

@@ -25,29 +25,27 @@ void MS300::initPort() {
 }
 void MS300::onPollTimeout()
 {
-    //qDebug() << "Timer2 Tick...";
     if (!m_modbus || m_modbus->state() != QModbusDevice::ConnectedState) {
         qDebug() << "Device not connected, state:" << (m_modbus ? m_modbus->state() : -1);
         return;
     }
 
-    int id = m_currentIndex;
-    double targetHz = m_targetFreqs[id]; // 抓取 UI 先前存進來的最新值
+    int id = 2;
+    //double targetHz = m_targetFreqs[id]; // 抓取 UI 先前存進來的最新值
 
 
 
-    // --- 步驟 A: 寫入運轉指令 (2000H) ---
-    QModbusDataUnit writeUnit(QModbusDataUnit::HoldingRegisters, 0x2000, 2);
-    writeUnit.setValue(0, m_targetCmds[id]);
+    // --- 步驟 A: 寫入頻率指令 (2001H) ---
+    QModbusDataUnit writeUnit(QModbusDataUnit::HoldingRegisters, 0x2001, 1);
+    //writeUnit.setValue(0, m_targetCmds[id]);
     //qDebug() << id << "set mode" << m_targetCmds[id];
 
-    writeUnit.setValue(1, static_cast<quint16>(targetHz * 100));
-    //qDebug() << id << "set value" << static_cast<quint16>(targetHz * 100);
-
-    //writeUnit.setValue(2, m_targetReset[id]);
+    writeUnit.setValue(0, static_cast<quint16>(m_targetHz * 100));
+    //qDebug() << id << "set value" << static_cast<quint16>(m_targetHz * 100);
     
-    m_modbus->sendWriteRequest(writeUnit, id);
-    m_targetReset[id] = 0;
+
+    m_modbus->sendWriteRequest(writeUnit, 2);
+ 
     // ---讀取
     QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 0x2103, 1);
     if (auto* reply = m_modbus->sendReadRequest(readUnit, id)) {
@@ -57,17 +55,13 @@ void MS300::onPollTimeout()
                     const QModbusDataUnit res = reply->result();
                     if (id == 2)
                     {
+                        double rawValue = static_cast<double>(res.value(0));
 
-                        double val = static_cast<double>(res.value(0)) / 100.0;
-                        double maxHz = 60.0;
-                        double maxLinearSpeed = 130.0;
-                        double ratio = maxLinearSpeed / maxHz;
-
-                        // 3. 計算線速度
-                        double linearSpeed = val * ratio;
+                        // 2. 速度換算
+                        double lineSpeed = rawValue * (130.0 / 6000.0);
 
                         //qDebug() << "COM4 MS300: " << id << " Frequency= " << res.value(0);
-                        emit dataUpdated(id, linearSpeed);
+                        emit dataUpdated(id, lineSpeed);
                     }
 
                 }

@@ -8,17 +8,19 @@
 #include "DIOModule.h"
 #include "Tension.h"
 #include "MS300.h"
+#include "LengthController.h"
 #include <QQmlEngine>
 #include "KdbProxy.h"
-
+#include <QTimer>
 class Core : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
 public:
+    QVector<double> values;
     QVector<quint16> DataValues ;
     QVector<quint16> DataValues2;
-
+    double nowSpeed = 0;
     KdbProxy* m_proxy=nullptr;
     
     MS300* m_ms300 = nullptr;
@@ -29,6 +31,9 @@ public:
     
     QThread* threadDIO = nullptr;
     DIOModule* dioWorker = nullptr;
+
+    QThread* threadLength = nullptr;
+    LengthController* m_Length = nullptr;
 
     static Core& instance();  // Singleton entry
 
@@ -99,11 +104,29 @@ public:
 
         threadMS300->start();
     
+        m_Length = new LengthController();
+        threadLength = new QThread(this);
+        m_Length->moveToThread(threadLength);
+
+        connect(threadLength, &QThread::started, m_Length, &LengthController::initPort);
+
+        // 處理接收到的資料 (假設您 UI 有一個 QLabel 或顯示欄位)
+        connect(m_Length, &LengthController::lengthUpdated, this,&Core::onlength);
+
+        // 處理錯誤
+        connect(m_Length, &LengthController::errorOccurred, this, [](QString err) {
+            qWarning() << "Length COM2 Error:" << err;
+            });
+
+        // 4. 資源回收：當執行緒結束時，刪除 m_Length
+        connect(threadLength, &QThread::finished, m_Length, &QObject::deleteLater);
+
+        // 5. 正式啟動
+        threadLength->start();
+
 
         connect(m_tension, &Modbus485::dataUpdated,
             this, &Core::on485Data);
-        connect(m_tension, &Modbus485::lengthupdate,
-            this, &Core::onlength);
         connect(m_manager, &ModbusManager::workerData,
             this, &Core::onWorkerData);
         connect(m_manager, &ModbusManager::workerData2,
@@ -118,6 +141,7 @@ public:
             this, &Core::onZeroSpeed01);
         connect(m_manager, &ModbusManager::Zerospeed02,
             this, &Core::onZeroSpeed02);
+
 
 
         DataValues.resize(112);
@@ -153,11 +177,20 @@ public:
     void setMS300Run(int id, int mode);
     void resetMS300(int id);
     void loadSavedData();
+    void setMainFreqs(double v);
+    void setSTOP(double v);
+
     void writeRegisters(double v)
     {
-        QVector<double> values;
+        nowSpeed = v;
         values.resize(4);
-        values.fill(v);
+        //values.fill(v);
+        values[0] = v*m_p1;
+        values[1] = v*m_p2;
+        values[2] = v*m_p3;
+        values[3] = v*m_p4;
+
+
         m_manager->writeRegisters(values);
     }
     void updateProxyProperty(int index, quint16 value);
@@ -165,52 +198,89 @@ public:
 
     void coreConnect()
     {
+        //main Screen
+        QObject::connect(m_proxy, &KdbProxy::bigRollModeChanged, this,&Core::modeSelect);
+        QObject::connect(m_proxy, &KdbProxy::restBtnChanged,m_Length,&LengthController::lengthReset );
+        //QObject::connect(m_proxy, &KdbProxy::restBtnChanged, this, &Core::ontest);
+
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter1Changed, m_manager,&ModbusManager::SmallCutterIn);
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter2Changed, m_manager,&ModbusManager::LargeCutterIn);
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter3Changed, m_manager, &ModbusManager::ModeSelect);
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter4Changed, m_manager, &ModbusManager::RunIndicator);
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter5Changed, m_manager, &ModbusManager::AlarmIndicator);
+
+
+        QObject::connect(m_proxy, &KdbProxy::pressureRollerChanged, m_manager, &ModbusManager::PressRoll);
+        QObject::connect(m_proxy, &KdbProxy::pressureRollerDownChanged, m_manager, &ModbusManager::PressRollDown);
+        QObject::connect(m_proxy, &KdbProxy::pressurePlateChanged, this, &Core::PressPlate);
+        QObject::connect(m_proxy, &KdbProxy::pressurePlateBackChanged, this, &Core::PressPlateBack);
+
         //ADAM-5000  5056SO Output
-        QObject::connect(m_proxy, &KdbProxy::vfdAlarmResetChanged, m_manager, &ModbusManager::VfdAlarmReset);
-        QObject::connect(m_proxy, &KdbProxy::unwinderForwardChanged, m_manager, &ModbusManager::UnwinderForward);
-        QObject::connect(m_proxy, &KdbProxy::unwinderReverseChanged, m_manager, &ModbusManager::UnwinderReverse);
-        QObject::connect(m_proxy, &KdbProxy::mainDriveForwardChanged, m_manager, &ModbusManager::MainDriveForward);
-        QObject::connect(m_proxy, &KdbProxy::mainDriveReverseChanged, m_manager, &ModbusManager::MainDriveReverse);
-        QObject::connect(m_proxy, &KdbProxy::smallWinderForwardChanged, m_manager, &ModbusManager::SmallWinderForward);
-        QObject::connect(m_proxy, &KdbProxy::smallWinderReverseChanged, m_manager, &ModbusManager::SmallWinderReverse);
-        QObject::connect(m_proxy, &KdbProxy::largeWinderForwardChanged, m_manager, &ModbusManager::LargeWinderForward);
-        QObject::connect(m_proxy, &KdbProxy::largeWinderReverseChanged, m_manager, &ModbusManager::LargeWinderReverse);
-        QObject::connect(m_proxy, &KdbProxy::smallCutterStartChanged, m_manager, &ModbusManager::SmallCutterStart);
-        QObject::connect(m_proxy, &KdbProxy::selvedgeFanStartChanged, m_manager, &ModbusManager::SelvedgeFanStart);
-        QObject::connect(m_proxy, &KdbProxy::largeCutterStartChanged, m_manager, &ModbusManager::LargeCutterStart);
-        QObject::connect(m_proxy, &KdbProxy::leftSelvedgeWinderForwardChanged, m_manager, &ModbusManager::LeftSelvedgeWinderForward);
-        QObject::connect(m_proxy, &KdbProxy::leftSelvedgeWinderReverseChanged, m_manager, &ModbusManager::LeftSelvedgeWinderReverse);
-        QObject::connect(m_proxy, &KdbProxy::rightSelvedgeWinderForwardChanged, m_manager, &ModbusManager::RightSelvedgeWinderForward);
-        QObject::connect(m_proxy, &KdbProxy::rightSelvedgeWinderReverseChanged, m_manager, &ModbusManager::RightSelvedgeWinderReverse);
-        QObject::connect(m_proxy, &KdbProxy::webAlignerStartChanged, m_manager, &ModbusManager::WebAlignerStart);
-        QObject::connect(m_proxy, &KdbProxy::unwindingTensionAutoChanged, m_manager, &ModbusManager::UnwindingTensionAuto);
-        QObject::connect(m_proxy, &KdbProxy::unwindingDiameterResetChanged, m_manager, &ModbusManager::UnwindingDiameterRe);
-        QObject::connect(m_proxy, &KdbProxy::smallWinderTensionAutoChanged, m_manager, &ModbusManager::SmallWinderTensionAuto);
-        QObject::connect(m_proxy, &KdbProxy::smallWinderDiameterResetChanged, m_manager, &ModbusManager::SmallWinderDiameterRe);
-        QObject::connect(m_proxy, &KdbProxy::largeWinderTensionAutoChanged, m_manager, &ModbusManager::LargeWinderTensionAuto);
-        QObject::connect(m_proxy, &KdbProxy::largeWinderDiameterResetChanged, m_manager, &ModbusManager::LargeWinderDiameterRe);
-        QObject::connect(m_proxy, &KdbProxy::leftSelvedgeWinderAutoChanged, m_manager, &ModbusManager::LeftSelvedgeWinderAuto);
-        QObject::connect(m_proxy, &KdbProxy::rightSelvedgeWinderAutoChanged, m_manager, &ModbusManager::RightSelvedgeWinderAuto);
-        QObject::connect(m_proxy, &KdbProxy::nipRollUpChanged, m_manager, &ModbusManager::NipRollUp);
-        QObject::connect(m_proxy, &KdbProxy::nipRollDownChanged, m_manager, &ModbusManager::NipRollDown);
-        QObject::connect(m_proxy, &KdbProxy::leftPressPlateForwardChanged, m_manager, &ModbusManager::LeftPressPlateForward);
-        QObject::connect(m_proxy, &KdbProxy::leftPressPlateBackwardChanged, m_manager, &ModbusManager::LeftPressPlateBackward);
-        QObject::connect(m_proxy, &KdbProxy::rightPressPlateForwardChanged, m_manager, &ModbusManager::RightPressPlateForward);
-        QObject::connect(m_proxy, &KdbProxy::rightPressPlateBackwardChanged, m_manager, &ModbusManager::RightPressPlateBackward);
-        QObject::connect(m_proxy, &KdbProxy::smallCutterInChanged, m_manager, &ModbusManager::SmallCutterIn);
-        QObject::connect(m_proxy, &KdbProxy::largeCutterInChanged, m_manager, &ModbusManager::LargeCutterIn);
-        QObject::connect(m_proxy, &KdbProxy::modeSelectChanged, m_manager, &ModbusManager::ModeSelect);
-        QObject::connect(m_proxy, &KdbProxy::runIndicatorChanged, this, &Core::ontest);
-        QObject::connect(m_proxy, &KdbProxy::alarmIndicatorChanged, m_manager, &ModbusManager::AlarmIndicator);
-        QObject::connect(m_proxy, &KdbProxy::stopIndicatorChanged, this, &Core::ontest2);
-        QObject::connect(m_proxy, &KdbProxy::buzzerChanged, m_manager, &ModbusManager::Buzzer);
-        QObject::connect(m_proxy, &KdbProxy::smallRollModeSelectChanged, m_manager, &ModbusManager::SmallRollModeSelect);
-        
+        QObject::connect(m_proxy, &KdbProxy::vfdAlarmResetChanged, m_manager, &ModbusManager::VfdAlarmReset);//64
+        QObject::connect(m_proxy, &KdbProxy::unwinderForwardChanged, m_manager, &ModbusManager::UnwinderForward);//65
+        QObject::connect(m_proxy, &KdbProxy::unwinderReverseChanged, m_manager, &ModbusManager::UnwinderReverse);//66
+        QObject::connect(m_proxy, &KdbProxy::mainDriveForwardChanged, m_manager, &ModbusManager::MainDriveForward);//67
+        QObject::connect(m_proxy, &KdbProxy::mainDriveReverseChanged, m_manager, &ModbusManager::MainDriveReverse);//68
+        QObject::connect(m_proxy, &KdbProxy::smallWinderForwardChanged, m_manager, &ModbusManager::SmallWinderForward);//69
+        QObject::connect(m_proxy, &KdbProxy::smallWinderReverseChanged, m_manager, &ModbusManager::SmallWinderReverse);//70
+        QObject::connect(m_proxy, &KdbProxy::largeWinderForwardChanged, m_manager, &ModbusManager::LargeWinderForward);//71
+        QObject::connect(m_proxy, &KdbProxy::largeWinderReverseChanged, m_manager, &ModbusManager::LargeWinderReverse);//72
+        QObject::connect(m_proxy, &KdbProxy::smallCutterStartChanged, m_manager, &ModbusManager::SmallCutterStart);//73
+        QObject::connect(m_proxy, &KdbProxy::selvedgeFanStartChanged, m_manager, &ModbusManager::SelvedgeFanStart);//74
+        QObject::connect(m_proxy, &KdbProxy::largeCutterStartChanged, m_manager, &ModbusManager::LargeCutterStart);//75
+        QObject::connect(m_proxy, &KdbProxy::leftSelvedgeWinderForwardChanged, m_manager, &ModbusManager::LeftSelvedgeWinderForward);//76
+        QObject::connect(m_proxy, &KdbProxy::leftSelvedgeWinderReverseChanged, m_manager, &ModbusManager::LeftSelvedgeWinderReverse);//77
+        QObject::connect(m_proxy, &KdbProxy::rightSelvedgeWinderForwardChanged, m_manager, &ModbusManager::RightSelvedgeWinderForward);//78
+        QObject::connect(m_proxy, &KdbProxy::rightSelvedgeWinderReverseChanged, m_manager, &ModbusManager::RightSelvedgeWinderReverse);//79
+        QObject::connect(m_proxy, &KdbProxy::webAlignerStartChanged, m_manager, &ModbusManager::WebAlignerStart);//80
+        QObject::connect(m_proxy, &KdbProxy::unwindingTensionAutoChanged, m_manager, &ModbusManager::UnwindingTensionAuto);//81
+        QObject::connect(m_proxy, &KdbProxy::unwindingDiameterResetChanged, m_manager, &ModbusManager::UnwindingDiameterRe);//82
+        QObject::connect(m_proxy, &KdbProxy::smallWinderTensionAutoChanged, m_manager, &ModbusManager::SmallWinderTensionAuto);//83
+        QObject::connect(m_proxy, &KdbProxy::smallWinderDiameterResetChanged, m_manager, &ModbusManager::SmallWinderDiameterRe);//84
+        QObject::connect(m_proxy, &KdbProxy::largeWinderTensionAutoChanged, m_manager, &ModbusManager::LargeWinderTensionAuto);//85
+        QObject::connect(m_proxy, &KdbProxy::largeWinderDiameterResetChanged, m_manager, &ModbusManager::LargeWinderDiameterRe);//86
+        QObject::connect(m_proxy, &KdbProxy::leftSelvedgeWinderAutoChanged, m_manager, &ModbusManager::LeftSelvedgeWinderAuto);//87
+        QObject::connect(m_proxy, &KdbProxy::rightSelvedgeWinderAutoChanged, m_manager, &ModbusManager::RightSelvedgeWinderAuto);//88
+        QObject::connect(m_proxy, &KdbProxy::nipRollUpChanged, m_manager, &ModbusManager::NipRollUp);//89
+        QObject::connect(m_proxy, &KdbProxy::nipRollDownChanged, m_manager, &ModbusManager::NipRollDown);//90
+        QObject::connect(m_proxy, &KdbProxy::leftPressPlateForwardChanged, m_manager, &ModbusManager::LeftPressPlateForward);//91
+        QObject::connect(m_proxy, &KdbProxy::leftPressPlateBackwardChanged, m_manager, &ModbusManager::LeftPressPlateBackward);//92
+        QObject::connect(m_proxy, &KdbProxy::rightPressPlateForwardChanged, m_manager, &ModbusManager::RightPressPlateForward);//93
+        QObject::connect(m_proxy, &KdbProxy::rightPressPlateBackwardChanged, m_manager, &ModbusManager::RightPressPlateBackward);//94
+        QObject::connect(m_proxy, &KdbProxy::smallCutterInChanged, m_manager, &ModbusManager::SmallCutterIn);//95
+        QObject::connect(m_proxy, &KdbProxy::largeCutterInChanged, m_manager, &ModbusManager::LargeCutterIn);//96
+        QObject::connect(m_proxy, &KdbProxy::modeSelectChanged, m_manager, &ModbusManager::ModeSelect);//97
+        QObject::connect(m_proxy, &KdbProxy::runIndicatorChanged, m_manager, &ModbusManager::RunIndicator);//98
+        QObject::connect(m_proxy, &KdbProxy::alarmIndicatorChanged, m_manager, &ModbusManager::AlarmIndicator);//99
+        QObject::connect(m_proxy, &KdbProxy::stopIndicatorChanged, m_manager, &ModbusManager::StopIndicator);//100
+        QObject::connect(m_proxy, &KdbProxy::buzzerChanged, m_manager, &ModbusManager::Buzzer);//101
+        QObject::connect(m_proxy, &KdbProxy::smallRollModeSelectChanged, m_manager, &ModbusManager::SmallRollModeSelect);//102
+        QObject::connect(m_proxy, &KdbProxy::output8Changed, m_manager, &ModbusManager::io103);//103
+        QObject::connect(m_proxy, &KdbProxy::output9Changed, m_manager, &ModbusManager::io104);//104
+        QObject::connect(m_proxy, &KdbProxy::output10Changed, m_manager, &ModbusManager::io105);//105
+
+        QObject::connect(m_proxy, &KdbProxy::output11Changed, m_manager, &ModbusManager::io106);//106
+        QObject::connect(m_proxy, &KdbProxy::whiteLightChanged, m_manager, &ModbusManager::io106);
+
+        QObject::connect(m_proxy, &KdbProxy::output12Changed, m_manager, &ModbusManager::io107);//107
+        QObject::connect(m_proxy, &KdbProxy::uvLightChanged, m_manager, &ModbusManager::io107);
+
+        QObject::connect(m_proxy, &KdbProxy::output13Changed, m_manager, &ModbusManager::io108);//108
+        QObject::connect(m_proxy, &KdbProxy::bottomLightChanged, m_manager, &ModbusManager::io108);
+
+        QObject::connect(m_proxy, &KdbProxy::output14Changed, m_manager, &ModbusManager::io109);//109
+        QObject::connect(m_proxy, &KdbProxy::output15Changed, m_manager, &ModbusManager::io110);//110
+        QObject::connect(m_proxy, &KdbProxy::output16Changed, m_manager, &ModbusManager::io111);//111
+        QObject::connect(m_proxy, &KdbProxy::output17Changed, m_manager, &ModbusManager::io112);//112
+
         //UI主畫面 設定張力值
         QObject::connect(m_proxy, &KdbProxy::modifyUnwindingTensionChanged, this, &Core::setTensionSV_1);
         QObject::connect(m_proxy, &KdbProxy::modifySmallWinderTensionOverChanged, this, &Core::setTensionSV_2);
         QObject::connect(m_proxy, &KdbProxy::modifyLargeWinderTensionOverChanged, this, &Core::setTensionSV_3);
-        QObject::connect(m_proxy, &KdbProxy::modifySpeedChanged, this,&Core::writeRegisters);
+        QObject::connect(m_proxy, &KdbProxy::modifySpeedChanged, this,&Core::setMainFreqs);
+        QObject::connect(m_proxy, &KdbProxy::modifyCurrentLengthChanged, this, &Core::setCurrentLength);
+        
+        QObject::connect(m_proxy, &KdbProxy::modifyBrakingDistanceChanged, this, &Core::setBrakingDistance);
 
         //ADAM-5000  5024 Analog Output  
 
@@ -219,21 +289,63 @@ public:
         QObject::connect(m_proxy, &KdbProxy::modifyAnalogOutCutterChanged, m_manager, &ModbusManager::writeRegister58);
         QObject::connect(m_proxy, &KdbProxy::modifyAnalogOutSelvedgeWinderChanged, m_manager, &ModbusManager::writeRegister59);
 
+        QObject::connect(m_proxy, &KdbProxy::analogOutUnwinderMainDrivePcChanged, this, [this](double pc)
+            {
 
-    }
+                m_p1 = pc / 100;
+                qDebug() << "p1 set " << m_p1;
+
+            }
+        );
+        QObject::connect(m_proxy, &KdbProxy::analogOutWinderPcChanged, this, [this](double pc)
+            {
+                
+                m_p2 = pc / 100;
+                qDebug() << "p2 set " << m_p2;
+
+            }
+        );
+        QObject::connect(m_proxy, &KdbProxy::analogOutCutterPcChanged, this, [this](double pc) 
+            {
+                
+                m_p3 = pc / 100;
+                qDebug() << "p3 set " << m_p3;
+
+            }
+        );
+        QObject::connect(m_proxy, &KdbProxy::analogOutSelvedgeWinderPcChanged, this, [this](double pc)
+            {
+
+                m_p4 = pc / 100;
+                qDebug() << "p4 set " << m_p4;
+
+            }
+        );
+
+        QObject::connect(m_proxy, &KdbProxy::smallRollMotorChanged, this, [this]()
+            {
+                qDebug() << "JOG SmallWinderReverse";
+                m_manager->SmallWinderReverse(1.0);
+                QTimer::singleShot(1000, this,
+                    [this]()
+                    {
+                        m_manager->SmallWinderReverse(0.0);
+                    });
+            }
+        );
+     };
 public slots:
     void writeSingleCoil(int address, double value);
     void setTensionSV_1(double v);
     void setTensionSV_2(double v);
     void setTensionSV_3(double v);
-    void ontest(bool v) 
+    void ontest() 
     {
-        handleDIOSignal(0, v);
+        DataValues[80] = 1;
+        onWorkerData(DataValues);
+        qDebug() << "test";
     }
-    void ontest2(bool v)
-    {
-        handleDIOSignal(1, v);
-    }
+   
 signals:
     void holdingRegisterReady(QVector<quint16> values);
     //void newDataReady( QVector<quint16> values);
@@ -254,6 +366,75 @@ private slots:
     void onZeroSpeed02();
     void on485Data(int id, double pv, double tqo);
     void onMS300Data(int id, double v);
+    void setCurrentLength(int length);
+    void modeSelect(double v)
+    {
+        bool value = (v != 1.0) ? true : false;
+        writeSingleCoil(105, value);
+    }
+    void setBrakingDistance(double BrakingDistance);
+    void PressPlate(double value)
+    {
+        if (PressIndex2 <= 0)
+        {
+            PressIndex2++;
+        }
+        else
+        {
+            PressIndex2 = 0;
+        }
+        if (PressIndex2 == 1)
+        {
+            writeCoils(91, { 0,0,1,0 });
+            QTimer::singleShot(500, this,
+                [this]()
+                {
+                    writeCoils(91, { 0, 0, 0, 0 });
+                });
+        }
+        else if (PressIndex2 == 0)
+        {
+            writeCoils(91, { 0,1,0,1 });
+            QTimer::singleShot(500, this,
+                [this]()
+                {
+                    writeCoils(91, { 0, 0, 0, 0 });
+                });
+            PressIndex = 0;
+            PressIndex2 = 0;
+        }
+    }
+    void PressPlateBack(double value)
+    {
+        if (PressIndex <= 0) 
+        {
+            PressIndex++;
+        }
+        else 
+        {
+            PressIndex = 0;
+        }
+        if (PressIndex == 1)
+        {
+            writeCoils(91, { 1,0,0,0 });
+            QTimer::singleShot(500, this,
+                [this]()
+                {
+                    writeCoils(91, { 0, 0, 0, 0 });
+                });
+        }
+        else if (PressIndex == 0)
+        {
+            writeCoils(91, { 0,1,0,1 });
+            QTimer::singleShot(500, this,
+                [this]()
+                {
+                    writeCoils(91, { 0, 0, 0, 0 });
+                });
+            PressIndex = 0;
+            PressIndex2 = 0;
+        }
+    }
 private:
     explicit Core(QObject* parent = nullptr);
     ~Core();
@@ -261,12 +442,25 @@ private:
     static QMutex m_mutex;
 
     ModbusManager* m_manager{ nullptr };
+    bool m_isWaitingForStop = false;
+    bool m_isBrakingPerformed = false;
     bool m_UnwinderJogReverseSelect = false;
     bool m_WinderJogReverseSelect = false;
     bool m_LeftSelvedgeWinderSelect = false;
     bool m_RightSelvedgeWinderSelect = false;
     bool m_mode = false;
     int targetAddr;
+    int m_length = 0;
+    double m_BrakingDistance = 0.0;
+    double speed = 0;
+    double setspeed = 0;
+    double m_p1 = 1.0;//放捲
+    double m_p2 = 1.0;//大小收卷
+    double m_p3 = 1.0;//大小切刀
+    double m_p4 = 1.0;//耳料收卷
+    int PressIndex = 0;
+    int PressIndex2 = 0;
+
     QVector<bool> targetWinder;
     QVector<bool> Winder1 = { 1,0,1 };
     QVector<bool> Winder2 = { 1,0,1,0,0,0,0,1,0,1 };
@@ -274,7 +468,5 @@ private:
     QVector<bool> Winder4 = { 1,0,1,0,0,0,0,1,0,0 };
     
     QVector<bool> StopWinderJog = { 0,0,0,0,0,0,0,0,0,0,0 };
-
-
 
 };

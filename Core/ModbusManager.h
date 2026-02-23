@@ -31,20 +31,13 @@ public:
     
     bool hasAlarmFunc(const QVector<quint16> v)
     {
-        // 不檢查的 input
-
-        static const std::set<int> ignoreBits = { 55, 56, 57, 58, 59};
-        bool hasAlarm =false;
-        for (int i = 0; i < 64; ++i)
+        if(v[33]==0 || v[37]==0 )
         {
-            if (ignoreBits.count(i))
-                continue;   // 跳過這些點
-            if (v[i])
-            {
-                hasAlarm = true;
-            }
+            return true;
         }
-        return hasAlarm;
+
+        // 3. 只有當 34 ~ 40 全部都為 1 (或大於 0) 時，才視為正常
+        return false;
     }
 
 public slots:
@@ -90,10 +83,23 @@ public slots:
     void StopIndicator(double value);//100
     void Buzzer(double value);//101
     void SmallRollModeSelect(double value);//102
-
+    void io103(double value); //103
+    void io104(double value); //104
+    void io105(double value); //105
+    void io106(double value); //106
+    void io107(double value); //107
+    void io108(double value); //108
+    void io109(double value); //109
+    void io110(double value); //110
+    void io111(double value); //111
+    void io112(double value); //112
+    void PressRoll(double v);
+    void PressRollDown(double v);
+    void PressPlate(double v);
+    void PressPlateBack(double v);
     //IPC DIO
     void IpcStart(bool v); //0
-    void IpcStop(bool v);  //1
+    void IpcStop(double val,bool v);  //1
     //void IpcAlarmRe(bool v);    //2
     //void MainJogForward(bool v);   //3
     //void MainJogReverse(bool v);   //4
@@ -117,6 +123,7 @@ signals:
     void Zerospeed01();
     void Zerospeed02();
 
+
 private:
 
         QThread* m_thread;
@@ -126,7 +133,7 @@ private:
         bool m_RightSelvedgeWinderSelect = false;
         bool m_WinderJogReverseSelect = false;
         bool m_UnwinderJogReverseSelect = false;
-
+        QVector<double> stopSpeed = { 0,0,0,0 };
         int currentOutput = 0;    // 目前輸出
         int targetOutput = 0;     // 設定的輸出值
         int stepSize = 50;        // 每次增加

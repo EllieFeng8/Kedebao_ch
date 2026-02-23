@@ -37,7 +37,12 @@ public slots:
     void updateFreqCache(int id, double hz) {
         if (id >= 1 && id <= 10) m_targetFreqs[id] = hz;
     }
-    // UI 呼叫此 Slot 來更新運轉狀態
+
+    void setTargetFrequency(double hz) {
+        if (hz < 0.0) hz = 0.0;
+        if (hz > 600.0) hz = 600.0;
+        m_targetHz = hz;
+    }// UI 呼叫此 Slot 來更新運轉狀態
     void updateControlCache(int id, quint16 cmd) {
         if (id >= 1 && id <= 10) m_targetCmds[id] = cmd;
     }
@@ -59,6 +64,17 @@ public slots:
 
         qDebug() << "MS300 resources cleaned up.";
     }
+    void setAccelDecelMode(int mode) {
+        if (mode < 0 || mode > 3) return;
+
+        // 1. 先清空 bit 7~6 (使用遮罩 0xFF3F)
+        m_accelDecelWord &= 0xFF3F;
+
+        // 2. 將 mode 左移 6 位元寫入
+        m_accelDecelWord |= (static_cast<quint16>(mode) << 6);
+
+        qDebug() << "Target Accel/Decel Mode:" << mode << " Hex:" << QString::number(m_accelDecelWord, 16);
+    }
 private slots:
     void onPollTimeout();
 
@@ -68,6 +84,7 @@ private:
     quint16 m_targetReset[11];//  2002H (Reset 指令位址)
     QModbusRtuSerialClient* m_modbus = nullptr; 
     QTimer* m_pollTimer = nullptr;
-
+    quint16 m_accelDecelWord = 0x0000;
     int m_currentIndex = 1;
+    double m_targetHz = 0.0;
 };

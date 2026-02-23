@@ -12,6 +12,8 @@ class KdbProxy : public QObject
     Q_OBJECT
     QML_ELEMENT
 
+    Q_PROPERTY(int bigRollMode READ getBigRollMode WRITE setBigRollMode NOTIFY bigRollModeChanged)
+    Q_PROPERTY(int restBtn READ getRestBtn WRITE setRestBtn NOTIFY restBtnChanged)
     Q_PROPERTY(int metalDetector READ getMetalDetector NOTIFY metalDetectorChanged)
     Q_PROPERTY(int gratingDetection READ getGratingDetection NOTIFY gratingDetectionChanged)
     Q_PROPERTY(int oppositeSide READ getOppositeSide NOTIFY oppositeSideChanged)
@@ -43,7 +45,16 @@ class KdbProxy : public QObject
     Q_PROPERTY(double modifyLargeWinderTensionOver READ getModifyLargeWinderTensionOver WRITE setModifyLargeWinderTensionOver NOTIFY modifyLargeWinderTensionOverChanged)
 
 
-    // ===== INPUT-1 Alarm Signals =====
+    //壓板
+    Q_PROPERTY(int pressurePlate READ getPressurePlate WRITE setPressurePlate NOTIFY pressurePlateChanged)
+    //壓板
+    Q_PROPERTY(int pressurePlateBack READ getPressurePlateBack WRITE setPressurePlateBack NOTIFY pressurePlateBackChanged)
+    //壓輪
+    Q_PROPERTY(int pressureRoller READ getPressureRoller WRITE setPressureRoller NOTIFY pressureRollerChanged)
+    //壓輪
+    Q_PROPERTY(int pressureRollerDown READ getPressureRollerDown WRITE setPressureRollerDown NOTIFY pressureRollerDownChanged)
+
+        // ===== INPUT-1 Alarm Signals =====
     Q_PROPERTY(double unwinderVfdFreqAlarm READ getUnwinderVfdFreqAlarm NOTIFY unwinderVfdFreqAlarmChanged)
     Q_PROPERTY(double mainDriveVfdFreqAlarm READ getMainDriveVfdFreqAlarm NOTIFY mainDriveVfdFreqAlarmChanged)
     Q_PROPERTY(double smallWinderVfdFreqAlarm READ getSmallWinderVfdFreqAlarm NOTIFY smallWinderVfdFreqAlarmChanged)
@@ -334,8 +345,46 @@ class KdbProxy : public QObject
     Q_PROPERTY(int buzzerSwitch READ getBuzzerSwitch WRITE setBuzzerSwitch NOTIFY buzzerSwitchChanged)
     Q_PROPERTY(int smallRollModeSelectSwitch READ getSmallRollModeSelectSwitch WRITE setSmallRollModeSelectSwitch NOTIFY smallRollModeSelectSwitchChanged)
 
+    //8
+    Q_PROPERTY(double output8 READ getOutput8 WRITE setOutput8 NOTIFY output8Changed)
+    Q_PROPERTY(double output8Switch READ getOutput8 WRITE setOutput8 NOTIFY output8Changed)
 
-    // ===== ANALOG OUTPUT =====
+    //9
+    Q_PROPERTY(double output9 READ getOutput9 WRITE setOutput9 NOTIFY output9Changed)
+    Q_PROPERTY(double output9Switch READ getOutput9 WRITE setOutput9 NOTIFY output9Changed)
+
+    //10
+    Q_PROPERTY(double output10 READ getOutput10 WRITE setOutput10 NOTIFY output10Changed)
+    Q_PROPERTY(double output10Switch READ getOutput10 WRITE setOutput10 NOTIFY output10Changed)
+
+    //11
+    Q_PROPERTY(double output11 READ getOutput11 WRITE setOutput11 NOTIFY output11Changed)
+    Q_PROPERTY(double output11Switch READ getOutput11 WRITE setOutput11 NOTIFY output11Changed)
+
+    //12
+    Q_PROPERTY(double output12 READ getOutput12 WRITE setOutput12 NOTIFY output12Changed)
+    Q_PROPERTY(double output12Switch READ getOutput12 WRITE setOutput12 NOTIFY output12Changed)
+
+    //13
+    Q_PROPERTY(double output13 READ getOutput13 WRITE setOutput13 NOTIFY output13Changed)
+    Q_PROPERTY(double output13Switch READ getOutput13 WRITE setOutput13 NOTIFY output13Changed)
+
+        //14
+    Q_PROPERTY(double output14 READ getOutput14 WRITE setOutput14 NOTIFY output14Changed)
+    Q_PROPERTY(double output14Switch READ getOutput14 WRITE setOutput14 NOTIFY output14Changed)
+
+        //15
+    Q_PROPERTY(double output15 READ getOutput15 WRITE setOutput15 NOTIFY output15Changed)
+    Q_PROPERTY(double output15Switch READ getOutput15 WRITE setOutput15 NOTIFY output15Changed)
+        //16
+    Q_PROPERTY(double output16 READ getOutput16 WRITE setOutput16 NOTIFY output16Changed)
+    Q_PROPERTY(double output16Switch READ getOutput16 WRITE setOutput16 NOTIFY output16Changed)
+
+        //17
+    Q_PROPERTY(double output17 READ getOutput17 WRITE setOutput17 NOTIFY output17Changed)
+    Q_PROPERTY(double output17Switch READ getOutput17 WRITE setOutput17 NOTIFY output17Changed)
+
+        // ===== ANALOG OUTPUT =====
     Q_PROPERTY(double analogOutUnwinderMainDrive READ getAnalogOutUnwinderMainDrive WRITE setAnalogOutUnwinderMainDrive NOTIFY analogOutUnwinderMainDriveChanged)
     Q_PROPERTY(double analogOutWinder READ getAnalogOutWinder WRITE setAnalogOutWinder NOTIFY analogOutWinderChanged)
     Q_PROPERTY(double analogOutCutter READ getAnalogOutCutter WRITE setAnalogOutCutter NOTIFY analogOutCutterChanged)
@@ -345,6 +394,12 @@ class KdbProxy : public QObject
     Q_PROPERTY(double modifyAnalogOutWinder READ getModifyAnalogOutWinder WRITE setModifyAnalogOutWinder NOTIFY modifyAnalogOutWinderChanged)
     Q_PROPERTY(double modifyAnalogOutCutter READ getModifyAnalogOutCutter WRITE setModifyAnalogOutCutter NOTIFY modifyAnalogOutCutterChanged)
     Q_PROPERTY(double modifyAnalogOutSelvedgeWinder READ getModifyAnalogOutSelvedgeWinder WRITE setModifyAnalogOutSelvedgeWinder NOTIFY modifyAnalogOutSelvedgeWinderChanged)
+
+     //%
+    Q_PROPERTY(double analogOutUnwinderMainDrivePc READ getAnalogOutUnwinderMainDrivePc WRITE setAnalogOutUnwinderMainDrivePc NOTIFY analogOutUnwinderMainDrivePcChanged)
+    Q_PROPERTY(double analogOutWinderPc READ getAnalogOutWinderPc WRITE setAnalogOutWinderPc NOTIFY analogOutWinderPcChanged)
+    Q_PROPERTY(double analogOutCutterPc READ getAnalogOutCutterPc WRITE setAnalogOutCutterPc NOTIFY analogOutCutterPcChanged)
+    Q_PROPERTY(double analogOutSelvedgeWinderPc READ getAnalogOutSelvedgeWinderPc WRITE setAnalogOutSelvedgeWinderPc NOTIFY analogOutSelvedgeWinderPcChanged)
 
     // ===== ANALOG OUTPUT Switch=====
     Q_PROPERTY(int analogOutUnwinderMainDriveSwitch READ getAnalogOutUnwinderMainDriveSwitch WRITE setAnalogOutUnwinderMainDriveSwitch NOTIFY analogOutUnwinderMainDriveSwitchChanged)
@@ -442,10 +497,22 @@ class KdbProxy : public QObject
 
 public:
     explicit KdbProxy(QObject* parent = nullptr) : QObject(parent) {}
+
+    Q_INVOKABLE int getBigRollMode() const { return m_bigRollMode; }
+    void setBigRollMode(int value) { m_bigRollMode = value; emit bigRollModeChanged(m_bigRollMode); }
+
+    Q_INVOKABLE int getRestBtn() const { return m_restBtn; }
+    void setRestBtn(int value) { m_restBtn = value; emit restBtnChanged(m_restBtn); }
+
      Q_INVOKABLE int getMetalDetector() const { return m_metalDetector; }
      Q_INVOKABLE int getGratingDetection() const { return m_gratingDetection; }
      Q_INVOKABLE int getOppositeSide() const { return m_OppositeSideSignal; }
-
+     void setOppositeSide(int value)
+     {
+         if (m_OppositeSideSignal != value)
+             m_OppositeSideSignal = value;
+         emit oppositeSideChanged(m_OppositeSideSignal);
+     }
      Q_INVOKABLE int getDoorASignal() const { return m_doorASignal; }
      Q_INVOKABLE int getDoorBSignal() const { return m_doorBSignal; }
      Q_INVOKABLE int getDoorCSignal() const { return m_doorCSignal; }
@@ -485,7 +552,7 @@ public:
      Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
      Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
      Q_INVOKABLE double getModifyBrakingDistance() const { return m_modifybrakingDistance;}
-     void setModifyCurrentLength(int value){m_modifycurrentLength = value; emit modifyCurrentLengthChanged(m_brakingDistance);};
+     void setModifyCurrentLength(int value){m_modifycurrentLength = value; emit modifyCurrentLengthChanged(m_modifycurrentLength);};
      void setModifySpeed(int value){m_modifyspeed = value; emit modifySpeedChanged(m_modifyspeed);};
      void setModifyBrakingDistance(double value){m_modifybrakingDistance = value; emit modifyBrakingDistanceChanged(m_modifybrakingDistance);};
 
@@ -495,6 +562,16 @@ public:
     void setModifyUnwindingTension(double value){m_modifyUnwindingTension = value; emit modifyUnwindingTensionChanged(m_modifyUnwindingTension);};
     void setModifySmallWinderTensionOver(double value){m_modifySmallWinderTensionOver = value; emit modifySmallWinderTensionOverChanged(m_modifySmallWinderTensionOver);};
     void setModifyLargeWinderTensionOver(double value){m_modifyLargeWinderTensionOver = value; emit modifyLargeWinderTensionOverChanged(m_modifyLargeWinderTensionOver);};
+   
+    Q_INVOKABLE int getPressurePlate() const { return m_pressurePlate; }
+    Q_INVOKABLE int getPressureRoller() const { return m_pressureRoller; }
+    void setPressurePlate(int value) { m_pressurePlate = value; emit pressurePlateChanged(m_pressurePlate); };
+    void setPressureRoller(int value) { m_pressureRoller = value; emit pressureRollerChanged(m_pressureRoller); };
+
+    Q_INVOKABLE int getPressurePlateBack() const { return m_pressurePlateBack; }
+    Q_INVOKABLE int getPressureRollerDown() const { return m_pressureRollerDown; }
+    void setPressurePlateBack(int value) { m_pressurePlateBack = value; emit pressurePlateBackChanged(m_pressurePlateBack); };
+    void setPressureRollerDown(int value) { m_pressureRollerDown = value; emit pressureRollerDownChanged(m_pressureRollerDown); };
 
      //=====INPUT-1 READ functions =====
      //=====INPUT-1 READ functions =====
@@ -2162,6 +2239,168 @@ public:
             m_smallRollModeSelectSwitch = value;
         emit smallRollModeSelectSwitchChanged(m_smallRollModeSelectSwitch);
     }
+    //8
+    Q_INVOKABLE double getOutput8() const { return m_output8; }
+    void setOutput8(double value)
+    {
+        if (m_output8 != value)
+            m_output8 = value;
+        emit output8Changed(m_output8);
+    }
+    //8switch
+    Q_INVOKABLE int getOutput8Switch() const { return output8Switch; }
+    void setOutput8Switch(int value)
+    {
+        if (output8Switch != value)
+            output8Switch = value;
+        emit output8SwitchChanged(output8Switch);
+    }
+
+    //9
+    Q_INVOKABLE double getOutput9() const { return m_output9; }
+    void setOutput9(double value)
+    {
+        if (m_output9 != value)
+            m_output9 = value;
+        emit output9Changed(m_output9);
+    }
+    //9switch
+    Q_INVOKABLE int getOutput9Switch() const { return output9Switch; }
+    void setOutput9Switch(int value)
+    {
+        if (output9Switch != value)
+            output9Switch = value;
+        emit output9SwitchChanged(output9Switch);
+    }
+    //10
+    Q_INVOKABLE double getOutput10() const { return m_output10; }
+    void setOutput10(double value)
+    {
+        if (m_output10 != value)
+            m_output10 = value;
+        emit output10Changed(m_output10);
+    }
+    //10switch
+    Q_INVOKABLE int getOutput10Switch() const { return output10Switch; }
+    void setOutput10Switch(int value)
+    {
+        if (output10Switch != value)
+            output10Switch = value;
+        emit output10SwitchChanged(output10Switch);
+    }
+    //11
+    Q_INVOKABLE double getOutput11() const { return m_output11; }
+    void setOutput11(double value)
+    {
+        if (m_output11 != value)
+            m_output11 = value;
+        emit output11Changed(m_output11);
+    }
+    //11switch
+    Q_INVOKABLE int getOutput11Switch() const { return output11Switch; }
+    void setOutput11Switch(int value)
+    {
+        if (output11Switch != value)
+            output11Switch = value;
+        emit output11SwitchChanged(output11Switch);
+    }
+    //12
+    Q_INVOKABLE double getOutput12() const { return m_output12; }
+    void setOutput12(double value)
+    {
+        if (m_output12 != value)
+            m_output12 = value;
+        emit output12Changed(m_output12);
+    }
+    //12switch
+    Q_INVOKABLE int getOutput12Switch() const { return output12Switch; }
+    void setOutput12Switch(int value)
+    {
+        if (output12Switch != value)
+            output12Switch = value;
+        emit output12SwitchChanged(output12Switch);
+    }
+    //13
+    Q_INVOKABLE double getOutput13() const { return m_output13; }
+    void setOutput13(double value)
+    {
+        if (m_output13 != value)
+            m_output13 = value;
+        emit output13Changed(m_output13);
+    }
+    //13switch
+    Q_INVOKABLE int getOutput13Switch() const { return output13Switch; }
+    void setOutput13Switch(int value)
+    {
+        if (output13Switch != value)
+            output13Switch = value;
+        emit output13SwitchChanged(output13Switch);
+    }
+    //14
+    Q_INVOKABLE double getOutput14() const { return m_output14; }
+    void setOutput14(double value)
+    {
+        if (m_output14 != value)
+            m_output14 = value;
+        emit output14Changed(m_output14);
+    }
+    //14switch
+    Q_INVOKABLE int getOutput14Switch() const { return output14Switch; }
+    void setOutput14Switch(int value)
+    {
+        if (output14Switch != value)
+            output14Switch = value;
+        emit output14SwitchChanged(output14Switch);
+    }
+    //15
+    Q_INVOKABLE double getOutput15() const { return m_output15; }
+    void setOutput15(double value)
+    {
+        if (m_output15 != value)
+            m_output15 = value;
+        emit output15Changed(m_output15);
+    }
+    //15switch
+    Q_INVOKABLE int getOutput15Switch() const { return output15Switch; }
+    void setOutput15Switch(int value)
+    {
+        if (output15Switch != value)
+            output15Switch = value;
+        emit output15SwitchChanged(output15Switch);
+    }
+    //16
+    Q_INVOKABLE double getOutput16() const { return m_output16; }
+    void setOutput16(double value)
+    {
+        if (m_output16 != value)
+            m_output16 = value;
+        emit output16Changed(m_output16);
+    }
+    //16switch
+    Q_INVOKABLE int getOutput16Switch() const { return output16Switch; }
+    void setOutput16Switch(int value)
+    {
+        if (output16Switch != value)
+            output16Switch = value;
+        emit output16SwitchChanged(output16Switch);
+    }
+    //17
+    Q_INVOKABLE double getOutput17() const { return m_output17; }
+    void setOutput17(double value)
+    {
+        if (m_output17 != value)
+            m_output17 = value;
+        emit output17Changed(m_output17);
+    }
+    //17switch
+    Q_INVOKABLE int getOutput17Switch() const { return output17Switch; }
+    void setOutput17Switch(int value)
+    {
+        if (output17Switch != value)
+            output17Switch = value;
+        emit output17SwitchChanged(output17Switch);
+    }
+
      
     // ===== ANALOG OUTPUT READ =====
     Q_INVOKABLE double getAnalogOutUnwinderMainDrive() const{ return m_analogOutUnwinderMainDrive;}
@@ -2171,6 +2410,9 @@ public:
             m_analogOutUnwinderMainDrive = value;
         emit analogOutUnwinderMainDriveChanged(m_analogOutUnwinderMainDrive);
     }
+    //%
+    Q_INVOKABLE double getAnalogOutUnwinderMainDrivePc() const { return m_analogOutUnwinderMainDrivePc; }
+    void setAnalogOutUnwinderMainDrivePc(double value) { m_analogOutUnwinderMainDrivePc = value; emit analogOutUnwinderMainDrivePcChanged(m_analogOutUnwinderMainDrivePc); }
     // ===== ANALOG OUTPUT READ switch=====
     Q_INVOKABLE int getAnalogOutUnwinderMainDriveSwitch() const{ return m_analogOutUnwinderMainDriveSwitch;}
     void setAnalogOutUnwinderMainDriveSwitch(int value)
@@ -2187,6 +2429,10 @@ public:
             m_analogOutWinder = value;
         emit analogOutWinderChanged(m_analogOutWinder);
     }
+    //%
+    Q_INVOKABLE double getAnalogOutWinderPc() const { return m_analogOutWinderPc; }
+    void setAnalogOutWinderPc(double value) { m_analogOutWinderPc = value; emit analogOutWinderPcChanged(m_analogOutWinderPc); }
+
     Q_INVOKABLE int getAnalogOutWinderSwitch() const{ return m_analogOutWinderSwitch;}
     void setAnalogOutWinderSwitch(int value)
     {
@@ -2202,6 +2448,10 @@ public:
             m_analogOutCutter = value;
         emit analogOutCutterChanged(m_analogOutCutter);
     }
+    //%
+    Q_INVOKABLE double getAnalogOutCutterPc() const { return m_analogOutCutterPc; }
+    void setAnalogOutCutterPc(double value) { m_analogOutCutterPc = value; emit analogOutCutterPcChanged(m_analogOutCutterPc); }
+
     //switch
     Q_INVOKABLE int getAnalogOutCutterSwitch() const { return m_analogOutCutterSwitch;}
     void setAnalogOutCutterSwitch(int value)
@@ -2218,6 +2468,10 @@ public:
             m_analogOutSelvedgeWinder = value;
         emit analogOutSelvedgeWinderChanged(m_analogOutSelvedgeWinder);
     }
+    //%
+    Q_INVOKABLE double getAnalogOutSelvedgeWinderPc() const { return m_analogOutSelvedgeWinderPc; }
+    void setAnalogOutSelvedgeWinderPc(double value) { m_analogOutSelvedgeWinderPc = value; emit analogOutSelvedgeWinderPcChanged(m_analogOutSelvedgeWinderPc); }
+
     //switch
     Q_INVOKABLE int getAnalogOutSelvedgeWinderSwitch() const{ return m_analogOutSelvedgeWinderSwitch;}
     void setAnalogOutSelvedgeWinderSwitch(int value)
@@ -2636,6 +2890,10 @@ public:
         emit singleActionModeChanged(m_singleActionMode);
     }
     signals:
+    void bigRollModeChanged(int value);
+    void smallRollModeChanged(int value);
+    void restBtnChanged(int value);
+
     void metalDetectorChanged(int value);
     void gratingDetectionChanged(int value);
     void oppositeSideChanged(int value);
@@ -2666,7 +2924,10 @@ public:
     void modifySmallWinderTensionOverChanged(double value);
     void modifyLargeWinderTensionOverChanged(double value);
 
-
+    void pressurePlateChanged(int value);
+    void pressureRollerChanged(int value);
+    void pressurePlateBackChanged(int value);
+    void pressureRollerDownChanged(int value);
     // INPUT-1
     void unwinderVfdFreqAlarmChanged(double value);
     void mainDriveVfdFreqAlarmChanged(double value);
@@ -2936,6 +3197,17 @@ public:
 
     void buzzerChanged(double value);
     void smallRollModeSelectChanged(double value);
+
+    void output8Changed(double value);
+    void output9Changed(double value);
+    void output10Changed(double value);
+    void output11Changed(double value);
+    void output12Changed(double value);
+    void output13Changed(double value);
+    void output14Changed(double value);
+    void output15Changed(double value);
+    void output16Changed(double value);
+    void output17Changed(double value);
     //===== OUTPUT-3 switch=====
     void largeCutterInSwitchChanged(int value);
     void modeSelectSwitchChanged(int value);
@@ -2947,6 +3219,16 @@ public:
     void buzzerSwitchChanged(int value);
     void smallRollModeSelectSwitchChanged(int value);
 
+    void output8SwitchChanged(int value);
+    void output9SwitchChanged(int value);
+    void output10SwitchChanged(int value);
+    void output11SwitchChanged(int value);
+    void output12SwitchChanged(int value);
+    void output13SwitchChanged(int value);
+    void output14SwitchChanged(int value);
+    void output15SwitchChanged(int value);
+    void output16SwitchChanged(int value);
+    void output17SwitchChanged(int value);
     //===== ANALOG OUTPUT =====
     void analogOutUnwinderMainDriveChanged(double value);
     void analogOutWinderChanged(double value);
@@ -2957,6 +3239,12 @@ public:
     void modifyAnalogOutWinderChanged(double value);
     void modifyAnalogOutCutterChanged(double value);
     void modifyAnalogOutSelvedgeWinderChanged(double value);
+
+    //%
+    void analogOutUnwinderMainDrivePcChanged(double value);
+    void analogOutWinderPcChanged(double value);
+    void analogOutCutterPcChanged(double value);
+    void analogOutSelvedgeWinderPcChanged(double value);
     //===== ANALOG OUTPUT switch=====
     void analogOutUnwinderMainDriveSwitchChanged(int value);
     void analogOutWinderSwitchChanged(int value);
@@ -3045,7 +3333,9 @@ public:
     // ===== Single Action Mode=====
     void singleActionModeChanged(int value);
 
-private:
+public:
+    int m_bigRollMode = 1;//默認大捲模式(1大捲模式,0小捲模式)
+    int m_restBtn = 0;//主畫面長度reset btn
 
     int m_metalDetector = 0;
     int m_gratingDetection = 0;
@@ -3077,6 +3367,14 @@ private:
     double m_modifySmallWinderTensionOver = 0.0;
     double m_modifyLargeWinderTensionOver = 0.0;
 
+    //壓板
+    int m_pressurePlate = 0;
+    //壓輪
+    int m_pressureRoller = 0;
+    //壓板
+    int m_pressurePlateBack = 0;
+    //壓輪
+    int m_pressureRollerDown = 0;
     // ===== cutter=====
     int m_smallRollCutter1 = 0;
     int m_smallRollCutter2 = 0;
@@ -3347,6 +3645,17 @@ private:
 
     double m_buzzer = 0.0;
     double m_smallRollModeSelect = 0.0;
+
+    double m_output8 = 0.0;
+    double m_output9 = 0.0;
+    double m_output10 = 0.0;
+    double m_output11 = 0.0;
+    double m_output12 = 0.0;
+    double m_output13 = 0.0;
+    double m_output14 = 0.0;
+    double m_output15 = 0.0;
+    double m_output16 = 0.0;
+    double m_output17 = 0.0;
     //===OUTPUT3 switch=====
     int m_largeCutterInSwitch = 0;
     int m_modeSelectSwitch = 0;
@@ -3358,6 +3667,16 @@ private:
     int m_buzzerSwitch = 0;
     int m_smallRollModeSelectSwitch = 0;
 
+    int output8Switch = 0;
+    int output9Switch = 0;
+    int output10Switch = 0;
+    int output11Switch = 0;
+    int output12Switch = 0;
+    int output13Switch = 0;
+    int output14Switch = 0;
+    int output15Switch = 0;
+    int output16Switch = 0;
+    int output17Switch = 0;
     // ===== ANALOG OUTPUT =====
     double m_analogOutUnwinderMainDrive = 0.0;
     double m_analogOutWinder = 0.0;
@@ -3373,6 +3692,12 @@ private:
     int m_analogOutWinderSwitch = 0;
     int m_analogOutCutterSwitch = 0;
     int m_analogOutSelvedgeWinderSwitch = 0;
+
+    //%
+    double m_analogOutUnwinderMainDrivePc = 100.0;
+    double m_analogOutWinderPc = 100.0;
+    double m_analogOutCutterPc = 100.0;
+    double m_analogOutSelvedgeWinderPc = 100.0;
 
     int m_modifyAnalogOutUnwinderMainDriveSwitch = 0;
     int m_modifyAnalogOutWinderSwitch = 0;

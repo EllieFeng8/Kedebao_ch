@@ -62,7 +62,15 @@ Rectangle {
     property bool smallCoiSwitch: false //小捲張力switch
     property bool bigCoiSwitch: false //大捲張力switch
     property int modifyBrakingDistance: 5
+
     clip: true
+    property alias pressureRollerUpMouseArea:pressureRollerUpMouseArea
+    property alias pressureRollerDownMouseArea:pressureRollerDownMouseArea
+    property alias pressurePlateBackMouseArea:pressurePlateBackMouseArea
+    property alias pressureRollerForwardMouseArea:pressureRollerForwardMouseArea
+    property alias pressureRollerUp:pressureRollerUp
+    property alias pressurePlate:pressurePlate
+    property alias smallRollCutterRec1:smallRollCutterRec1
 
 
     Item {
@@ -828,7 +836,7 @@ Rectangle {
     Item {
         id: bigRollTensionSetting
         x: 422
-        y: 612
+        y: 651
         height: 274
         width: 274
         visible: AppState.isBig ? true : false
@@ -865,10 +873,10 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    if(Kdb.modifyLargeWinderTensionOver !== Number(bigCoilTension.text)) {
+                   // if(Kdb.modifyLargeWinderTensionOver !== Number(bigCoilTension.text)) {
                         Kdb.modifyLargeWinderTensionOver = bigCoilTension.text
                         //console.log("11 modifyLargeWinderTensionOver changed~~~", Kdb.modifyLargeWinderTensionOver);
-                    }
+                   // }
                 }
             }
         }
@@ -933,7 +941,6 @@ Rectangle {
             font.styleName: "Bold"
             text: Kdb.modifyLargeWinderTensionOver
             validator: DoubleValidator {}//限制只能輸入整數/double
-            inputMethodHints: Qt.ImhDigitsOnly
         }
         Image {
             id: servo_2
@@ -1024,10 +1031,10 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    if(Kdb.modifyBrakingDistance !== Number(brakeDistance.text)) {
+                   // if(Kdb.modifyBrakingDistance !== Number(brakeDistance.text)) {
                         Kdb.modifyBrakingDistance = brakeDistance.text
                         //console.log("11 modifyBrakingDistance changed~~~", Kdb.modifyBrakingDistance);
-                    }
+                   // }
                 }
             }
         }
@@ -1094,7 +1101,7 @@ Rectangle {
             //maximumLength: 6 //限制輸入2位整數
             text: Kdb.modifyBrakingDistance
             validator: DoubleValidator {}//限制只能輸入整數/double
-            inputMethodHints: Qt.ImhDigitsOnly
+
         }
     }
     Item {
@@ -1184,7 +1191,7 @@ Rectangle {
                     verticalAlignment: Text.AlignVCenter
                     wrapMode: Text.WordWrap
                     validator: IntValidator{}//限制只能輸入整數
-                    inputMethodHints: Qt.ImhDigitsOnly
+
                 }
                 Image {
                     id: lenthSettingButton
@@ -1206,10 +1213,10 @@ Rectangle {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked:{
-                            if(Kdb.modifyCurrentLength !== Number(lengthSet.text)) {
+                           // if(Kdb.modifyCurrentLength !== Number(lengthSet.text)) {
                                 Kdb.modifyCurrentLength = lengthSet.text
                                 //console.log("11 modifyCurrentLength changed~~~", Kdb.modifyCurrentLength);
-                            }
+                           // }
                         }
                     }
                 }
@@ -1321,7 +1328,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
                 validator: IntValidator{}//限制只能輸入整數
-                inputMethodHints: Qt.ImhDigitsOnly
+
             }
             Image {
                 id: speedometer_1
@@ -1348,10 +1355,10 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    if(Kdb.modifySpeed !== Number(speedSet.text)) {
+                    //if(Kdb.modifySpeed !== Number(speedSet.text)) {
                         Kdb.modifySpeed = speedSet.text
                         //console.log("11 modifySpeed changed~~~", Kdb.modifySpeed);
-                    }
+                    //}
                 }
             }
         }
@@ -1443,7 +1450,6 @@ Rectangle {
                 text: Kdb.modifySmallWinderTensionOver
                 //maximumLength: 4 //限制輸入2位整數
                 validator: DoubleValidator {}//限制只能輸入整數/double
-                inputMethodHints: Qt.ImhDigitsOnly
             }
             Image {
                 id: servo_3
@@ -1472,10 +1478,10 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    if(Kdb.modifySmallWinderTensionOver !== Number(smallCoilTension.text)) {
+                    //if(Kdb.modifySmallWinderTensionOver !== Number(smallCoilTension.text)) {
                         Kdb.modifySmallWinderTensionOver = smallCoilTension.text
                         // console.log("11 modifySmallWinderTensionOver changed~~~", Kdb.modifySmallWinderTensionOver);
-                    }
+                    //}
                 }
             }
         }
@@ -1486,6 +1492,7 @@ Rectangle {
             height:158
             anchors.top:smallR.bottom
             anchors.topMargin:184
+            x:100
             color: "#00ffffff"
             Image {
                 id: smallRollCutterBg1
@@ -1522,7 +1529,12 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-                checkState: Kdb.smallRollCutter1//Qt.Checked
+                checked: Kdb.smallRollCutter1 === 2 
+    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
+                onToggled: {
+                Kdb.smallRollCutter1 = checked ? 2 : 0
+                }               
+                // checkState: Kdb.smallRollCutter1//Qt.Checked
             }
             CheckBox {
                 id: checkBox2
@@ -1543,7 +1555,12 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-                checkState: Kdb.smallRollCutter2
+                checked: Kdb.smallRollCutter2 === 2 
+    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
+                onToggled: {
+                Kdb.smallRollCutter2 = checked ? 2 : 0
+                }         
+                //checkState: Kdb.smallRollCutter2
             }
             CheckBox {
                 id: checkBox3
@@ -1563,7 +1580,12 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-                checkState: Kdb.smallRollCutter3
+                checked: Kdb.smallRollCutter3 === 2 
+    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
+                onToggled: {
+                Kdb.smallRollCutter3 = checked ? 2 : 0
+                }         
+                //checkState: Kdb.smallRollCutter3
             }
             CheckBox {
                 id: checkBox4
@@ -1583,7 +1605,12 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-                checkState: Kdb.smallRollCutter4
+                checked: Kdb.smallRollCutter4 === 2 
+    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
+                onToggled: {
+                Kdb.smallRollCutter4 = checked ? 2 : 0
+                }         
+                //checkState: Kdb.smallRollCutter4
             }
             CheckBox {
                 id: checkBox5
@@ -1603,16 +1630,20 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-
-                checkState: Kdb.smallRollCutter5
+                checked: Kdb.smallRollCutter5 === 2 
+    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
+                onToggled: {
+                Kdb.smallRollCutter5 = checked ? 2 : 0
+                }         
+                //checkState: Kdb.smallRollCutter5
             }
         }
 
     }
     Item {
         id: unWindingTensionPosition
-        x: 1535
-        y: 641
+        x: 1545
+        y: 651
         height: 274
         width: 274
 
@@ -1684,7 +1715,6 @@ Rectangle {
             //maximumLength: 4 //限制輸入2位整數
             text: Kdb.modifyUnwindingTension
             validator: DoubleValidator {}//限制只能輸入整數/double
-            inputMethodHints: Qt.ImhDigitsOnly
         }
         Image {
             id: servo_1
@@ -1713,12 +1743,340 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    if(Kdb.modifyUnwindingTension !== Number(unwindingTension.text)) {
+                   //if(Kdb.modifyUnwindingTension !== Number(unwindingTension.text)) {
                         Kdb.modifyUnwindingTension = unwindingTension.text
                         //console.log("11 modifyUnwindingTension changed~~~", Kdb.modifyUnwindingTension);
-                    }
+                  //  }
                 }
             }
         }
     }
+    //檔板前進大
+    Item {
+        id: pressurePlateBig
+        x:795
+        y:759
+        height: 169
+        width: 282
+        visible:AppState.isBig ? true : false
+
+        Image {
+            x: -4
+            source: "assets/Rectangle 15.png"
+        }
+        Text {
+
+            x: 19.93
+            y: 23.66
+            height: 42.35
+            width: 159.42
+            color: "#000000"
+            font.pixelSize: 32
+            font.weight: Font.DemiBold
+            horizontalAlignment: Text.AlignLeft
+            lineHeight: 22
+            lineHeightMode: Text.FixedHeight
+            text: "檔板前進"
+            verticalAlignment: Text.AlignVCenter
+        }
+        Image {
+            x: 56
+            y: 76
+            width: 71
+            height: 63
+            source: "assets/Group 42.png"//back
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: pressurePlateBackBigMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:pressurePlateBackBigMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                        Kdb.pressurePlateBack = !Kdb.pressurePlateBack;
+                        console.log("11 Kdb.pressurePlateBack changed~~~", Kdb.pressurePlateBack);
+                }
+            }
+        }
+        Image {
+            x: 163
+            y: 76
+            height: 63
+            width: 71
+            source: "assets/Group 61.png"//up
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: pressureRollerForwardBigMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:pressureRollerForwardBigMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                    Kdb.pressurePlate = !Kdb.pressurePlate;
+                    console.log("11 Kdb.pressurePlate changed~~~", Kdb.pressurePlate);
+                }
+
+            }
+        }
+    }
+    //壓輪升降大
+    Item {
+        id: pressureRollerUpBig
+        //x:660
+        anchors.left: pressurePlateBig.right
+        anchors.leftMargin:88
+        y:759
+        height: 169
+        width: 282
+        visible:AppState.isBig ? true : false
+
+        Image {
+
+            x: -4
+            source: "assets/Rectangle 15.png"
+        }
+        Text {
+
+            x: 19.93
+            y: 23.66
+            height: 42.35
+            width: 159.42
+            color: "#000000"
+            font.pixelSize: 32
+            font.weight: Font.DemiBold
+            horizontalAlignment: Text.AlignLeft
+            lineHeight: 22
+            lineHeightMode: Text.FixedHeight
+            text: "壓輪升降"
+            verticalAlignment: Text.AlignVCenter
+        }
+
+        Image {
+            x: 56
+            y: 76
+            height: 71
+            width: 63
+            source: "assets/Group1 42.png"//up
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: pressureRollerUpBigMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:pressureRollerUpBigMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                    Kdb.pressureRoller = !Kdb.pressureRoller;
+                    console.log("11 Kdb.pressureRoller changed~~~", Kdb.pressureRoller);
+                }
+
+            }
+        }
+        Image {
+            x: 163
+            y: 76
+            height: 71
+            width: 63
+            source: "assets/Group1 61.png"//up
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: pressureRollerDownBigMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:pressureRollerDownBigMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                    Kdb.pressureRollerDown = !Kdb.pressureRollerDown;
+                    console.log("11 Kdb.pressureRollerDown changed~~~", Kdb.pressureRollerDown);
+                }
+            }
+        }
+    }
+
+    //檔板前進小
+    Item {
+        id: pressurePlate
+        x:370
+        y:759
+        height: 169
+        width: 282
+        visible:AppState.isBig ? false : true
+
+        Image {
+            x: -4
+            source: "assets/Rectangle 15.png"
+        }
+        Text {
+
+            x: 19.93
+            y: 23.66
+            height: 42.35
+            width: 159.42
+            color: "#000000"
+            font.pixelSize: 32
+            font.weight: Font.DemiBold
+            horizontalAlignment: Text.AlignLeft
+            lineHeight: 22
+            lineHeightMode: Text.FixedHeight
+            text: "檔板前進"
+            verticalAlignment: Text.AlignVCenter
+        }
+        Image {
+            x: 56
+            y: 76
+            width: 71
+            height: 63
+            source: "assets/Group 42.png"//back
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: pressurePlateBackMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:pressurePlateBackMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                    Kdb.pressurePlateBack = !Kdb.pressurePlateBack;
+                    console.log("11 Kdb.pressurePlateBack changed~~~", Kdb.pressurePlateBack);
+                }
+            }
+        }
+        Image {
+            x: 163
+            y: 76
+            height: 63
+            width: 71
+            source: "assets/Group 61.png"//up
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: pressureRollerForwardMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:pressureRollerForwardMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                    Kdb.pressurePlate = !Kdb.pressurePlate;
+                    console.log("11 Kdb.pressurePlate changed~~~", Kdb.pressurePlate);
+                }
+            }
+        }
+    }
+    //壓輪升降小
+    Item {
+        id: pressureRollerUp
+        //x:660
+        anchors.left: pressurePlate.right
+        anchors.leftMargin:8
+        y:759
+        height: 169
+        width: 282
+        visible:AppState.isBig ? false : true
+
+        Image {
+            id: rectangle_back
+            x: -4
+            source: "assets/Rectangle 15.png"
+        }
+        Text {
+
+            x: 19.93
+            y: 23.66
+            height: 42.35
+            width: 159.42
+            color: "#000000"
+            font.pixelSize: 32
+            font.weight: Font.DemiBold
+            horizontalAlignment: Text.AlignLeft
+            lineHeight: 22
+            lineHeightMode: Text.FixedHeight
+            text: "壓輪升降"
+            verticalAlignment: Text.AlignVCenter
+        }
+
+        Image {
+            x: 56
+            y: 76
+            height: 71
+            width: 63
+            source: "assets/Group1 42.png"//up
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: pressureRollerUpMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:pressureRollerUpMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                    Kdb.pressureRoller = Kdb.pressureRoller+5;
+                    console.log("11 Kdb.pressureRoller changed~~~", Kdb.pressureRoller);
+                }
+            }
+        }
+        Image {
+            x: 163
+            y: 76
+            height: 71
+            width: 63
+            source: "assets/Group1 61.png"//up
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: pressureRollerDownMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:pressureRollerDownMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                    Kdb.pressureRollerDown = !Kdb.pressureRollerDown;
+                    console.log("11 Kdb.pressureRollerDown changed~~~", Kdb.pressureRollerDown);
+                }
+            }
+        }
+    }
+
 }

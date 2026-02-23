@@ -32,6 +32,11 @@ Core::~Core()
         qDebug() << "threadMS300 is quit";
 
     }
+    if (threadLength->isRunning()) {
+        m_Length->stopPolling(); // 停止 Timer
+        threadLength->quit();    // 請求結束執行緒
+        threadLength->wait();    // 等待執行緒完全退出
+    }
     qDebug() << "Core destroyed: Resources cleaned up.";
 }
 
@@ -63,17 +68,10 @@ void Core::stopAll()
 void Core::onWorkerData( QVector<quint16> values)
 {
     if (DataValues == values) {
+        qDebug() << "==";
         return;
     }
 
-    if(values[102]==1)
-    {
-        m_mode = true;
-    }
-    else
-    {
-        m_mode = false;
-    }
 
     for (int i = 0; i < values.size(); ++i) {
         
@@ -237,6 +235,7 @@ void Core::onholdingRegisterReady( QVector<quint16> values)
     m_proxy->setAnalogOutWinder(v2);
     m_proxy->setAnalogOutCutter(v3);
     m_proxy->setAnalogOutSelvedgeWinder(v4);
+
 }
 
 void Core::writeSingleCoil(int address, double value)
@@ -335,14 +334,78 @@ void Core::setMS300Run(int id, int mode) {
 void Core::onlength(double v)
 {
     m_proxy->setCurrentLength(v);
+    
+    if (m_length > 0 && v >= (double)m_length) {
+
+        qDebug() << "Target length reached!" << v << "/" << m_length;
+
+
+        setSTOP(0.0);
+        m_isWaitingForStop = true;
+
+        // 為了安全，將目標長度重設為 0，避免在停止過程中重複觸發
+        m_length = 0;
+        m_isBrakingPerformed = false;
+        return;
+        // 如果需要更新 UI 上的目標值顯示，可以視情況呼叫 m_proxy
+    }
+
+    if (m_length > 0 && m_BrakingDistance > 0 && !m_isBrakingPerformed) {
+        double remainingDistance = (double)m_length - v;
+
+        if (remainingDistance <= m_BrakingDistance) {
+            qDebug() << "Entering Braking Zone. Executing SLOW DOWN once.";
+
+            // 執行降速指令
+            setMainFreqs(nowSpeed / 10.0);
+
+            // 標記為已執行，防止下一次 onlength 又跑進來
+            m_isBrakingPerformed = true;
+        }
+    }
 }
 
 
 
 void Core::onMS300Data(int id, double v)
 {
-    double speed = v;//TODO 換算 頻率->線速度 
+    if (speed != v) 
+    {
+        speed = v;
+        writeRegisters(speed);
+    }
+    if (m_isWaitingForStop) {
+        // 當速度小於一個極小值 (例如 0.05 m/min) 就視為已停止
+        if (v <= 0.15) {
+            qDebug() << "Speed reached zero! Executing Coil Stop...";
+
+            // 執行你原本想做的動作
+            QVector<bool> stop(24, false);
+            writeCoils(65, stop);
+            QTimer::singleShot(500, this,
+                [this]()
+                {
+                    writeCoils(89, {1,0,0,1,0,1});
+                    QTimer::singleShot(200, this,
+                        [this]()
+                        {
+                            writeCoils(89, {0,0,0,0,0,0});
+                        });
+                    PressIndex = 0;
+                    PressIndex2 = 0;
+                    QTimer::singleShot(1000, this,
+                        [this]()
+                        {
+                            writeRegisters(0.35);
+                        });
+                }
+            );
+            // 重要：執行完後關閉旗標，否則會一直重複執行 writeCoils
+            m_isWaitingForStop = false;
+        }
+    }
     m_proxy->setSpeed(v);
+    //writeRegisters(speed);
 }
 
 void Core::resetMS300(int id)
@@ -352,6 +415,35 @@ void Core::resetMS300(int id)
     m_ms300->updateResetCache(id, 2);
 }
 
+void Core::setCurrentLength(int length)
+{
+    qDebug() << "set length = " << length;
+    m_length = length;
+}
+void Core::setBrakingDistance(double BrakingDistance)
+{
+    qDebug() << "set BrakingDistance = " << BrakingDistance;
+    m_BrakingDistance = BrakingDistance;
+}
+void Core::setMainFreqs(double v)
+{ 
+    setspeed = v;
+    double Hz = v * (60.0 / 130.0); 
+    qDebug() << "change";
+    {
+        QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
+            Qt::QueuedConnection);
+    }
+}
+void Core::setSTOP(double v)
+{
+    double Hz = v * (60.0 / 130.0);
+    qDebug() << "STOP";
+    {
+        QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
+            Qt::QueuedConnection);
+    }
+}
 void Core::loadSavedData() 
 {
     //QSettings settings("config.ini", QSettings::IniFormat);
@@ -556,7 +648,8 @@ void Core::updateProxyProperty(int index, quint16 value)
     case 77: m_proxy->setLeftSelvedgeWinderReverse(value); break;
     case 78: m_proxy->setRightSelvedgeWinderForward(value); break;
     case 79: m_proxy->setRightSelvedgeWinderReverse(value); break;
-    case 80: m_proxy->setWebAlignerStart(value); break;
+    case 80: m_proxy->setWebAlignerStart(value); 
+             m_proxy->setOppositeSide(value); break;
     case 81: m_proxy->setUnwindingTensionAuto(value); break;
     case 82: m_proxy->setUnwindingDiameterReset(value); break;
     case 83: m_proxy->setSmallWinderTensionAuto(value); break;
@@ -579,6 +672,17 @@ void Core::updateProxyProperty(int index, quint16 value)
     case 100: m_proxy->setStopIndicator(value); break;
     case 101: m_proxy->setBuzzer(value); break;
     case 102: m_proxy->setSmallRollModeSelect(value); break;
+    case 103: m_proxy->setOutput8(value); break;
+    case 104: m_proxy->setOutput9(value); break;
+    case 105: m_proxy->setOutput10(value); break;
+    case 106: m_proxy->setOutput11(value); break;
+    case 107: m_proxy->setOutput12(value); break;
+    case 108: m_proxy->setOutput13(value); break;
+    case 109: m_proxy->setOutput14(value); break;
+    case 110: m_proxy->setOutput15(value); break;
+    case 111: m_proxy->setOutput16(value); break;
+    case 112: m_proxy->setOutput17(value); break;
+
 
     default: break;
     }
@@ -621,18 +725,20 @@ void Core::handleDIOSignal(int bitIndex, bool state)
     switch (bitIndex) {
     case 0:
         m_proxy->setIpcStart(val);
+        setMainFreqs(setspeed);
+        m_isBrakingPerformed = false;
         if (state)
         {
-        m_manager->IpcStart(state);//動作  
-
-         qDebug() << "DI Bit 0 changed" << state;//Log 
+            m_manager->IpcStart(state);//動作  
         }
         break;
     case 1:
         m_proxy->setIpcStop(val);
         if (state)
         {
-            m_manager->IpcStop(state);//動作  
+            setSTOP(0.0);
+            m_isWaitingForStop = true;
+ 
         }
         qDebug() << "DI Bit 1 changed" << state ;//Log 
         break;

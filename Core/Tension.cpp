@@ -16,7 +16,7 @@ void Modbus485::initPort() {
         qDebug() << "COM3 connet";
         m_pollTimer = new QTimer(this);
         connect(m_pollTimer, &QTimer::timeout, this, &Modbus485::onPollTimeout);
-        m_pollTimer->start(50);
+        m_pollTimer->start(100);
         //Test set SV
 
     }
@@ -83,7 +83,7 @@ void Modbus485::onPollTimeout() {
                         // --- TC-3050  ---
                         double tqo = res.value(0) / 40.95; // 02F0H
                         double pv = res.value(4) / 10.0;  // 02F4H
-                        qDebug() << "TC-3050 ID:" << id << "PV:" << pv ;
+                        //qDebug() << "TC-3050 ID:" << id << "PV:" << pv ;
                         emit dataUpdated(id, pv, tqo);
                     }
                     //else if(id>=4){
@@ -95,11 +95,18 @@ void Modbus485::onPollTimeout() {
                     //    emit dataUpdated(id, val, 0);
                     //}
                     else if (id == 6) {
-                        int32_t high = res.value(0);
-                        int32_t low = res.value(1);
-                        int32_t rawPv = (high << 16) | (low & 0xFFFF);
-                        // 根據說明書，PV 範圍可達 -199999
-                        double pv = static_cast<double>(rawPv);
+                        quint16 reg0 = res.value(0);
+                        quint16 reg1 = res.value(1);
+
+                        // 方案 A: 如果 132186112 太大，表示 reg0 是高位且內含資料
+                        // 方案 B: 嘗試以 reg1 作為高位，reg0 作為低位 (Little-endian 方式組合)
+                        // 根據說明書 PV 範圍，我們使用有號 32 位元整數 (int32_t)
+                        int32_t pvRaw = (static_cast<int32_t>(reg1) << 16) | (reg0 & 0xFFFF);
+
+                        // 如果數值還是不對，請換回這行試試：
+                        // int32_t pvRaw = (static_cast<int32_t>(reg0) << 16) | (reg1 & 0xFFFF);
+
+                        double pv = static_cast<double>(pvRaw);
                         qDebug() << "Slave 6 PV (32bit):" << pv;                  
                         emit lengthupdate(pv);
                     }

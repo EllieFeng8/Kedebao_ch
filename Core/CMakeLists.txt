@@ -16,6 +16,8 @@ qt_add_qml_module(Core STATIC
         MS300.cpp
         Tension.h
         Tension.cpp
+        LengthController.h
+        LengthController.cpp
 )
 
 target_include_directories(Core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

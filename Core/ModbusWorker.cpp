@@ -170,7 +170,16 @@ void ModbusWorker::poll()
     bool f_stopIndicator = false;      //100
     bool f_buzzer = false;              //101
     bool f_smallRollModeSelect = false; //102
-
+    bool f_IO103 = false;
+    bool f_IO104 = false;
+    bool f_IO105 = false;
+    bool f_IO106 = false;
+    bool f_IO107 = false;
+    bool f_IO108 = false;
+    bool f_IO109 = false;
+    bool f_IO110 = false;
+    bool f_IO111 = false;
+    bool f_IO112 = false;
     //Value  
     bool _vfdAlarmReset = false;               //64
     bool _unwinderForward = false;             //65
@@ -213,7 +222,16 @@ void ModbusWorker::poll()
     bool _stopIndicator = false;      //100
     bool _buzzer = false;              //101
     bool _smallRollModeSelect = false; //102
-
+    bool _IO103 = false;
+    bool _IO104 = false;
+    bool _IO105 = false;
+    bool _IO106 = false;
+    bool _IO107 = false;
+    bool _IO108 = false;
+    bool _IO109 = false;
+    bool _IO110 = false;
+    bool _IO111 = false;
+    bool _IO112 = false;
     {
         QMutexLocker locker(&m_lock64);
         if(flag_vfdAlarmReset)
@@ -450,6 +468,66 @@ void ModbusWorker::poll()
             f_smallRollModeSelect = flag_smallRollModeSelect;
             flag_smallRollModeSelect = false;
         }
+        if (flag_IO103)
+        {
+            _IO103 = (m_IO103 > 0.0) ? true : false;
+            f_IO103 = flag_IO103;
+            flag_IO103 = false;
+        }
+        if (flag_IO104)
+        {
+            _IO104 = (m_IO104 > 0.0) ? true : false;
+            f_IO104 = flag_IO104;
+            flag_IO104 = false;
+        }
+        if (flag_IO105)
+        {
+            _IO105 = (m_IO105 > 0.0) ? true : false;
+            f_IO105 = flag_IO105;
+            flag_IO105 = false;
+        }
+        if (flag_IO106)
+        {
+            _IO106 = (m_IO106 > 0.0) ? true : false;
+            f_IO106 = flag_IO106;
+            flag_IO106 = false;
+        }
+        if (flag_IO107)
+        {
+            _IO107 = (m_IO107 > 0.0) ? true : false;
+            f_IO107 = flag_IO107;
+            flag_IO107 = false;
+        }
+        if (flag_IO108)
+        {
+            _IO108 = (m_IO108 > 0.0) ? true : false;
+            f_IO108 = flag_IO108;
+            flag_IO108 = false;
+        }
+        if (flag_IO109)
+        {
+            _IO109 = (m_IO109 > 0.0) ? true : false;
+            f_IO109 = flag_IO109;
+            flag_IO109 = false;
+        }
+        if (flag_IO110)
+        {
+            _IO110 = (m_IO110 > 0.0) ? true : false;
+            f_IO110 = flag_IO110;
+            flag_IO110 = false;
+        }
+        if (flag_IO111)
+        {
+            _IO111 = (m_IO111 > 0.0) ? true : false;
+            f_IO111 = flag_IO111;
+            flag_IO111 = false;
+        }
+        if (flag_IO112)
+        {
+            _IO112 = (m_IO112 > 0.0) ? true : false;
+            f_IO112 = flag_IO112;
+            flag_IO112 = false;
+        }
     }
 
     {
@@ -609,7 +687,46 @@ void ModbusWorker::poll()
         {
             writeSingleCoil(102, _smallRollModeSelect);
         }
-
+        if (f_IO103)
+        {
+            writeSingleCoil(103, _IO103);
+        }
+        if (f_IO104)
+        {
+            writeSingleCoil(104, _IO104);
+        }
+        if (f_IO105)
+        {
+            writeSingleCoil(105, _IO105);
+        }
+        if (f_IO106)
+        {
+            writeSingleCoil(106, _IO106);
+        }
+        if (f_IO107)
+        {
+            writeSingleCoil(107, _IO107);
+        }
+        if (f_IO108)
+        {
+            writeSingleCoil(108, _IO108);
+        }
+        if (f_IO109)
+        {
+            writeSingleCoil(109, _IO109);
+        }
+        if (f_IO110)
+        {
+            writeSingleCoil(110, _IO110);
+        }
+        if (f_IO111)
+        {
+            writeSingleCoil(111, _IO111);
+        }
+        if (f_IO112)
+        {
+            writeSingleCoil(112, _IO112);
+        }
         initFlag();
     }
 
@@ -688,6 +805,7 @@ void ModbusWorker::onReply2()
 }
 void ModbusWorker::writeCoils(int startAddress, const QVector<bool>& values)
 {
+    qDebug() << "[Modbus]  write coils. Address:" << startAddress << "Count:" << values.size() << "Values:" << values;
     if (!m_running)
         return;
 
@@ -702,7 +820,7 @@ void ModbusWorker::writeCoils(int startAddress, const QVector<bool>& values)
         emit writeDone(startAddress, false, "Write values is empty");
         return;
     }
-    qDebug() << "[Modbus]  write coils. Address:" << startAddress << "Count:" << values.size() << "Values:" << values;
+
     // 建立 DataUnit: Coils, 起始地址 + 數量
     QModbusDataUnit unit(QModbusDataUnit::Coils, startAddress, values.size());
 
@@ -837,7 +955,7 @@ void ModbusWorker::writeSingleCoil(int address, bool value)
 
     if (!m_running || m_client->state() != QModbusDevice::ConnectedState)
     {
-        qDebug() << "Worker write single coil @ addr:" << address << " = " << value;
+        //qDebug() << "Worker write single coil @ addr:" << address << " = " << value;
         emit writeDone(address, false, "Client not connected");
         return;
     }
@@ -1103,6 +1221,66 @@ void ModbusWorker::set_SmallRollModeSelect(double value)
     if (qFuzzyCompare(m_smallRollModeSelect, value)) return;
     flag_smallRollModeSelect = true;
     m_smallRollModeSelect = value;
+}
+void ModbusWorker::set_IO103(double value)
+{
+    if (qFuzzyCompare(m_IO103, value)) return;
+    flag_IO103 = true;
+    m_IO103 = value;
+}
+void ModbusWorker::set_IO104(double value)
+{
+    if (qFuzzyCompare(m_IO104, value)) return;
+    flag_IO104 = true;
+    m_IO104 = value;
+}
+void ModbusWorker::set_IO105(double value)
+{
+    if (qFuzzyCompare(m_IO105, value)) return;
+    flag_IO105 = true;
+    m_IO105 = value;
+}
+void ModbusWorker::set_IO106(double value)
+{
+    if (qFuzzyCompare(m_IO106, value)) return;
+    flag_IO106 = true;
+    m_IO106 = value;
+}
+void ModbusWorker::set_IO107(double value)
+{
+    if (qFuzzyCompare(m_IO107, value)) return;
+    flag_IO107 = true;
+    m_IO107 = value;
+}
+void ModbusWorker::set_IO108(double value)
+{
+    if (qFuzzyCompare(m_IO108, value)) return;
+    flag_IO108 = true;
+    m_IO108 = value;
+}
+void ModbusWorker::set_IO109(double value)
+{
+    if (qFuzzyCompare(m_IO109, value)) return;
+    flag_IO109 = true;
+    m_IO109 = value;
+}
+void ModbusWorker::set_IO110(double value)
+{
+    if (qFuzzyCompare(m_IO110, value)) return;
+    flag_IO110 = true;
+    m_IO110 = value;
+}
+void ModbusWorker::set_IO111(double value)
+{
+    if (qFuzzyCompare(m_IO111, value)) return;
+    flag_IO111 = true;
+    m_IO111 = value;
+}
+void ModbusWorker::set_IO112(double value)
+{
+    if (qFuzzyCompare(m_IO112, value)) return;
+    flag_IO112 = true;
+    m_IO112 = value;
 }
 void ModbusWorker::StartAuto()
 {
