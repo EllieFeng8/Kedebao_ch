@@ -10,7 +10,7 @@ ModeSwitchUI {
     basicSwitchbigMouseArea.onClicked: {
         AppState.isBig = !AppState.isBig
         Kdb.bigRollMode = !Kdb.bigRollMode
-        console.log("Kdb.bigRollMode",Kdb.bigRollMode)
+        //console.log("Kdb.bigRollMode",Kdb.bigRollMode)
         modeSwitch.visible = false
     }
     backMouseArea.onClicked: {

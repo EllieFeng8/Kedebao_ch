@@ -19,7 +19,9 @@ Rectangle {
     property int textLeft2: 253
     property int input2TextLeft:30
     property int signLeft: 356
-
+    MouseArea {
+        anchors.fill: parent
+    }
 
     Text {
         id: title

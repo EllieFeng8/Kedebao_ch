@@ -375,11 +375,11 @@ void Core::onMS300Data(int id, double v)
         writeRegisters(speed);
     }
     if (m_isWaitingForStop) {
-        // 當速度小於一個極小值 (例如 0.05 m/min) 就視為已停止
+        // 當速度小於一個極小值 (例如 0.15 m/min) 就視為已停止
         if (v <= 0.15) {
             qDebug() << "Speed reached zero! Executing Coil Stop...";
 
-            // 執行你原本想做的動作
+ 
             QVector<bool> stop(24, false);
             writeCoils(65, stop);
             QTimer::singleShot(500, this,
@@ -396,11 +396,11 @@ void Core::onMS300Data(int id, double v)
                     QTimer::singleShot(1000, this,
                         [this]()
                         {
-                            writeRegisters(0.35);
+                            writeRegisters(3);
                         });
                 }
             );
-            // 重要：執行完後關閉旗標，否則會一直重複執行 writeCoils
+           
             m_isWaitingForStop = false;
         }
     }

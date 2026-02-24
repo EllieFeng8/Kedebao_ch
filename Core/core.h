@@ -324,12 +324,45 @@ public:
 
         QObject::connect(m_proxy, &KdbProxy::smallRollMotorChanged, this, [this]()
             {
-                qDebug() << "JOG SmallWinderReverse";
+                qDebug() << "JOG SmallWinder";
                 m_manager->SmallWinderReverse(1.0);
                 QTimer::singleShot(1000, this,
                     [this]()
                     {
                         m_manager->SmallWinderReverse(0.0);
+                    });
+            }
+        );
+        QObject::connect(m_proxy, &KdbProxy::mainDriveMotorChanged, this, [this]()
+            {
+                qDebug() << "JOG mainDriveMotor";
+                m_manager->MainDriveForward(1.0);
+                QTimer::singleShot(1000, this,
+                    [this]()
+                    {
+                        m_manager->MainDriveForward(0.0);
+                    });
+            }
+        );
+        QObject::connect(m_proxy, &KdbProxy::largeRollMotorChanged, this, [this]()
+            {
+                qDebug() << "JOG largeRollMotor";
+                m_manager-> LargeWinderForward(1.0);
+                QTimer::singleShot(1000, this,
+                    [this]()
+                    {
+                        m_manager->LargeWinderForward(0.0);
+                    });
+            }
+        );
+        QObject::connect(m_proxy, &KdbProxy::unwindingMotorChanged, this, [this]()
+            {
+                qDebug() << "JOG unwindingMotor";
+                m_manager->UnwinderForward(1.0);
+                QTimer::singleShot(1000, this,
+                    [this]()
+                    {
+                        m_manager->UnwinderForward(0.0);
                     });
             }
         );

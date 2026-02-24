@@ -26,7 +26,9 @@ Rectangle {
     property int inputTextSize:24
     property int dashPos: 28
     property int btnPos:-15
-
+    MouseArea {
+        anchors.fill: parent
+    }
         Text {
         id: title
         x:935
@@ -203,10 +205,10 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
-                        if(Kdb.smallRollMotor !== Number(output0_1.text)) {
+                        //if(Kdb.smallRollMotor !== Number(output0_1.text)) {
                             Kdb.smallRollMotor = output0_1.text
                             //console.log("11 smallRollMotor changed~~~", Kdb.smallRollMotor);
-                        }
+                        //}
                     }
                     //onClicked: root.visible = false
                 }
@@ -270,10 +272,10 @@ Rectangle {
                     cursorShape: Qt.PointingHandCursor
                     enabled: true
                     onClicked: {
-                        if(Kdb.mainDriveMotor !== Number(output1_1.text)) {
+                       // if(Kdb.mainDriveMotor !== Number(output1_1.text)) {
                             Kdb.mainDriveMotor = output1_1.text
                             //console.log("11 mainDriveMotor changed~~~", Kdb.mainDriveMotor);
-                        }
+                       // }
                     }
                 }
             }
@@ -334,10 +336,10 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        if(Kdb.largeRollMotor !== Number(output2_1.text)) {
+                        //if(Kdb.largeRollMotor !== Number(output2_1.text)) {
                             Kdb.largeRollMotor = output2_1.text
                             //console.log("11 largeRollMotor changed~~~", Kdb.largeRollMotor);
-                        }
+                        //}
                     }
                 }
             }
@@ -398,10 +400,10 @@ Rectangle {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                if(Kdb.wasteRollMotorB !== Number(output3_1.text)) {
+                //if(Kdb.wasteRollMotorB !== Number(output3_1.text)) {
                     Kdb.wasteRollMotorB = output3_1.text
                     //console.log("11 wasteRollMotorB changed~~~", Kdb.wasteRollMotorB);
-                }
+                //}
             }
         }
     }
@@ -462,10 +464,10 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        if(Kdb.unwindingMotor !== Number(output4_1.text)) {
+                        //if(Kdb.unwindingMotor !== Number(output4_1.text)) {
                             Kdb.unwindingMotor = output4_1.text
                             //console.log("11 unwindingMotor changed~~~", Kdb.unwindingMotor);
-                        }
+                        //}
                     }
                 }
             }
@@ -526,10 +528,10 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        if(Kdb.edgeAlignMotor !== Number(output5_1.text)) {
+                        //if(Kdb.edgeAlignMotor !== Number(output5_1.text)) {
                             Kdb.edgeAlignMotor = output5_1.text
                             //console.log("11 edgeAlignMotor changed~~~", Kdb.edgeAlignMotor);
-                        }
+                        //}
                     }
                 }
             }
@@ -591,10 +593,10 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
-                        if(Kdb.cutterWheelMotor !== Number(output6_1.text)) {
+                        //if(Kdb.cutterWheelMotor !== Number(output6_1.text)) {
                             Kdb.cutterWheelMotor = output6_1.text
                             //console.log("11 cutterWheelMotor changed~~~", Kdb.cutterWheelMotor);
-                        }
+                        //}
                     }
                 }
             }
@@ -656,10 +658,10 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        if(Kdb.wasteRollMotorA !== Number(output7_1.text)) {
+                        //if(Kdb.wasteRollMotorA !== Number(output7_1.text)) {
                             Kdb.wasteRollMotorA = output7_1.text
                             //console.log("11 wasteRollMotorA changed~~~", Kdb.wasteRollMotorA);
-                        }
+                        //}
                     }
                 }
             }

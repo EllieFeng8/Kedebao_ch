@@ -24,6 +24,9 @@ Rectangle {
     property bool clicked1:Kdb.modifyAnalogOutWinderSwitch
     property bool clicked2:Kdb.modifyAnalogOutCutterSwitch
     property bool clicked3:Kdb.modifyAnalogOutSelvedgeWinderSwitch
+    MouseArea {
+        anchors.fill: parent
+    }
     Text {
         id: title
         x:935

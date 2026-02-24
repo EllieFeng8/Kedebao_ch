@@ -68,7 +68,9 @@ Rectangle {
     property bool clicked47:Kdb.output17Switch
     property int topMargin: 25
     property int groupLeftMargin: 100
-
+    MouseArea {
+        anchors.fill: parent
+    }
 
     Text {
         id: title
