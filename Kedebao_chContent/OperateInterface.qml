@@ -174,7 +174,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -240,7 +240,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -305,7 +305,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -369,7 +369,7 @@ Rectangle {
         validator: DoubleValidator {}//限制只能輸入整數/double
         //placeholderText: "請輸入內容"
         focus: true
-
+        inputMethodHints: Qt.ImhDigitsOnly
         Rectangle {
             height: 2
             y:dashPos
@@ -412,73 +412,9 @@ Rectangle {
 }
 
         Text {
-            id:text_4
-            x: textLeft
-            anchors.top: text_3.bottom
-            anchors.topMargin: topMargin
-            width: setWidth1
-            height: 24
-            text: qsTr("放布馬達")
-            font.pixelSize: fontSize
-            horizontalAlignment: Text.AlignRight
-
-            TextInput {
-                id: output4_1
-                width: 100
-                font.pixelSize: inputTextSize
-                horizontalAlignment: Text.AlignHCenter
-                x: textInputLeft
-                y: 0
-                text:Number(Kdb.unwindingMotor).toFixed(2)//Kdb.unwindingMotor
-                validator: DoubleValidator {}//限制只能輸入整數/double
-                //placeholderText: "請輸入內容"
-                focus: true
-
-                Rectangle {
-                    height: 2
-                    y:dashPos
-                    width: output4_1.width
-                    color: "#aaaaaa"
-                }
-            }
-            Image {
-                id: unwindingMotor
-                x:350
-                y:btnPos
-                source: "assets/rectangle_35.png"
-                Text {
-                    id: unwindingName
-                    text: qsTr("吋動")
-                    color: "#aaaaaa"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
-                    font.bold: true
-                }
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    shadowEnabled: unwindingMouseArea.containsMouse ? true : false
-                    shadowColor: "#58000000"
-                    shadowBlur: 0.8
-                }
-                MouseArea {
-                    id: unwindingMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        if(Kdb.unwindingMotor !== Number(output4_1.text)) {
-                            Kdb.unwindingMotor = output4_1.text
-                            //console.log("11 unwindingMotor changed~~~", Kdb.unwindingMotor);
-                        }
-                    }
-                }
-            }
-        }
-
-        Text {
             id:text_5
             x: textLeft
-            anchors.top: text_4.bottom
+            anchors.top: text_3.bottom
             anchors.topMargin: topMargin
             width: setWidth1
             //height: 24
@@ -497,7 +433,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -562,7 +498,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -627,7 +563,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:dashPos
@@ -663,203 +599,6 @@ Rectangle {
                         if(Kdb.wasteRollMotorA !== Number(output7_1.text)) {
                             Kdb.wasteRollMotorA = output7_1.text
                             //console.log("11 wasteRollMotorA changed~~~", Kdb.wasteRollMotorA);
-                        }
-                    }
-                }
-            }
-        }
-
-
-        Text {
-            id:text_8
-            anchors.left: text_7.left
-            anchors.top: text_7.bottom
-            anchors.topMargin: topMargin
-            //y: smallMotor.bottom
-            width: setWidth1
-            //height: 24
-            text: qsTr("放捲張力")
-            font.pixelSize: fontSize
-            horizontalAlignment: Text.AlignRight
-
-            TextInput {
-                id: output8_1
-                width: 100
-                font.pixelSize: inputTextSize
-                horizontalAlignment: Text.AlignHCenter
-                x: textInputLeft
-                y: 0
-                text:Number(Kdb.unwindingTension).toFixed(2)//Kdb.unwindingTension
-                validator: DoubleValidator {}//限制只能輸入整數/double
-                //placeholderText: "請輸入內容"
-                focus: true
-
-                Rectangle {
-                    height: 2
-                    y:dashPos
-                    width: output8_1.width
-                    color: "#aaaaaa"
-                }
-            }
-            Image {
-                id: btnTensionMotor
-                x:350
-                y:btnPos
-                source: "assets/rectangle_35.png"
-                Text {
-                    id: btnTensionName
-                    text: qsTr("OK")
-                    color: "#aaaaaa"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
-                    font.bold: true
-                }
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    shadowEnabled: btnTensionMouseArea.containsMouse ? true : false
-                    shadowColor: "#58000000"
-                    shadowBlur: 0.8
-                }
-                MouseArea {
-                    id: btnTensionMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        if(Kdb.unwindingTension !== Number(output8_1.text)){
-                            Kdb.unwindingTension = output8_1.text
-                            //console.log("11 unwindingTension changed~~~",Kdb.unwindingTension);
-                        }
-                    }
-                }
-            }
-        }
-
-        Text {
-            id:text_9
-
-            anchors.left: text_8.left
-            anchors.top: text_8.bottom
-            anchors.topMargin: topMargin
-            //y: smallMotor.bottom
-            width: setWidth1
-            //height: 24
-            text: qsTr("小捲張力")
-            font.pixelSize: fontSize
-            horizontalAlignment: Text.AlignRight
-
-            TextInput {
-                id: output9_1
-                width: 100
-                font.pixelSize: inputTextSize
-                horizontalAlignment: Text.AlignHCenter
-                x: textInputLeft
-                y: 0
-                text:Number(Kdb.smallRollTension).toFixed(2)//Kdb.smallRollTension
-                validator: DoubleValidator {}//限制只能輸入整數/double
-                //placeholderText: "請輸入內容"
-                focus: true
-
-                Rectangle {
-                    height: 2
-                    y:dashPos
-                    width: output9_1.width
-                    color: "#aaaaaa"
-                }
-            }
-            Image {
-                id: btnSmallRollTensionMotor
-                x:350
-                y:btnPos
-                source: "assets/rectangle_35.png"
-                Text {
-                    id: btnSmallRollTensioName
-                    text: qsTr("OK")
-                    color: "#aaaaaa"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
-                    font.bold: true
-                }
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    shadowEnabled: btnSmallRollTensioMouseArea.containsMouse ? true : false
-                    shadowColor: "#58000000"
-                    shadowBlur: 0.8
-                }
-                MouseArea {
-                    id: btnSmallRollTensioMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        if(Kdb.smallRollTension !== Number(output9_1.text)) {
-                            Kdb.smallRollTension = output9_1.text
-                            //console.log("11 smallRollTension changed~~~", Kdb.smallRollTension);
-                        }
-                    }
-                }
-            }
-        }
-
-        Text {
-            id:text_10
-
-            anchors.left: text_9.left
-            anchors.top: text_9.bottom
-            anchors.topMargin: topMargin
-            width: setWidth1
-            //height: 24
-            text: qsTr("大捲張力")
-            font.pixelSize: fontSize
-            horizontalAlignment: Text.AlignRight
-
-            TextInput {
-                id: output10_1
-                width: 100
-                font.pixelSize: inputTextSize
-                horizontalAlignment: Text.AlignHCenter
-                x: textInputLeft
-                y: 0
-                text:Number(Kdb.largeRollTension).toFixed(2)//Kdb.largeRollTension
-                validator: DoubleValidator {}//限制只能輸入整數/double
-                //placeholderText: "請輸入內容"
-                focus: true
-
-                Rectangle {
-                    height: 2
-                    y:dashPos
-                    width: output10_1.width
-                    color: "#aaaaaa"
-                }
-            }
-            Image {
-                id: btnLargeRollTensionMotor
-                x:350
-                y:btnPos
-                source: "assets/rectangle_35.png"
-                Text {
-                    id: btnLargeRollTensioName
-                    text: qsTr("OK")
-                    color: "#aaaaaa"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
-                    font.bold: true
-                }
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    shadowEnabled: btnLargeRollTensioMouseArea.containsMouse ? true : false
-                    shadowColor: "#58000000"
-                    shadowBlur: 0.8
-                }
-                MouseArea {
-                    id: btnLargeRollTensioMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        if(Kdb.largeRollTension !== Number(output10_1.text)) {
-                            Kdb.largeRollTension = output10_1.text
-                            //console.log("11 largeRollTension changed~~~", Kdb.largeRollTension);
                         }
                     }
                 }

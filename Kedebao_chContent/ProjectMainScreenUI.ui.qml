@@ -941,6 +941,7 @@ Rectangle {
             font.styleName: "Bold"
             text: Kdb.modifyLargeWinderTensionOver
             validator: DoubleValidator {}//限制只能輸入整數/double
+            inputMethodHints: Qt.ImhDigitsOnly
         }
         Image {
             id: servo_2
@@ -1101,7 +1102,7 @@ Rectangle {
             //maximumLength: 6 //限制輸入2位整數
             text: Kdb.modifyBrakingDistance
             validator: DoubleValidator {}//限制只能輸入整數/double
-
+            inputMethodHints: Qt.ImhDigitsOnly
         }
     }
     Item {
@@ -1191,7 +1192,7 @@ Rectangle {
                     verticalAlignment: Text.AlignVCenter
                     wrapMode: Text.WordWrap
                     validator: IntValidator{}//限制只能輸入整數
-
+                    inputMethodHints: Qt.ImhDigitsOnly
                 }
                 Image {
                     id: lenthSettingButton
@@ -1328,7 +1329,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
                 validator: IntValidator{}//限制只能輸入整數
-
+                inputMethodHints: Qt.ImhDigitsOnly
             }
             Image {
                 id: speedometer_1
@@ -1450,6 +1451,7 @@ Rectangle {
                 text: Kdb.modifySmallWinderTensionOver
                 //maximumLength: 4 //限制輸入2位整數
                 validator: DoubleValidator {}//限制只能輸入整數/double
+                inputMethodHints: Qt.ImhDigitsOnly
             }
             Image {
                 id: servo_3
@@ -1711,6 +1713,7 @@ Rectangle {
             //maximumLength: 4 //限制輸入2位整數
             text: Kdb.modifyUnwindingTension
             validator: DoubleValidator {}//限制只能輸入整數/double
+            inputMethodHints: Qt.ImhDigitsOnly
         }
         Image {
             id: servo_1
