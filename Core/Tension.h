@@ -41,7 +41,7 @@ public:
 signals:
     void dataUpdated(int id,double pv,double tqo);
     void lengthupdate(double val);
-    
+    void connectionFailed(const QString& errorMsg);
     void errorOccurred(int id, QString error);
 
 public slots:
@@ -73,6 +73,6 @@ private:
 
     QTimer* m_pollTimer = nullptr;
 
-    QList<int> m_slaveIds = { 1,2}; 
+    QList<int> m_slaveIds = { 1,2,3}; 
     int m_currentIndex = 0;
 };

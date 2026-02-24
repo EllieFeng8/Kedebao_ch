@@ -340,7 +340,7 @@ void Core::onlength(double v)
         qDebug() << "Target length reached!" << v << "/" << m_length;
 
 
-        setSTOP(0.0);
+        setSTOP();
         m_isWaitingForStop = true;
 
         // 為了安全，將目標長度重設為 0，避免在停止過程中重複觸發
@@ -435,9 +435,9 @@ void Core::setMainFreqs(double v)
             Qt::QueuedConnection);
     }
 }
-void Core::setSTOP(double v)
+void Core::setSTOP()
 {
-    double Hz = v * (60.0 / 130.0);
+    double Hz = 0 * (60.0 / 130.0);
     qDebug() << "STOP";
     {
         QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
@@ -497,6 +497,12 @@ void Core::setTensionSV_3(double v)
 {
     QMetaObject::invokeMethod(m_tension, [this,v]() {m_tension->setTargetTension(3, v); },
         Qt::QueuedConnection);
+}
+
+void Core::TensionFailed(const QString& errorMsg)
+{
+    setSTOP();
+    m_isWaitingForStop = true;
 }
 
 void Core::updateProxyProperty(int index, quint16 value)
@@ -736,7 +742,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         m_proxy->setIpcStop(val);
         if (state)
         {
-            setSTOP(0.0);
+            setSTOP();
             m_isWaitingForStop = true;
  
         }

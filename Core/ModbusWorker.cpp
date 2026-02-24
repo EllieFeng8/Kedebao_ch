@@ -161,15 +161,15 @@ void ModbusWorker::poll()
     bool f_leftPressPlateBackward = false;  //92
     bool f_rightPressPlateForward = false;  //93
     bool f_rightPressPlateBackward = false; //94
-    bool f_smallCutterIn = false;       //95
+    bool f_IO95 = false;       //95
     //===OUTPUT3=====
-    bool f_largeCutterIn = false;       //96
-    bool f_modeSelect = false;          //97
-    bool f_runIndicator = false;        //98
-    bool f_alarmIndicator = false;      //99
-    bool f_stopIndicator = false;      //100
-    bool f_buzzer = false;              //101
-    bool f_smallRollModeSelect = false; //102
+    bool f_IO96 = false;       //96
+    bool f_IO97 = false;          //97
+    bool f_IO98 = false;        //98
+    bool f_IO99 = false;      //99
+    bool f_IO100 = false;      //100
+    bool f_IO101 = false;              //101
+    bool f_IO102 = false; //102
     bool f_IO103 = false;
     bool f_IO104 = false;
     bool f_IO105 = false;
@@ -213,15 +213,15 @@ void ModbusWorker::poll()
     bool _leftPressPlateBackward = false;  //92
     bool _rightPressPlateForward = false;  //93
     bool _rightPressPlateBackward = false; //94
-    bool _smallCutterIn = false;       //95
+    bool _IO95 = false;  //95
     //===OUTPUT3=====
-    bool _largeCutterIn = false;       //96
-    bool _modeSelect = false;          //97
-    bool _runIndicator = false;        //98
-    bool _alarmIndicator = false;      //99
-    bool _stopIndicator = false;      //100
-    bool _buzzer = false;              //101
-    bool _smallRollModeSelect = false; //102
+    bool _IO96 = false;  //96
+    bool _IO97 = false;  //97
+    bool _IO98 = false;  //98
+    bool _IO99 = false;  //99
+    bool _IO100 = false; //100
+    bool _IO101 = false; //101
+    bool _IO102 = false; //102
     bool _IO103 = false;
     bool _IO104 = false;
     bool _IO105 = false;
@@ -420,53 +420,53 @@ void ModbusWorker::poll()
             f_rightPressPlateBackward = flag_rightPressPlateBackward;
             flag_rightPressPlateBackward = false;
         }
-        if(flag_smallCutterIn)
+        if(flag_IO95)
         {
-            _smallCutterIn = (m_smallCutterIn > 0.0) ? true : false;
-            f_smallCutterIn = flag_smallCutterIn;
-            flag_smallCutterIn = false;
+            _IO95 = (m_IO95 > 0.0) ? true : false;
+            f_IO95 = flag_IO95;
+            flag_IO95 = false;
         }
-        if(flag_largeCutterIn)
+        if(flag_IO96)
         {
-            _largeCutterIn = (m_largeCutterIn > 0.0) ? true : false;
-            f_largeCutterIn = flag_largeCutterIn;
-            flag_largeCutterIn = false;
+            _IO96 = (m_IO96 > 0.0) ? true : false;
+            f_IO96 = flag_IO96;
+            flag_IO96 = false;
         }
-        if(flag_modeSelect)
+        if(flag_IO97)
         {
-            _modeSelect = (m_modeSelect > 0.0) ? true : false;
-            f_modeSelect = flag_modeSelect;
-            flag_modeSelect = false;
+            _IO97 = (m_IO97 > 0.0) ? true : false;
+            f_IO97 = flag_IO97;
+            flag_IO97 = false;
         }
-        if(flag_runIndicator)
+        if(flag_IO98)
         {
-            _runIndicator = (m_runIndicator > 0.0) ? true : false;
-            f_runIndicator = flag_runIndicator;
-            flag_runIndicator = false;
+            _IO98 = (m_IO98 > 0.0) ? true : false;
+            f_IO98 = flag_IO98;
+            flag_IO98 = false;
         }
-        if(flag_alarmIndicator)
+        if(flag_IO99)
         {
-            _alarmIndicator = (m_alarmIndicator > 0.0) ? true : false;
-            f_alarmIndicator = flag_alarmIndicator;
-            flag_alarmIndicator = false;
+            _IO99 = (m_IO99 > 0.0) ? true : false;
+            f_IO99 = flag_IO99;
+            flag_IO99 = false;
         }
-        if(flag_stopIndicator)
+        if(flag_IO100)
         {
-            _stopIndicator = (m_stopIndicator > 0.0) ? true : false;
-            f_stopIndicator = flag_stopIndicator;
-            flag_stopIndicator = false;
+            _IO100 = (m_IO100 > 0.0) ? true : false;
+            f_IO100 = flag_IO100;
+            flag_IO100 = false;
         }
-        if (flag_buzzer)
+        if (flag_IO101)
         {
-            _buzzer = (m_buzzer > 0.0) ? true : false;
-            f_buzzer = flag_buzzer;
-            flag_buzzer = false;
+            _IO101 = (m_IO101 > 0.0) ? true : false;
+            f_IO101 = flag_IO101;
+            flag_IO101 = false;
         }
-        if (flag_smallRollModeSelect) 
+        if (flag_IO102) 
         {
-            _smallRollModeSelect = (m_smallRollModeSelect > 0.0) ? true : false;
-            f_smallRollModeSelect = flag_smallRollModeSelect;
-            flag_smallRollModeSelect = false;
+            _IO102 = (m_IO102 > 0.0) ? true : false;
+            f_IO102 = flag_IO102;
+            flag_IO102 = false;
         }
         if (flag_IO103)
         {
@@ -655,37 +655,37 @@ void ModbusWorker::poll()
         {
             writeSingleCoil(94, _rightPressPlateBackward);
         }
-        if (f_smallCutterIn)
+        if (f_IO95)
         {
-            writeSingleCoil(95, _smallCutterIn);
+            writeSingleCoil(95, _IO95);
         }
-        if (f_largeCutterIn)
+        if (f_IO96)
         {
-            writeSingleCoil(96, _largeCutterIn);
+            writeSingleCoil(96, _IO96);
         }
-        if (f_modeSelect)
+        if (f_IO97)
         {
-            writeSingleCoil(97, _modeSelect);
+            writeSingleCoil(97, _IO97);
         }
-        if (f_runIndicator)
+        if (f_IO98)
         {
-            writeSingleCoil(98, _runIndicator);
+            writeSingleCoil(98, _IO98);
         }
-        if (f_alarmIndicator)
+        if (f_IO99)
         {
-            writeSingleCoil(99, _alarmIndicator);
+            writeSingleCoil(99, _IO99);
         }
-        if (f_stopIndicator)
+        if (f_IO100)
         {
-            writeSingleCoil(100, _stopIndicator);
+            writeSingleCoil(100, _IO100);
         }
-        if (f_buzzer)
+        if (f_IO101)
         {
-            writeSingleCoil(101, _buzzer);
+            writeSingleCoil(101, _IO101);
         }
-        if (f_smallRollModeSelect)
+        if (f_IO102)
         {
-            writeSingleCoil(102, _smallRollModeSelect);
+            writeSingleCoil(102, _IO102);
         }
         if (f_IO103)
         {
@@ -1174,111 +1174,164 @@ void ModbusWorker::set_RightPressPlateBackward(double value)
     flag_rightPressPlateBackward = true;
     m_rightPressPlateBackward = value;
 }
-void ModbusWorker::set_SmallCutterIn(double value)
+void ModbusWorker::set_IO95(double value)
 {
-    if (qFuzzyCompare(m_smallCutterIn, value)) return;
-    flag_smallCutterIn = true;
-    m_smallCutterIn = value;
+
+    if (qFuzzyCompare(m_IO95, value)) return;
+    qDebug() << "I/O 95 change";
+    flag_IO95 = true;
+    m_IO95 = value;
 }
-void ModbusWorker::set_LargeCutterIn(double value)
+void ModbusWorker::set_IO96(double value)
 {
-    if (qFuzzyCompare(m_largeCutterIn, value)) return;
-    flag_largeCutterIn = true;
-    m_largeCutterIn = value;
+
+    if (qFuzzyCompare(m_IO96, value)) return;
+    qDebug() << "I/O 96 change";
+
+    flag_IO96 = true;
+    m_IO96 = value;
 }
-void ModbusWorker::set_ModeSelect(double value)
+void ModbusWorker::set_IO97(double value)
 {
-    if (qFuzzyCompare(m_modeSelect, value)) return;
-    flag_modeSelect = true;
-    m_modeSelect = value;
+
+    if (qFuzzyCompare(m_IO97, value)) return;
+    qDebug() << "I/O 97 change";
+
+    flag_IO97 = true;
+    m_IO97 = value;
 }
-void ModbusWorker::set_RunIndicator(double value)
+void ModbusWorker::set_IO98(double value)
 {
-    if (qFuzzyCompare(m_runIndicator, value)) return;
-    flag_runIndicator = true;
-    m_runIndicator = value;
+
+    if (qFuzzyCompare(m_IO98, value)) return;
+    qDebug() << "I/O 98 change";
+
+    flag_IO98 = true;
+    m_IO98 = value;
 }
-void ModbusWorker::set_AlarmIndicator(double value)
+void ModbusWorker::set_IO99(double value)
 {
-    if (qFuzzyCompare(m_alarmIndicator, value)) return;
-    flag_alarmIndicator = true;
-    m_alarmIndicator = value;
+
+    if (qFuzzyCompare(m_IO99, value)) return;
+    qDebug() << "I/O 99 change";
+
+    flag_IO99 = true;
+    m_IO99 = value;
 }
-void ModbusWorker::set_StopIndicator(double value)
+void ModbusWorker::set_IO100(double value)
 {
-    if (qFuzzyCompare(m_stopIndicator, value)) return;
-    flag_stopIndicator = true;
-    m_stopIndicator = value;
+
+    if (qFuzzyCompare(m_IO100, value)) return;
+    qDebug() << "I/O 100 change";
+
+    flag_IO100 = true;
+    m_IO100 = value;
 }
-void ModbusWorker::set_Buzzer(double value)
+void ModbusWorker::set_IO101(double value)
 {
-    if (qFuzzyCompare(m_buzzer, value)) return;
-    flag_buzzer = true;
-    m_buzzer = value;
+
+    if (qFuzzyCompare(m_IO101, value)) return;
+    qDebug() << "I/O 101 change";
+
+    flag_IO101 = true;
+    m_IO101 = value;
 }
-void ModbusWorker::set_SmallRollModeSelect(double value)
+void ModbusWorker::set_IO102(double value)
 {
-    if (qFuzzyCompare(m_smallRollModeSelect, value)) return;
-    flag_smallRollModeSelect = true;
-    m_smallRollModeSelect = value;
+
+    if (qFuzzyCompare(m_IO102, value)) return;
+    qDebug() << "I/O 102 change";
+
+    flag_IO102 = true;
+    m_IO102 = value;
 }
 void ModbusWorker::set_IO103(double value)
 {
+
     if (qFuzzyCompare(m_IO103, value)) return;
+    qDebug() << "I/O 103 change";
+
     flag_IO103 = true;
     m_IO103 = value;
 }
 void ModbusWorker::set_IO104(double value)
 {
+
     if (qFuzzyCompare(m_IO104, value)) return;
+    qDebug() << "I/O 104 change";
+
     flag_IO104 = true;
     m_IO104 = value;
 }
 void ModbusWorker::set_IO105(double value)
 {
+
     if (qFuzzyCompare(m_IO105, value)) return;
+    qDebug() << "I/O 105 change";
+
     flag_IO105 = true;
     m_IO105 = value;
 }
 void ModbusWorker::set_IO106(double value)
 {
+
     if (qFuzzyCompare(m_IO106, value)) return;
+    qDebug() << "I/O 106 change";
+
     flag_IO106 = true;
     m_IO106 = value;
 }
 void ModbusWorker::set_IO107(double value)
 {
+
     if (qFuzzyCompare(m_IO107, value)) return;
+    qDebug() << "I/O 107 change";
+
     flag_IO107 = true;
     m_IO107 = value;
 }
 void ModbusWorker::set_IO108(double value)
 {
+
     if (qFuzzyCompare(m_IO108, value)) return;
+    qDebug() << "I/O 108 change";
+
     flag_IO108 = true;
     m_IO108 = value;
 }
 void ModbusWorker::set_IO109(double value)
 {
+
     if (qFuzzyCompare(m_IO109, value)) return;
+    qDebug() << "I/O 109 change";
+
     flag_IO109 = true;
     m_IO109 = value;
 }
 void ModbusWorker::set_IO110(double value)
 {
+
     if (qFuzzyCompare(m_IO110, value)) return;
+    qDebug() << "I/O 110 change";
+
     flag_IO110 = true;
     m_IO110 = value;
 }
 void ModbusWorker::set_IO111(double value)
 {
+
     if (qFuzzyCompare(m_IO111, value)) return;
+    qDebug() << "I/O 111 change";
+
     flag_IO111 = true;
     m_IO111 = value;
 }
 void ModbusWorker::set_IO112(double value)
 {
+
     if (qFuzzyCompare(m_IO112, value)) return;
+    qDebug() << "I/O 112 change";
+
     flag_IO112 = true;
     m_IO112 = value;
 }

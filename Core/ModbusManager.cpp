@@ -60,15 +60,6 @@ void ModbusManager::createWorker()
             {
                 m_alarmActive = false; // alarm 消失，可再次觸發
             }
-            // 零速檢出
-            if (v[55] == 1)
-            {
-                //emit Zerospeed01();
-            }
-            if (v[56] == 1)
-            {
-                //emit Zerospeed02();
-            }
         });
     connect(m_worker, &ModbusWorker::dataReady2,
         this, [this](QVector<quint16> v) {
@@ -402,65 +393,65 @@ void ModbusManager::SmallCutterIn(double value)
 {
     bool v = (value > 0.0) ? true : false;
     qDebug() << "SmallCutter1" << v;
-    m_worker->set_SmallCutterIn(value);
+    m_worker->set_IO95(value);
+}
+void ModbusManager::SmallCutter2(double value)
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "SmallCutter2" << v;
+    m_worker->set_IO96(value);
+}
+void ModbusManager::SmallCutter3(double value)
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "SmallCutter3" << v;
+    m_worker->set_IO97(value);
+}
+void ModbusManager::SmallCutter4(double value)
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "SmallCutter4" << v;
+    m_worker->set_IO98(value);
+}
+void ModbusManager::SmallCutter5(double value)
+{
+    bool v = (value > 0.0) ? true : false;
+    qDebug() << "SmallCutter5" << v;
+    m_worker->set_IO99(value);
 }
 void ModbusManager::LargeCutterIn(double value)
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "SmallCutter2" << v;
-    m_worker->set_LargeCutterIn(value);
-}
-void ModbusManager::ModeSelect(double value)
-{
-    bool v = (value > 0.0) ? true : false;
-    qDebug() << "SmallCutter3" << v;
-    m_worker->set_ModeSelect(value);
+    qDebug() << "LargeCutterIn" << v;
+    m_worker->set_IO100(value);
 }
 void ModbusManager::RunIndicator(double value)
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "SmallCutter4" << v;
-    m_worker->set_RunIndicator(value);
+    qDebug() << "RunIndicator" << v;
+    m_worker->set_IO101(value);
 }
 void ModbusManager::AlarmIndicator(double value)
-{
-    bool v = (value > 0.0) ? true : false;
-    qDebug() << "SmallCutter5" << v;
-    m_worker->set_AlarmIndicator(value);
-}
-void ModbusManager::StopIndicator(double value)
-{
-    bool v = (value > 0.0) ? true : false;
-    qDebug() << "LargeCutterIn" << v;
-    m_worker->set_StopIndicator(value);
-}
-void ModbusManager::Buzzer(double value)
-{
-    bool v = (value > 0.0) ? true : false;
-    qDebug() << "RunIndicator" << v;
-    m_worker->set_Buzzer(value);
-}
-void ModbusManager::SmallRollModeSelect(double value)
 {
 
     bool v = (value > 0.0) ? true : false;
     qDebug() << "AlarmIndicator" << v;
-    m_worker->set_SmallRollModeSelect(value);
+    m_worker->set_IO102(value);
 }
-void ModbusManager::io103(double value)//o8
+void ModbusManager::StopIndicator(double value)//o8
 {
     bool v = (value > 0.0) ? true : false;
     qDebug() << "StopIndicator" << v;
     m_worker->set_IO103(value);
 }
-void ModbusManager::io104(double value)//o9
+void ModbusManager::Buzzer(double value)//o9
 {
     bool v = (value > 0.0) ? true : false;
     qDebug() << "Buzzer" << v;
     m_worker->set_IO104(value);
 
 }
-void ModbusManager::io105(double value)//o10
+void ModbusManager::ModeSelect(double value)//o10
 {
     bool v = (value > 0.0) ? true : false;
     m_ModeSelet = v;
@@ -471,21 +462,21 @@ void ModbusManager::io105(double value)//o10
 void ModbusManager::io106(double value)//o11
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "I/O 106 = " << v;
+    qDebug() << "white light " << v;
     m_worker->set_IO106(value);
 
 }
 void ModbusManager::io107(double value)//o12
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "I/O 107 = " << v;
+    qDebug() << "UV light " << v;
     m_worker->set_IO107(value);
 
 }
 void ModbusManager::io108(double value)//o13
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "I/O 108 = " << v;
+    qDebug() << "bot light " << v;
     m_worker->set_IO108(value);
 
 }
@@ -523,12 +514,12 @@ void ModbusManager::IpcStart(bool v)
     
     if (m_ModeSelet)
     {
-        writeCoils(65, {0,0,1,0,0,1,0,0,1,1,0,0,0,0,0,1,1,0,1,0,1,0,1,1}); //小卷模式 正轉啟動
+        writeCoils(65, {1,0,1,0,0,1,0,0,1,1,0,0,0,0,0,1,1,0,1,0,1,0,1,1}); //小卷模式 正轉啟動
     }
     else
     {
 
-        writeCoils(65, {0,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,1});//大捲模式 正轉啟動
+        writeCoils(65, {1,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,1});//大捲模式 正轉啟動
     }
 }
 void ModbusManager::IpcStop(double val, bool v)

@@ -12,17 +12,25 @@ void Modbus485::initPort() {
     m_modbus->setTimeout(500);
     m_modbus->setNumberOfRetries(3);
 
+    // [優化] 監聽執行時期的錯誤
+    connect(m_modbus, &QModbusDevice::errorOccurred, this, [this](QModbusDevice::Error error) {
+        if (error != QModbusDevice::NoError) {
+            emit connectionFailed(m_modbus->errorString());
+        }
+        });
+
     if (m_modbus->connectDevice()) {
-        qDebug() << "COM3 connet";
+        qDebug() << "COM3 connect success";
         m_pollTimer = new QTimer(this);
         connect(m_pollTimer, &QTimer::timeout, this, &Modbus485::onPollTimeout);
         m_pollTimer->start(100);
-        //Test set SV
-
     }
-    else
-    {
-        qDebug() << "connect COM3 fail";
+    else {
+        QString err = "connect COM3 fail: " + m_modbus->errorString();
+        qDebug() << err;
+
+        // --- 關鍵修改：發出訊號 ---
+        emit connectionFailed(err);
     }
 }
 
@@ -66,12 +74,7 @@ void Modbus485::onPollTimeout() {
         // 處理 TC-3050 (ID 1, 2, 3)
         readUnit = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 752, 6);
     }
-    else if (id == 6)
-    {
-        // 處理 碼輪控制器
-      
-        readUnit = QModbusDataUnit(QModbusDataUnit::HoldingRegisters, 0, 2);
-    }
+
 
     if (auto* reply = m_modbus->sendReadRequest(readUnit, id)) {
         if (!reply->isFinished()) {
@@ -94,22 +97,22 @@ void Modbus485::onPollTimeout() {
                     //    // 您可以視需求發送不同的信號或共用 dataUpdated
                     //    emit dataUpdated(id, val, 0);
                     //}
-                    else if (id == 6) {
-                        quint16 reg0 = res.value(0);
-                        quint16 reg1 = res.value(1);
+                    //else if (id == 6) {
+                    //    quint16 reg0 = res.value(0);
+                    //    quint16 reg1 = res.value(1);
 
-                        // 方案 A: 如果 132186112 太大，表示 reg0 是高位且內含資料
-                        // 方案 B: 嘗試以 reg1 作為高位，reg0 作為低位 (Little-endian 方式組合)
-                        // 根據說明書 PV 範圍，我們使用有號 32 位元整數 (int32_t)
-                        int32_t pvRaw = (static_cast<int32_t>(reg1) << 16) | (reg0 & 0xFFFF);
+                    //    // 方案 A: 如果 132186112 太大，表示 reg0 是高位且內含資料
+                    //    // 方案 B: 嘗試以 reg1 作為高位，reg0 作為低位 (Little-endian 方式組合)
+                    //    // 根據說明書 PV 範圍，我們使用有號 32 位元整數 (int32_t)
+                    //    int32_t pvRaw = (static_cast<int32_t>(reg1) << 16) | (reg0 & 0xFFFF);
 
-                        // 如果數值還是不對，請換回這行試試：
-                        // int32_t pvRaw = (static_cast<int32_t>(reg0) << 16) | (reg1 & 0xFFFF);
+                    //    // 如果數值還是不對，請換回這行試試：
+                    //    // int32_t pvRaw = (static_cast<int32_t>(reg0) << 16) | (reg1 & 0xFFFF);
 
-                        double pv = static_cast<double>(pvRaw);
-                        qDebug() << "Slave 6 PV (32bit):" << pv;                  
-                        emit lengthupdate(pv);
-                    }
+                    //    double pv = static_cast<double>(pvRaw);
+                    //    qDebug() << "Slave 6 PV (32bit):" << pv;                  
+                    //    emit lengthupdate(pv);
+                    //}
                 }   
                 else
                 {
