@@ -85,7 +85,7 @@ public:
 
         // 銷毀連線：當 thread 停止時，自動在 thread 內呼叫 deleteLater 釋放 m_tension
         connect(threadTension, &QThread::finished, m_tension, &QObject::deleteLater);
-
+        
         threadTension->start();
       /*  threadMS300 = new QThread(this);
         MS300::instance()->moveToThread(threadMS300);
@@ -114,6 +114,7 @@ public:
         connect(m_Length, &LengthController::lengthUpdated, this,&Core::onlength);
 
         // 處理錯誤
+        
         connect(m_Length, &LengthController::errorOccurred, this, [](QString err) {
             qWarning() << "Length COM2 Error:" << err;
             });
@@ -127,6 +128,8 @@ public:
 
         connect(m_tension, &Modbus485::dataUpdated,
             this, &Core::on485Data);
+        connect(m_tension, &Modbus485::connectionFailed, 
+            this, &Core::TensionFailed);
         connect(m_manager, &ModbusManager::workerData,
             this, &Core::onWorkerData);
         connect(m_manager, &ModbusManager::workerData2,
@@ -178,7 +181,8 @@ public:
     void resetMS300(int id);
     void loadSavedData();
     void setMainFreqs(double v);
-    void setSTOP(double v);
+    void setSTOP();
+    bool isStop = true;
 
     void writeRegisters(double v)
     {
@@ -201,14 +205,6 @@ public:
         //main Screen
         QObject::connect(m_proxy, &KdbProxy::bigRollModeChanged, this,&Core::modeSelect);
         QObject::connect(m_proxy, &KdbProxy::restBtnChanged,m_Length,&LengthController::lengthReset );
-        //QObject::connect(m_proxy, &KdbProxy::restBtnChanged, this, &Core::ontest);
-
-        QObject::connect(m_proxy, &KdbProxy::smallRollCutter1Changed, m_manager,&ModbusManager::SmallCutterIn);
-        QObject::connect(m_proxy, &KdbProxy::smallRollCutter2Changed, m_manager,&ModbusManager::LargeCutterIn);
-        QObject::connect(m_proxy, &KdbProxy::smallRollCutter3Changed, m_manager, &ModbusManager::ModeSelect);
-        QObject::connect(m_proxy, &KdbProxy::smallRollCutter4Changed, m_manager, &ModbusManager::RunIndicator);
-        QObject::connect(m_proxy, &KdbProxy::smallRollCutter5Changed, m_manager, &ModbusManager::AlarmIndicator);
-
 
         QObject::connect(m_proxy, &KdbProxy::pressureRollerChanged, m_manager, &ModbusManager::PressRoll);
         QObject::connect(m_proxy, &KdbProxy::pressureRollerDownChanged, m_manager, &ModbusManager::PressRollDown);
@@ -247,28 +243,42 @@ public:
         QObject::connect(m_proxy, &KdbProxy::leftPressPlateBackwardChanged, m_manager, &ModbusManager::LeftPressPlateBackward);//92
         QObject::connect(m_proxy, &KdbProxy::rightPressPlateForwardChanged, m_manager, &ModbusManager::RightPressPlateForward);//93
         QObject::connect(m_proxy, &KdbProxy::rightPressPlateBackwardChanged, m_manager, &ModbusManager::RightPressPlateBackward);//94
-        QObject::connect(m_proxy, &KdbProxy::smallCutterInChanged, m_manager, &ModbusManager::SmallCutterIn);//95
-        QObject::connect(m_proxy, &KdbProxy::largeCutterInChanged, m_manager, &ModbusManager::LargeCutterIn);//96
-        QObject::connect(m_proxy, &KdbProxy::modeSelectChanged, m_manager, &ModbusManager::ModeSelect);//97
-        QObject::connect(m_proxy, &KdbProxy::runIndicatorChanged, m_manager, &ModbusManager::RunIndicator);//98
-        QObject::connect(m_proxy, &KdbProxy::alarmIndicatorChanged, m_manager, &ModbusManager::AlarmIndicator);//99
-        QObject::connect(m_proxy, &KdbProxy::stopIndicatorChanged, m_manager, &ModbusManager::StopIndicator);//100
-        QObject::connect(m_proxy, &KdbProxy::buzzerChanged, m_manager, &ModbusManager::Buzzer);//101
-        QObject::connect(m_proxy, &KdbProxy::smallRollModeSelectChanged, m_manager, &ModbusManager::SmallRollModeSelect);//102
-        QObject::connect(m_proxy, &KdbProxy::output8Changed, m_manager, &ModbusManager::io103);//103
-        QObject::connect(m_proxy, &KdbProxy::output9Changed, m_manager, &ModbusManager::io104);//104
-        QObject::connect(m_proxy, &KdbProxy::output10Changed, m_manager, &ModbusManager::io105);//105
+        
+        // output 95以後 ,因為新增小卷切刀 proxy名稱對不上 以備註名稱為準
+        QObject::connect(m_proxy, &KdbProxy::smallCutterInChanged, m_manager, &ModbusManager::SmallCutterIn);//95  小卷切刀一
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter1Changed, m_manager, &ModbusManager::SmallCutterIn);//95 小卷切刀一
 
-        QObject::connect(m_proxy, &KdbProxy::output11Changed, m_manager, &ModbusManager::io106);//106
+        QObject::connect(m_proxy, &KdbProxy::largeCutterInChanged, m_manager, &ModbusManager::SmallCutter2);//96 小卷切刀二
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter2Changed, m_manager, &ModbusManager::SmallCutter2);//96 小卷切刀二
+
+        QObject::connect(m_proxy, &KdbProxy::modeSelectChanged, m_manager, &ModbusManager::SmallCutter3);//97 小卷切刀三
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter3Changed, m_manager, &ModbusManager::SmallCutter3);//97 小卷切刀三
+
+        QObject::connect(m_proxy, &KdbProxy::runIndicatorChanged, m_manager, &ModbusManager::SmallCutter4);//98 小卷切刀四
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter4Changed, m_manager, &ModbusManager::SmallCutter4);//98 小卷切刀四
+
+        QObject::connect(m_proxy, &KdbProxy::alarmIndicatorChanged, m_manager, &ModbusManager::SmallCutter5);//99 小卷切刀五
+        QObject::connect(m_proxy, &KdbProxy::smallRollCutter5Changed, m_manager, &ModbusManager::SmallCutter5);//99 小卷切刀五
+
+        QObject::connect(m_proxy, &KdbProxy::stopIndicatorChanged, m_manager, &ModbusManager::LargeCutterIn);//100 大捲切刀
+        QObject::connect(m_proxy, &KdbProxy::bigRollCutterChanged, m_manager, &ModbusManager::LargeCutterIn);//100 大捲切刀
+
+        QObject::connect(m_proxy, &KdbProxy::buzzerChanged, m_manager, &ModbusManager::RunIndicator);//101 指示燈 運行
+        QObject::connect(m_proxy, &KdbProxy::smallRollModeSelectChanged, m_manager, &ModbusManager::AlarmIndicator);//102 指示燈 異常
+        QObject::connect(m_proxy, &KdbProxy::output8Changed, m_manager, &ModbusManager::StopIndicator);//103 指示燈 停止
+        QObject::connect(m_proxy, &KdbProxy::output9Changed, m_manager, &ModbusManager::Buzzer);//104 蜂鳴器
+        QObject::connect(m_proxy, &KdbProxy::output10Changed, m_manager, &ModbusManager::ModeSelect);//105 模式選擇
+
+        QObject::connect(m_proxy, &KdbProxy::output11Changed, m_manager, &ModbusManager::io106);//106 日光燈
         QObject::connect(m_proxy, &KdbProxy::whiteLightChanged, m_manager, &ModbusManager::io106);
 
-        QObject::connect(m_proxy, &KdbProxy::output12Changed, m_manager, &ModbusManager::io107);//107
+        QObject::connect(m_proxy, &KdbProxy::output12Changed, m_manager, &ModbusManager::io107);//107 紫光燈
         QObject::connect(m_proxy, &KdbProxy::uvLightChanged, m_manager, &ModbusManager::io107);
 
-        QObject::connect(m_proxy, &KdbProxy::output13Changed, m_manager, &ModbusManager::io108);//108
+        QObject::connect(m_proxy, &KdbProxy::output13Changed, m_manager, &ModbusManager::io108);//108 下方照明燈
         QObject::connect(m_proxy, &KdbProxy::bottomLightChanged, m_manager, &ModbusManager::io108);
 
-        QObject::connect(m_proxy, &KdbProxy::output14Changed, m_manager, &ModbusManager::io109);//109
+        QObject::connect(m_proxy, &KdbProxy::output14Changed, m_manager, &ModbusManager::io109);//109 
         QObject::connect(m_proxy, &KdbProxy::output15Changed, m_manager, &ModbusManager::io110);//110
         QObject::connect(m_proxy, &KdbProxy::output16Changed, m_manager, &ModbusManager::io111);//111
         QObject::connect(m_proxy, &KdbProxy::output17Changed, m_manager, &ModbusManager::io112);//112
@@ -398,6 +408,7 @@ private slots:
     void onZeroSpeed01();
     void onZeroSpeed02();
     void on485Data(int id, double pv, double tqo);
+    void TensionFailed(const QString& errorMsg);
     void onMS300Data(int id, double v);
     void setCurrentLength(int length);
     void modeSelect(double v)

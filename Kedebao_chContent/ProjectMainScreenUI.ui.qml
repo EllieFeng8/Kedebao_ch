@@ -381,7 +381,7 @@ Rectangle {
                     id: gratingDetection2
                     x: 108
                     y: 7
-                    statusColor:Kdb.gratingDetection
+                    statusColor:Kdb.gratingDetection2
                 }
                 Image {
                     id: feed_1
@@ -572,7 +572,7 @@ Rectangle {
                     id: gratingDetection3
                     x: 108
                     y: 7
-                    statusColor:Kdb.gratingDetection
+                    statusColor:Kdb.gratingDetection3
                 }
                 Image {
                     id: feed_2
@@ -873,10 +873,10 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                   // if(Kdb.modifyLargeWinderTensionOver !== Number(bigCoilTension.text)) {
+                    if(Kdb.modifyLargeWinderTensionOver !== Number(bigCoilTension.text)) {
                         Kdb.modifyLargeWinderTensionOver = bigCoilTension.text
                         //console.log("11 modifyLargeWinderTensionOver changed~~~", Kdb.modifyLargeWinderTensionOver);
-                   // }
+                    }
                 }
             }
         }
@@ -941,6 +941,8 @@ Rectangle {
             font.styleName: "Bold"
             text: Kdb.modifyLargeWinderTensionOver
             validator: DoubleValidator {}//限制只能輸入整數/double
+            maximumLength:2
+            inputMethodHints: Qt.ImhDigitsOnly
         }
         Image {
             id: servo_2
@@ -1012,7 +1014,7 @@ Rectangle {
         }
         Image {
             id: brakingDistanceButton
-            x: 270
+            x: 278
             y: 102
             height: 44
             width: 50
@@ -1031,10 +1033,10 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                   // if(Kdb.modifyBrakingDistance !== Number(brakeDistance.text)) {
+                    if(Kdb.modifyBrakingDistance !== Number(brakeDistance.text)) {
                         Kdb.modifyBrakingDistance = brakeDistance.text
                         //console.log("11 modifyBrakingDistance changed~~~", Kdb.modifyBrakingDistance);
-                   // }
+                    }
                 }
             }
         }
@@ -1090,7 +1092,7 @@ Rectangle {
             x: 204
             y: 102
             height: 44
-            width: 59
+            width: 69
             color: "#565656"
             font.pixelSize: 20
             font.weight: Font.Normal
@@ -1098,10 +1100,11 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             wrapMode: Text.WordWrap
             font.styleName: "Bold"
+            maximumLength:3
             //maximumLength: 6 //限制輸入2位整數
             text: Kdb.modifyBrakingDistance
             validator: DoubleValidator {}//限制只能輸入整數/double
-
+            inputMethodHints: Qt.ImhDigitsOnly
         }
     }
     Item {
@@ -1182,7 +1185,7 @@ Rectangle {
                     x: -7
                     y: 28
                     height: 78
-                    width: 123
+                    width: 158
                     color: "#565656"
                     font.pixelSize: 54
                     font.weight: Font.Normal
@@ -1191,12 +1194,18 @@ Rectangle {
                     verticalAlignment: Text.AlignVCenter
                     wrapMode: Text.WordWrap
                     validator: IntValidator{}//限制只能輸入整數
-
+                    maximumLength: 4
+                    inputMethodHints: Qt.ImhDigitsOnly
                 }
                 Image {
                     id: lenthSettingButton
-                    x: 122
-                    y: 54
+                    anchors {
+                        left: lengthSet.right
+                        top:lengthSet.top
+                        leftMargin: 5
+                        topMargin:30
+                    }
+
                     height: 44
                     width: 50
                     source: "assets/rectangle_32.png"
@@ -1213,10 +1222,10 @@ Rectangle {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked:{
-                           // if(Kdb.modifyCurrentLength !== Number(lengthSet.text)) {
+                            if(Kdb.modifyCurrentLength !== Number(lengthSet.text)) {
                                 Kdb.modifyCurrentLength = lengthSet.text
                                 //console.log("11 modifyCurrentLength changed~~~", Kdb.modifyCurrentLength);
-                           // }
+                            }
                         }
                     }
                 }
@@ -1328,7 +1337,8 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
                 validator: IntValidator{}//限制只能輸入整數
-
+                maximumLength:3
+                inputMethodHints: Qt.ImhDigitsOnly
             }
             Image {
                 id: speedometer_1
@@ -1355,10 +1365,10 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    //if(Kdb.modifySpeed !== Number(speedSet.text)) {
+                    if(Kdb.modifySpeed !== Number(speedSet.text)) {
                         Kdb.modifySpeed = speedSet.text
                         //console.log("11 modifySpeed changed~~~", Kdb.modifySpeed);
-                    //}
+                    }
                 }
             }
         }
@@ -1450,6 +1460,8 @@ Rectangle {
                 text: Kdb.modifySmallWinderTensionOver
                 //maximumLength: 4 //限制輸入2位整數
                 validator: DoubleValidator {}//限制只能輸入整數/double
+                maximumLength:2
+                inputMethodHints: Qt.ImhDigitsOnly
             }
             Image {
                 id: servo_3
@@ -1478,10 +1490,10 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                    //if(Kdb.modifySmallWinderTensionOver !== Number(smallCoilTension.text)) {
+                    if(Kdb.modifySmallWinderTensionOver !== Number(smallCoilTension.text)) {
                         Kdb.modifySmallWinderTensionOver = smallCoilTension.text
                         // console.log("11 modifySmallWinderTensionOver changed~~~", Kdb.modifySmallWinderTensionOver);
-                    //}
+                    }
                 }
             }
         }
@@ -1529,12 +1541,11 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-                checked: Kdb.smallRollCutter1 === 2 
-    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
-                onToggled: {
-                Kdb.smallRollCutter1 = checked ? 2 : 0
-                }               
-                // checkState: Kdb.smallRollCutter1//Qt.Checked
+                checkState: Kdb.smallRollCutter1//Qt.Checked
+                onToggled:{
+                    Kdb.smallRollCutter1 = Kdb.smallRollCutter1 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter1",Kdb.smallRollCutter1)
+                }
             }
             CheckBox {
                 id: checkBox2
@@ -1555,12 +1566,11 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-                checked: Kdb.smallRollCutter2 === 2 
-    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
-                onToggled: {
-                Kdb.smallRollCutter2 = checked ? 2 : 0
-                }         
-                //checkState: Kdb.smallRollCutter2
+                checkState: Kdb.smallRollCutter2
+                onToggled:{
+                    Kdb.smallRollCutter2 = Kdb.smallRollCutter2 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter2",Kdb.smallRollCutter2)
+                }
             }
             CheckBox {
                 id: checkBox3
@@ -1580,12 +1590,11 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-                checked: Kdb.smallRollCutter3 === 2 
-    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
-                onToggled: {
-                Kdb.smallRollCutter3 = checked ? 2 : 0
-                }         
-                //checkState: Kdb.smallRollCutter3
+                checkState: Kdb.smallRollCutter3
+                onToggled:{
+                    Kdb.smallRollCutter3 = Kdb.smallRollCutter3 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter3",Kdb.smallRollCutter3)
+                }
             }
             CheckBox {
                 id: checkBox4
@@ -1605,12 +1614,11 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-                checked: Kdb.smallRollCutter4 === 2 
-    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
-                onToggled: {
-                Kdb.smallRollCutter4 = checked ? 2 : 0
-                }         
-                //checkState: Kdb.smallRollCutter4
+                checkState: Kdb.smallRollCutter4
+                onToggled:{
+                    Kdb.smallRollCutter4 = Kdb.smallRollCutter4 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter4",Kdb.smallRollCutter4)
+                }
             }
             CheckBox {
                 id: checkBox5
@@ -1630,12 +1638,12 @@ Rectangle {
                 icon.width: 10
                 icon.height: 10
                 spacing: 15
-                checked: Kdb.smallRollCutter5 === 2 
-    // 2. 寫入：當使用者點擊畫面時，主動把新值傳回給 C++ Proxy
-                onToggled: {
-                Kdb.smallRollCutter5 = checked ? 2 : 0
-                }         
-                //checkState: Kdb.smallRollCutter5
+
+                checkState: Kdb.smallRollCutter5
+                onToggled:{
+                    Kdb.smallRollCutter5 = Kdb.smallRollCutter5 ? 0 : 2;
+                    console.log("Kdb.smallRollCutter5",Kdb.smallRollCutter5)
+                }
             }
         }
 
@@ -1715,6 +1723,8 @@ Rectangle {
             //maximumLength: 4 //限制輸入2位整數
             text: Kdb.modifyUnwindingTension
             validator: DoubleValidator {}//限制只能輸入整數/double
+            maximumLength:2
+            inputMethodHints: Qt.ImhDigitsOnly
         }
         Image {
             id: servo_1
@@ -1743,10 +1753,10 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked:{
-                   //if(Kdb.modifyUnwindingTension !== Number(unwindingTension.text)) {
+                    if(Kdb.modifyUnwindingTension !== Number(unwindingTension.text)) {
                         Kdb.modifyUnwindingTension = unwindingTension.text
                         //console.log("11 modifyUnwindingTension changed~~~", Kdb.modifyUnwindingTension);
-                  //  }
+                    }
                 }
             }
         }

@@ -15,7 +15,10 @@ class KdbProxy : public QObject
     Q_PROPERTY(int bigRollMode READ getBigRollMode WRITE setBigRollMode NOTIFY bigRollModeChanged)
     Q_PROPERTY(int restBtn READ getRestBtn WRITE setRestBtn NOTIFY restBtnChanged)
     Q_PROPERTY(int metalDetector READ getMetalDetector NOTIFY metalDetectorChanged)
+
     Q_PROPERTY(int gratingDetection READ getGratingDetection NOTIFY gratingDetectionChanged)
+    Q_PROPERTY(int gratingDetection2 READ getGratingDetection2 NOTIFY gratingDetection2Changed)
+    Q_PROPERTY(int gratingDetection3 READ getGratingDetection3 NOTIFY gratingDetection3Changed)
     Q_PROPERTY(int oppositeSide READ getOppositeSide NOTIFY oppositeSideChanged)
 
     Q_PROPERTY(int doorASignal READ getDoorASignal NOTIFY doorASignalChanged)
@@ -506,6 +509,8 @@ public:
 
      Q_INVOKABLE int getMetalDetector() const { return m_metalDetector; }
      Q_INVOKABLE int getGratingDetection() const { return m_gratingDetection; }
+     Q_INVOKABLE int getGratingDetection2() const { return m_gratingDetection2; }
+     Q_INVOKABLE int getGratingDetection3() const { return m_gratingDetection3; }
      Q_INVOKABLE int getOppositeSide() const { return m_OppositeSideSignal; }
      void setOppositeSide(int value)
      {
@@ -2896,6 +2901,8 @@ public:
 
     void metalDetectorChanged(int value);
     void gratingDetectionChanged(int value);
+    void gratingDetection2Changed(int value);
+    void gratingDetection3Changed(int value);
     void oppositeSideChanged(int value);
 
     void doorASignalChanged(int value);
@@ -3339,6 +3346,8 @@ public:
 
     int m_metalDetector = 0;
     int m_gratingDetection = 0;
+    int m_gratingDetection2 = 0;
+    int m_gratingDetection3 = 0;
     int m_OppositeSideSignal = 0;
 
     int m_doorASignal = 0;

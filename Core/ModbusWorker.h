@@ -77,18 +77,18 @@ public:
          flag_rightPressPlateForward = false;  //93
          flag_rightPressPlateBackward = false; //94
 
-         flag_smallCutterIn = false;       //95
+         flag_IO95 = false;       //95
 
         //===OUTPUT3=====
-         flag_largeCutterIn = false;       //96
-         flag_modeSelect = false;          //97
+         flag_IO96 = false;       //96
+         flag_IO97 = false;          //97
 
-         flag_runIndicator = false;        //98
-         flag_alarmIndicator = false;      //99
-         flag_stopIndicator = false;      //100
+         flag_IO98 = false;        //98
+         flag_IO99 = false;      //99
+         flag_IO100 = false;      //100
 
-         flag_buzzer = false;              //101
-         flag_smallRollModeSelect = false; //102
+         flag_IO101 = false;              //101
+         flag_IO102 = false; //102
     }
     //Output flag 
     bool flag_vfdAlarmReset = false;               //64
@@ -138,18 +138,18 @@ public:
     bool flag_rightPressPlateForward = false;  //93
     bool flag_rightPressPlateBackward = false; //94
 
-    bool flag_smallCutterIn = false;       //95
+    bool flag_IO95 = false;       //95
 
     //===OUTPUT3=====
-    bool flag_largeCutterIn = false;       //96
-    bool flag_modeSelect = false;          //97
+    bool flag_IO96 = false;       //96
+    bool flag_IO97 = false;          //97
 
-    bool flag_runIndicator = false;        //98
-    bool flag_alarmIndicator = false;      //99
-    bool flag_stopIndicator = false;      //100
+    bool flag_IO98 = false;        //98
+    bool flag_IO99 = false;      //99
+    bool flag_IO100 = false;      //100
 
-    bool flag_buzzer = false;              //101
-    bool flag_smallRollModeSelect = false; //102
+    bool flag_IO101 = false;              //101
+    bool flag_IO102 = false; //102
     bool flag_IO103 = false;
     bool flag_IO104 = false;
     bool flag_IO105 = false;
@@ -209,18 +209,18 @@ public:
     double m_rightPressPlateForward = 0.0;
     double m_rightPressPlateBackward = 0.0;
 
-    double m_smallCutterIn = 0.0;
+    double m_IO95 = 0.0;
 
     //===OUTPUT3=====
-    double m_largeCutterIn = 0.0;
-    double m_modeSelect = 0.0;
+    double m_IO96 = 0.0;
+    double m_IO97 = 0.0;
 
-    double m_runIndicator = 0.0;
-    double m_alarmIndicator = 0.0;
-    double m_stopIndicator = 0.0;
+    double m_IO98 = 0.0;
+    double m_IO99 = 0.0;
+    double m_IO100 = 0.0;
 
-    double m_buzzer = 0.0;
-    double m_smallRollModeSelect = 0.0;
+    double m_IO101 = 0.0;
+    double m_IO102 = 0.0;
 
     double m_IO103 = 0.0;
     double m_IO104 = 0.0;
@@ -289,14 +289,14 @@ public slots:
     void set_LeftPressPlateBackward(double value);
     void set_RightPressPlateForward(double value);
     void set_RightPressPlateBackward(double value);
-    void set_SmallCutterIn(double value);
-    void set_LargeCutterIn(double value);
-    void set_ModeSelect(double value);
-    void set_RunIndicator(double value);
-    void set_AlarmIndicator(double value);
-    void set_StopIndicator(double value);
-    void set_Buzzer(double value);
-    void set_SmallRollModeSelect(double value);
+    void set_IO95(double value);
+    void set_IO96(double value);
+    void set_IO97(double value);
+    void set_IO98(double value);
+    void set_IO99(double value);
+    void set_IO100(double value);
+    void set_IO101(double value);
+    void set_IO102(double value);
     void set_IO103(double);
     void set_IO104(double);
     void set_IO105(double);

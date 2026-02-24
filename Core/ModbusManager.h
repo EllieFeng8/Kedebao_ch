@@ -76,20 +76,26 @@ public slots:
     void RightPressPlateForward(double value);//93
     void RightPressPlateBackward(double value);//94
     void SmallCutterIn(double value);//95
-    void LargeCutterIn(double value);//96
-    void ModeSelect(double value);//97
-    void RunIndicator(double value);//98
-    void AlarmIndicator(double value);//99
-    void StopIndicator(double value);//100
-    void Buzzer(double value);//101
-    void SmallRollModeSelect(double value);//102
-    void io103(double value); //103
-    void io104(double value); //104
-    void io105(double value); //105
-    void io106(double value); //106
-    void io107(double value); //107
-    void io108(double value); //108
-    void io109(double value); //109
+    void SmallCutter2(double value);//96
+    void SmallCutter3(double value);//97
+    void SmallCutter4(double value);//98
+    void SmallCutter5(double value);//99
+
+    void LargeCutterIn(double value);//100
+    void RunIndicator(double value);//101
+    void AlarmIndicator(double value);//102
+    void StopIndicator(double value);//103
+    void Buzzer(double value);//104
+    void ModeSelect(double value);//105
+
+    //void SmallRollModeSelect(double value);//105
+    //void io103(double value); //106
+    //void io104(double value); //107
+    //void io105(double value); //108
+    void io106(double value); //109
+    void io107(double value); //110
+    void io108(double value); //111
+    void io109(double value); //112
     void io110(double value); //110
     void io111(double value); //111
     void io112(double value); //112

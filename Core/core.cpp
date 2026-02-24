@@ -68,7 +68,7 @@ void Core::stopAll()
 void Core::onWorkerData( QVector<quint16> values)
 {
     if (DataValues == values) {
-        qDebug() << "==";
+
         return;
     }
 
@@ -340,9 +340,26 @@ void Core::onlength(double v)
         qDebug() << "Target length reached!" << v << "/" << m_length;
 
 
-        setSTOP(0.0);
+        setSTOP();
         m_isWaitingForStop = true;
-
+        QTimer::singleShot(500, this,
+            [this]()
+            {
+                writeCoils(89, { 1,0,0,1,0,1 });
+                QTimer::singleShot(200, this,
+                    [this]()
+                    {
+                        writeCoils(89, { 0,0,0,0,0,0 });
+                    });
+                PressIndex = 0;
+                PressIndex2 = 0;
+                QTimer::singleShot(1000, this,
+                    [this]()
+                    {
+                        writeRegisters(3);
+                    });
+            }
+        );
         // 為了安全，將目標長度重設為 0，避免在停止過程中重複觸發
         m_length = 0;
         m_isBrakingPerformed = false;
@@ -382,24 +399,25 @@ void Core::onMS300Data(int id, double v)
  
             QVector<bool> stop(24, false);
             writeCoils(65, stop);
-            QTimer::singleShot(500, this,
-                [this]()
-                {
-                    writeCoils(89, {1,0,0,1,0,1});
-                    QTimer::singleShot(200, this,
-                        [this]()
-                        {
-                            writeCoils(89, {0,0,0,0,0,0});
-                        });
-                    PressIndex = 0;
-                    PressIndex2 = 0;
-                    QTimer::singleShot(1000, this,
-                        [this]()
-                        {
-                            writeRegisters(3);
-                        });
-                }
-            );
+            isStop = true;
+            //QTimer::singleShot(500, this,
+            //    [this]()
+            //    {
+            //        writeCoils(89, {1,0,0,1,0,1});
+            //        QTimer::singleShot(200, this,
+            //            [this]()
+            //            {
+            //                writeCoils(89, {0,0,0,0,0,0});
+            //            });
+            //        PressIndex = 0;
+            //        PressIndex2 = 0;
+            //        QTimer::singleShot(1000, this,
+            //            [this]()
+            //            {
+            //                writeRegisters(3);
+            //            });
+            //    }
+            //);
            
             m_isWaitingForStop = false;
         }
@@ -435,9 +453,9 @@ void Core::setMainFreqs(double v)
             Qt::QueuedConnection);
     }
 }
-void Core::setSTOP(double v)
+void Core::setSTOP()
 {
-    double Hz = v * (60.0 / 130.0);
+    double Hz = 0 * (60.0 / 130.0);
     qDebug() << "STOP";
     {
         QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
@@ -497,6 +515,12 @@ void Core::setTensionSV_3(double v)
 {
     QMetaObject::invokeMethod(m_tension, [this,v]() {m_tension->setTargetTension(3, v); },
         Qt::QueuedConnection);
+}
+
+void Core::TensionFailed(const QString& errorMsg)
+{
+    setSTOP();
+    m_isWaitingForStop = true;
 }
 
 void Core::updateProxyProperty(int index, quint16 value)
@@ -727,6 +751,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         m_proxy->setIpcStart(val);
         setMainFreqs(setspeed);
         m_isBrakingPerformed = false;
+        isStop = false;
         if (state)
         {
             m_manager->IpcStart(state);//動作  
@@ -736,8 +761,9 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         m_proxy->setIpcStop(val);
         if (state)
         {
-            setSTOP(0.0);
+            setSTOP();
             m_isWaitingForStop = true;
+
  
         }
         qDebug() << "DI Bit 1 changed" << state ;//Log 
