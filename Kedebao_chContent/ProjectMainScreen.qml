@@ -7,12 +7,13 @@ ProjectMainScreenUI {
 
     resetMouseArea.onClicked: {
         //console.log("resetMouseAreaonClicked")
-        lengthSet.text = "0"
-        speedSet.text = "0"
-        brakeDistance.text = "0"
-        unwindingTension.text = "0"
-        smallCoilTension.text = "0"
-        bigCoilTension.text = "0"
+        Kdb.modifyCurrentLength = 0
+        Kdb.currentLength = 0
+        // speedSet.text = "0"
+        // brakeDistance.text = "0"
+        // unwindingTension.text = "0"
+        // smallCoilTension.text = "0"
+        // bigCoilTension.text = "0"
         Kdb.restBtn = !Kdb.restBtn
         console.log("restBtn",Kdb.restBtn)
     }

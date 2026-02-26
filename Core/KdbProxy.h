@@ -17,7 +17,11 @@ class KdbProxy : public QObject
     Q_PROPERTY(int restBtn READ getRestBtn WRITE setRestBtn NOTIFY restBtnChanged)
 
     Q_PROPERTY(int metalDetector READ getMetalDetector NOTIFY metalDetectorChanged)
+    //光柵檢測*3
     Q_PROPERTY(int gratingDetection READ getGratingDetection NOTIFY gratingDetectionChanged)
+    Q_PROPERTY(int gratingDetection2 READ getGratingDetection2 NOTIFY gratingDetection2Changed)
+    Q_PROPERTY(int gratingDetection3 READ getGratingDetection3 NOTIFY gratingDetection3Changed)
+
     Q_PROPERTY(int oppositeSide READ getOppositeSide NOTIFY oppositeSideChanged)
 
     Q_PROPERTY(int doorASignal READ getDoorASignal NOTIFY doorASignalChanged)
@@ -394,29 +398,39 @@ class KdbProxy : public QObject
     Q_PROPERTY(double analogOutWinder READ getAnalogOutWinder WRITE setAnalogOutWinder NOTIFY analogOutWinderChanged)
     Q_PROPERTY(double analogOutCutter READ getAnalogOutCutter WRITE setAnalogOutCutter NOTIFY analogOutCutterChanged)
     Q_PROPERTY(double analogOutSelvedgeWinder READ getAnalogOutSelvedgeWinder WRITE setAnalogOutSelvedgeWinder NOTIFY analogOutSelvedgeWinderChanged)
+    //放捲頻率限制閥值
+    Q_PROPERTY(double unwindingLimitThreshold READ getUnwindingLimitThreshold WRITE setUnwindingLimitThreshold NOTIFY unwindingLimitThresholdChanged)
 
     //%
     Q_PROPERTY(double analogOutUnwinderMainDrivePc READ getAnalogOutUnwinderMainDrivePc WRITE setAnalogOutUnwinderMainDrivePc NOTIFY analogOutUnwinderMainDrivePcChanged)
     Q_PROPERTY(double analogOutWinderPc READ getAnalogOutWinderPc WRITE setAnalogOutWinderPc NOTIFY analogOutWinderPcChanged)
     Q_PROPERTY(double analogOutCutterPc READ getAnalogOutCutterPc WRITE setAnalogOutCutterPc NOTIFY analogOutCutterPcChanged)
     Q_PROPERTY(double analogOutSelvedgeWinderPc READ getAnalogOutSelvedgeWinderPc WRITE setAnalogOutSelvedgeWinderPc NOTIFY analogOutSelvedgeWinderPcChanged)
+    //放捲頻率限制閥值
+    Q_PROPERTY(double unwindingLimitThresholdPc READ getUnwindingLimitThresholdPc WRITE setUnwindingLimitThresholdPc NOTIFY unwindingLimitThresholdPcChanged)
 
 
     Q_PROPERTY(double modifyAnalogOutUnwinderMainDrive READ getModifyAnalogOutUnwinderMainDrive WRITE setModifyAnalogOutUnwinderMainDrive NOTIFY modifyAnalogOutUnwinderMainDriveChanged)
     Q_PROPERTY(double modifyAnalogOutWinder READ getModifyAnalogOutWinder WRITE setModifyAnalogOutWinder NOTIFY modifyAnalogOutWinderChanged)
     Q_PROPERTY(double modifyAnalogOutCutter READ getModifyAnalogOutCutter WRITE setModifyAnalogOutCutter NOTIFY modifyAnalogOutCutterChanged)
     Q_PROPERTY(double modifyAnalogOutSelvedgeWinder READ getModifyAnalogOutSelvedgeWinder WRITE setModifyAnalogOutSelvedgeWinder NOTIFY modifyAnalogOutSelvedgeWinderChanged)
+    //放捲頻率限制閥值
+    Q_PROPERTY(double modifyUnwindingLimitThreshold READ getModifyUnwindingLimitThreshold WRITE setModifyUnwindingLimitThreshold NOTIFY modifyUnwindingLimitThresholdChanged)
 
     // ===== ANALOG OUTPUT Switch=====
     Q_PROPERTY(int analogOutUnwinderMainDriveSwitch READ getAnalogOutUnwinderMainDriveSwitch WRITE setAnalogOutUnwinderMainDriveSwitch NOTIFY analogOutUnwinderMainDriveSwitchChanged)
     Q_PROPERTY(int analogOutWinderSwitch READ getAnalogOutWinderSwitch WRITE setAnalogOutWinderSwitch NOTIFY analogOutWinderSwitchChanged)
     Q_PROPERTY(int analogOutCutterSwitch READ getAnalogOutCutterSwitch WRITE setAnalogOutCutterSwitch NOTIFY analogOutCutterSwitchChanged)
     Q_PROPERTY(int analogOutSelvedgeWinderSwitch READ getAnalogOutSelvedgeWinderSwitch WRITE setAnalogOutSelvedgeWinderSwitch NOTIFY analogOutSelvedgeWinderSwitchChanged)
+    //放捲頻率限制閥值
+    Q_PROPERTY(int unwindingLimitThresholdSwitch READ getUnwindingLimitThresholdSwitch WRITE setUnwindingLimitThresholdSwitch NOTIFY unwindingLimitThresholdSwitchChanged)
 
     Q_PROPERTY(int modifyAnalogOutUnwinderMainDriveSwitch READ getModifyAnalogOutUnwinderMainDriveSwitch WRITE setModifyAnalogOutUnwinderMainDriveSwitch NOTIFY modifyAnalogOutUnwinderMainDriveSwitchChanged)
     Q_PROPERTY(int modifyAnalogOutWinderSwitch READ getModifyAnalogOutWinderSwitch WRITE setModifyAnalogOutWinderSwitch NOTIFY modifyAnalogOutWinderSwitchChanged)
     Q_PROPERTY(int modifyAnalogOutCutterSwitch READ getModifyAnalogOutCutterSwitch WRITE setModifyAnalogOutCutterSwitch NOTIFY modifyAnalogOutCutterSwitchChanged)
     Q_PROPERTY(int modifyAnalogOutSelvedgeWinderSwitch READ getModifyAnalogOutSelvedgeWinderSwitch WRITE setModifyAnalogOutSelvedgeWinderSwitch NOTIFY modifyAnalogOutSelvedgeWinderSwitchChanged)
+    //放捲頻率限制閥值
+    Q_PROPERTY(int modifyUnwindingLimitThresholdSwitch READ getModifyUnwindingLimitThresholdSwitch WRITE setModifyUnwindingLimitThresholdSwitch NOTIFY modifyUnwindingLimitThresholdSwitchChanged)
 
 
     // ===== IPC INPUT =====
@@ -513,6 +527,8 @@ public:
 
      Q_INVOKABLE int getMetalDetector() const { return m_metalDetector; }
      Q_INVOKABLE int getGratingDetection() const { return m_gratingDetection; }
+     Q_INVOKABLE int getGratingDetection2() const { return m_gratingDetection2; }
+     Q_INVOKABLE int getGratingDetection3() const { return m_gratingDetection3; }
      Q_INVOKABLE int getOppositeSide() const { return m_OppositeSideSignal; }
 
      Q_INVOKABLE int getDoorASignal() const { return m_doorASignal; }
@@ -2474,9 +2490,21 @@ public:
         emit analogOutSelvedgeWinderChanged(m_analogOutSelvedgeWinder);
     }
 
+    Q_INVOKABLE double getUnwindingLimitThreshold() const{ return m_unwindingLimitThreshold;}
+    void setUnwindingLimitThreshold(double value)
+    {
+        if (m_unwindingLimitThreshold != value)
+            m_unwindingLimitThreshold = value;
+        emit unwindingLimitThresholdChanged(m_unwindingLimitThreshold);
+    }
+
     //%
     Q_INVOKABLE double getAnalogOutSelvedgeWinderPc() const{ return m_analogOutSelvedgeWinderPc;}
     void setAnalogOutSelvedgeWinderPc(double value){ m_analogOutSelvedgeWinderPc = value;emit analogOutSelvedgeWinderPcChanged(m_analogOutSelvedgeWinderPc);}
+
+    //%
+    Q_INVOKABLE double getUnwindingLimitThresholdPc() const{ return m_unwindingLimitThresholdPc;}
+    void setUnwindingLimitThresholdPc(double value){ m_unwindingLimitThresholdPc = value;emit unwindingLimitThresholdPcChanged(m_analogOutSelvedgeWinderPc);}
 
     //switch
     Q_INVOKABLE int getAnalogOutSelvedgeWinderSwitch() const{ return m_analogOutSelvedgeWinderSwitch;}
@@ -2485,6 +2513,14 @@ public:
         if (m_analogOutSelvedgeWinderSwitch != value)
             m_analogOutSelvedgeWinderSwitch = value;
         emit analogOutSelvedgeWinderSwitchChanged(m_analogOutSelvedgeWinderSwitch);
+    }
+    //switch
+    Q_INVOKABLE int getUnwindingLimitThresholdSwitch() const{ return m_unwindingLimitThresholdSwitch;}
+    void setUnwindingLimitThresholdSwitch(int value)
+    {
+        if (m_unwindingLimitThresholdSwitch != value)
+            m_unwindingLimitThresholdSwitch = value;
+        emit unwindingLimitThresholdSwitchChanged(m_unwindingLimitThresholdSwitch);
     }
 
     Q_INVOKABLE double getModifyAnalogOutUnwinderMainDrive() const { return m_modifyAnalogOutUnwinderMainDrive; }
@@ -2543,6 +2579,15 @@ public:
         emit modifyAnalogOutSelvedgeWinderChanged(m_modifyAnalogOutSelvedgeWinder);
         qDebug()<<"get setModifyAnalogOutSelvedgeWinder"<<m_modifyAnalogOutSelvedgeWinder;
     }
+
+    Q_INVOKABLE double getModifyUnwindingLimitThreshold() const { return m_modifyUnwindingLimitThreshold;}
+    void setModifyUnwindingLimitThreshold(double value)
+    {
+        if (m_modifyUnwindingLimitThreshold != value)
+            m_modifyUnwindingLimitThreshold = value;
+        emit modifyUnwindingLimitThresholdChanged(m_modifyUnwindingLimitThreshold);
+        qDebug()<<"get setModifyUnwindingLimitThreshold"<<m_modifyUnwindingLimitThreshold;
+    }
     //switch
     Q_INVOKABLE int getModifyAnalogOutSelvedgeWinderSwitch() const { return m_modifyAnalogOutSelvedgeWinderSwitch;}
     void setModifyAnalogOutSelvedgeWinderSwitch(int value)
@@ -2550,6 +2595,14 @@ public:
         if (m_modifyAnalogOutSelvedgeWinderSwitch != value)
             m_modifyAnalogOutSelvedgeWinderSwitch = value;
         emit modifyAnalogOutSelvedgeWinderSwitchChanged(m_modifyAnalogOutSelvedgeWinderSwitch);
+    }
+    //switch
+    Q_INVOKABLE int getModifyUnwindingLimitThresholdSwitch() const { return m_modifyUnwindingLimitThresholdSwitch;}
+    void setModifyUnwindingLimitThresholdSwitch(int value)
+    {
+        if (m_modifyUnwindingLimitThresholdSwitch != value)
+            m_modifyUnwindingLimitThresholdSwitch = value;
+        emit modifyAnalogOutSelvedgeWinderSwitchChanged(m_modifyUnwindingLimitThresholdSwitch);
     }
 
     // ===== IPC INPUT WRITE =====
@@ -2831,6 +2884,8 @@ public:
 
     void metalDetectorChanged(int value);
     void gratingDetectionChanged(int value);
+    void gratingDetection2Changed(int value);
+    void gratingDetection3Changed(int value);
     void oppositeSideChanged(int value);
 
     void doorASignalChanged(int value);
@@ -3169,27 +3224,32 @@ public:
     void analogOutWinderChanged(double value);
     void analogOutCutterChanged(double value);
     void analogOutSelvedgeWinderChanged(double value);
+    void unwindingLimitThresholdChanged(double value);
 
     //%
     void analogOutUnwinderMainDrivePcChanged(double value);
     void analogOutWinderPcChanged(double value);
     void analogOutCutterPcChanged(double value);
     void analogOutSelvedgeWinderPcChanged(double value);
+    void unwindingLimitThresholdPcChanged(double value);
 
     void modifyAnalogOutUnwinderMainDriveChanged(double value);
     void modifyAnalogOutWinderChanged(double value);
     void modifyAnalogOutCutterChanged(double value);
     void modifyAnalogOutSelvedgeWinderChanged(double value);
+    void modifyUnwindingLimitThresholdChanged(double value);
     //===== ANALOG OUTPUT switch=====
     void analogOutUnwinderMainDriveSwitchChanged(int value);
     void analogOutWinderSwitchChanged(int value);
     void analogOutCutterSwitchChanged(int value);
     void analogOutSelvedgeWinderSwitchChanged(int value);
+    void unwindingLimitThresholdSwitchChanged(int value);
 
     void modifyAnalogOutUnwinderMainDriveSwitchChanged(int value);
     void modifyAnalogOutWinderSwitchChanged(int value);
     void modifyAnalogOutCutterSwitchChanged(int value);
     void modifyAnalogOutSelvedgeWinderSwitchChanged(int value);
+    void modifyUnwindingLimitThresholdSwitchChanged(int value);
 
     //===== IPC-INPUT =====
     void ipcStartChanged(double value);
@@ -3281,6 +3341,8 @@ private:
 
     int m_metalDetector = 0;
     int m_gratingDetection = 0;
+    int m_gratingDetection2 = 0;
+    int m_gratingDetection3 = 0;
     int m_OppositeSideSignal = 0;
 
     int m_doorASignal = 0;
@@ -3303,7 +3365,7 @@ private:
 
     int m_modifycurrentLength = 0;
     int m_modifyspeed = 0;
-    double m_modifybrakingDistance = 0;
+    double m_modifybrakingDistance = 1000;
 
     double m_modifyUnwindingTension = 0.0;
     double m_modifySmallWinderTensionOver = 0.0;
@@ -3618,27 +3680,37 @@ private:
     double m_analogOutWinder = 0.0;
     double m_analogOutCutter = 0.0;
     double m_analogOutSelvedgeWinder = 0.0;
+    //放捲頻率限制閥值
+    double m_unwindingLimitThreshold = 1.1;
 
     //%
     double m_analogOutUnwinderMainDrivePc = 1.0;
     double m_analogOutWinderPc = 2.0;
     double m_analogOutCutterPc = 3.0;
     double m_analogOutSelvedgeWinderPc = 4.0;
+    //放捲頻率限制閥值%
+    double m_unwindingLimitThresholdPc = 2.2;
 
     double m_modifyAnalogOutUnwinderMainDrive = 0.0;
     double m_modifyAnalogOutWinder = 0.0;
     double m_modifyAnalogOutCutter = 0.0;
     double m_modifyAnalogOutSelvedgeWinder = 0.0;
+    //放捲頻率限制閥值
+    double m_modifyUnwindingLimitThreshold = 3.3;
     // ===== ANALOG OUTPUT switch=====
     int m_analogOutUnwinderMainDriveSwitch = 0;
     int m_analogOutWinderSwitch = 0;
     int m_analogOutCutterSwitch = 0;
     int m_analogOutSelvedgeWinderSwitch = 0;
+    //放捲頻率限制閥值
+    int m_unwindingLimitThresholdSwitch = 1;
 
     int m_modifyAnalogOutUnwinderMainDriveSwitch = 0;
     int m_modifyAnalogOutWinderSwitch = 0;
     int m_modifyAnalogOutCutterSwitch = 0;
     int m_modifyAnalogOutSelvedgeWinderSwitch = 0;
+    //放捲頻率限制閥值
+    int m_modifyUnwindingLimitThresholdSwitch = 1;
 
 
     // ===== IPC INPUT =====

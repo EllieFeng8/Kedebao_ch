@@ -23,7 +23,7 @@ Rectangle {
     property alias bigCoilTension: bigCoilTension
     property alias smallCoilTension: smallCoilTension
     property alias unwindingTension: unwindingTension
-    property alias brakeDistance: brakeDistance
+    //property alias brakeDistance: brakeDistance
     property alias speedSet: speedSet
     property alias lengthSet: lengthSet
     property bool isbigRoll: false
@@ -34,8 +34,8 @@ Rectangle {
     property alias whiteLightMouseArea: whiteLightMouseArea
     property alias uvLampUI: uvLampUI
 
-    property alias brakingDistanceButton: brakingDistanceButton
-    property alias brakingDistanceMouseArea: brakingDistanceMouseArea
+    //property alias brakingDistanceButton: brakingDistanceButton
+    //property alias brakingDistanceMouseArea: brakingDistanceMouseArea
     property alias speedSettingButton: speedSettingButton
     property alias speedSettingmouseArea: speedSettingmouseArea
     property alias lenthSettingButton: lenthSettingButton
@@ -381,7 +381,7 @@ Rectangle {
                     id: gratingDetection2
                     x: 108
                     y: 7
-                    statusColor:Kdb.gratingDetection
+                    statusColor:Kdb.gratingDetection2
                 }
                 Image {
                     id: feed_1
@@ -572,7 +572,7 @@ Rectangle {
                     id: gratingDetection3
                     x: 108
                     y: 7
-                    statusColor:Kdb.gratingDetection
+                    statusColor:Kdb.gratingDetection3
                 }
                 Image {
                     id: feed_2
@@ -855,7 +855,7 @@ Rectangle {
         }
         Image {
             id: bigCoilTensionButton
-            x: 99.64
+            x: 107.64
             y: 203.01
             height: 54.80
             width: 62.27
@@ -928,10 +928,10 @@ Rectangle {
 
         TextField {
             id: bigCoilTension
-            x: 20
+            x: 15
             y: 203
             height: 55
-            width: 74
+            width: 93
             color: "#565656"
             font.pixelSize: 24
             font.weight: Font.Normal
@@ -941,6 +941,7 @@ Rectangle {
             font.styleName: "Bold"
             text: Kdb.modifyLargeWinderTensionOver
             validator: DoubleValidator {}//限制只能輸入整數/double
+            maximumLength:5
             inputMethodHints: Qt.ImhDigitsOnly
         }
         Image {
@@ -977,7 +978,7 @@ Rectangle {
 
             Image {
                 id: bigRollCutterSwitch
-                x: 33
+                x: 24
                 y:87
                 source: Kdb.bigRollCutter ? "assets/Group11.png" : "assets/Group 34.png"
 
@@ -1011,34 +1012,34 @@ Rectangle {
             x: -4
             source: "assets/rectangle_29.png"
         }
-        Image {
-            id: brakingDistanceButton
-            x: 270
-            y: 102
-            height: 44
-            width: 50
-            source: "assets/rectangle_32.png"
-
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                shadowEnabled: brakingDistanceMouseArea.containsMouse ? true : false
-                shadowColor: "#58000000"
-                shadowBlur: 0.8
-            }
-
-            MouseArea {
-                id: brakingDistanceMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked:{
-                    if(Kdb.modifyBrakingDistance !== Number(brakeDistance.text)) {
-                        Kdb.modifyBrakingDistance = brakeDistance.text
-                        //console.log("11 modifyBrakingDistance changed~~~", Kdb.modifyBrakingDistance);
-                    }
-                }
-            }
-        }
+        // Image {
+        //     id: brakingDistanceButton
+        //     x: 278
+        //     y: 102
+        //     height: 44
+        //     width: 50
+        //     source: "assets/rectangle_32.png"
+        //
+        //     layer.enabled: true
+        //     layer.effect: MultiEffect {
+        //         shadowEnabled: brakingDistanceMouseArea.containsMouse ? true : false
+        //         shadowColor: "#58000000"
+        //         shadowBlur: 0.8
+        //     }
+        //
+        //     MouseArea {
+        //         id: brakingDistanceMouseArea
+        //         anchors.fill: parent
+        //         hoverEnabled: true
+        //         cursorShape: Qt.PointingHandCursor
+        //         onClicked:{
+        //             if(Kdb.modifyBrakingDistance !== Number(brakeDistance.text)) {
+        //                 Kdb.modifyBrakingDistance = brakeDistance.text
+        //                 //console.log("11 modifyBrakingDistance changed~~~", Kdb.modifyBrakingDistance);
+        //             }
+        //         }
+        //     }
+        // }
         Text {
             id: m_
             x: 26.92
@@ -1055,22 +1056,22 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             wrapMode: Text.WordWrap
         }
-        Text {
-            id: element_16
-            x: 126
-            y: 113
-            height: 27
-            width: 72
-            color: "#565656"
-            font.pixelSize: 24
-            font.weight: Font.Normal
-            horizontalAlignment: Text.AlignLeft
-            lineHeight: 22
-            lineHeightMode: Text.FixedHeight
-            text: "設定值"
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.WordWrap
-        }
+        // Text {
+        //     id: element_16
+        //     x: 126
+        //     y: 113
+        //     height: 27
+        //     width: 72
+        //     color: "#565656"
+        //     font.pixelSize: 24
+        //     font.weight: Font.Normal
+        //     horizontalAlignment: Text.AlignLeft
+        //     lineHeight: 22
+        //     lineHeightMode: Text.FixedHeight
+        //     text: "設定值"
+        //     verticalAlignment: Text.AlignVCenter
+        //     wrapMode: Text.WordWrap
+        // }
         Text {
             id: element_17
             x: 24
@@ -1086,24 +1087,25 @@ Rectangle {
             wrapMode: Text.WordWrap
         }
 
-        TextField {
-            id: brakeDistance
-            x: 204
-            y: 102
-            height: 44
-            width: 59
-            color: "#565656"
-            font.pixelSize: 20
-            font.weight: Font.Normal
-            horizontalAlignment: Text.AlignLeft
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.WordWrap
-            font.styleName: "Bold"
-            //maximumLength: 6 //限制輸入2位整數
-            text: Kdb.modifyBrakingDistance
-            validator: DoubleValidator {}//限制只能輸入整數/double
-            inputMethodHints: Qt.ImhDigitsOnly
-        }
+        // TextField {
+        //     id: brakeDistance
+        //     x: 204
+        //     y: 102
+        //     height: 44
+        //     width: 69
+        //     color: "#565656"
+        //     font.pixelSize: 20
+        //     font.weight: Font.Normal
+        //     horizontalAlignment: Text.AlignLeft
+        //     verticalAlignment: Text.AlignVCenter
+        //     wrapMode: Text.WordWrap
+        //     font.styleName: "Bold"
+        //     maximumLength:4
+        //     //maximumLength: 6 //限制輸入2位整數
+        //     text: Kdb.modifyBrakingDistance
+        //     validator: DoubleValidator {}//限制只能輸入整數/double
+        //     inputMethodHints: Qt.ImhDigitsOnly
+        // }
     }
     Item {
         id: group_48
@@ -1183,7 +1185,7 @@ Rectangle {
                     x: -7
                     y: 28
                     height: 78
-                    width: 123
+                    width: 158
                     color: "#565656"
                     font.pixelSize: 54
                     font.weight: Font.Normal
@@ -1192,12 +1194,18 @@ Rectangle {
                     verticalAlignment: Text.AlignVCenter
                     wrapMode: Text.WordWrap
                     validator: IntValidator{}//限制只能輸入整數
+                    maximumLength: 4
                     inputMethodHints: Qt.ImhDigitsOnly
                 }
                 Image {
                     id: lenthSettingButton
-                    x: 122
-                    y: 54
+                    anchors {
+                        left: lengthSet.right
+                        top:lengthSet.top
+                        leftMargin: 5
+                        topMargin:30
+                    }
+
                     height: 44
                     width: 50
                     source: "assets/rectangle_32.png"
@@ -1329,6 +1337,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
                 validator: IntValidator{}//限制只能輸入整數
+                maximumLength:3
                 inputMethodHints: Qt.ImhDigitsOnly
             }
             Image {
@@ -1440,7 +1449,7 @@ Rectangle {
                 x: 8
                 y: 196
                 height: 50
-                width: 90
+                width: 95
                 color: "#565656"
                 font.pixelSize: 24
                 font.weight: Font.Normal
@@ -1451,6 +1460,7 @@ Rectangle {
                 text: Kdb.modifySmallWinderTensionOver
                 //maximumLength: 4 //限制輸入2位整數
                 validator: DoubleValidator {}//限制只能輸入整數/double
+                maximumLength:5
                 inputMethodHints: Qt.ImhDigitsOnly
             }
             Image {
@@ -1462,7 +1472,7 @@ Rectangle {
         }
         Image {
             id: smallCoilTensionButton
-            x: 97.15
+            x: 107.15
             y: 195.54
             height: 54.80
             width: 62.27
@@ -1702,7 +1712,7 @@ Rectangle {
             x: 20
             y: 202
             height: 55
-            width: 74
+            width: 90
             color: "#565656"
             font.pixelSize: 20
             font.weight: Font.Normal
@@ -1713,6 +1723,7 @@ Rectangle {
             //maximumLength: 4 //限制輸入2位整數
             text: Kdb.modifyUnwindingTension
             validator: DoubleValidator {}//限制只能輸入整數/double
+            maximumLength:5
             inputMethodHints: Qt.ImhDigitsOnly
         }
         Image {
@@ -1723,7 +1734,7 @@ Rectangle {
         }
         Image {
             id: unwindingTensionButton
-            x: 99.64
+            x: 112.64
             y: 201.76
             height: 54.80
             width: 62.27
