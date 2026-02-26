@@ -183,7 +183,7 @@ public:
     void setMainFreqs(double v);
     void setSTOP();
     bool isStop = true;
-
+    bool LowSpeed = false;
     void writeRegisters(double v)
     {
         nowSpeed = v;

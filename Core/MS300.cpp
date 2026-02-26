@@ -30,22 +30,31 @@ void MS300::onPollTimeout()
         return;
     }
 
-    int id = 2;
+    int id = m_currentIndex;
     //double targetHz = m_targetFreqs[id]; // 抓取 UI 先前存進來的最新值
 
 
 
     // --- 步驟 A: 寫入頻率指令 (2001H) ---
-    QModbusDataUnit writeUnit(QModbusDataUnit::HoldingRegisters, 0x2001, 1);
-    //writeUnit.setValue(0, m_targetCmds[id]);
-    //qDebug() << id << "set mode" << m_targetCmds[id];
+    if (id == 2 && m_needWriteID2)
+    {
+        QModbusDataUnit writeUnit(QModbusDataUnit::HoldingRegisters, 0x2001, 1);
+        //writeUnit.setValue(0, m_targetCmds[id]);
+        //qDebug() << id << "set mode" << m_targetCmds[id];
 
-    writeUnit.setValue(0, static_cast<quint16>(m_targetHz * 100));
-    //qDebug() << id << "set value" << static_cast<quint16>(m_targetHz * 100);
-    
-
-    m_modbus->sendWriteRequest(writeUnit, 2);
- 
+        writeUnit.setValue(0, static_cast<quint16>(m_targetHz * 100));
+        //qDebug() << id << "set value" << static_cast<quint16>(m_targetHz * 100);
+        //m_modbus->sendWriteRequest(writeUnit, 2);
+        if (auto* reply = m_modbus->sendWriteRequest(writeUnit, id)) {
+            connect(reply, &QModbusReply::finished, this, [this, reply]() {
+                if (reply->error() == QModbusDevice::NoError) {
+                    m_needWriteID2 = false; // 寫入成功後才清除標記
+                    qDebug() << "ID 2 Frequency updated to:" << m_targetHz;
+                }
+                reply->deleteLater();
+                });
+        }
+    }
     // ---讀取
     QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 0x2103, 1);
     if (auto* reply = m_modbus->sendReadRequest(readUnit, id)) {
@@ -53,6 +62,12 @@ void MS300::onPollTimeout()
             connect(reply, &QModbusReply::finished, this, [this, reply, id]() {
                 if (reply->error() == QModbusDevice::NoError) {
                     const QModbusDataUnit res = reply->result();
+                    if (id == 1)
+                    {
+                        double Hz = static_cast<double>(res.value(0)/100);
+                        qDebug() << "MS300 slave: 1 , Hz = " << Hz;
+                        emit dataUpdated(id, Hz);
+                    }
                     if (id == 2)
                     {
                         double rawValue = static_cast<double>(res.value(0));
@@ -75,7 +90,7 @@ void MS300::onPollTimeout()
         else { delete reply; }
     }
     m_currentIndex++;
-    if (m_currentIndex > 10) {
+    if (m_currentIndex > 2) {
         m_currentIndex = 1;
     }
 }

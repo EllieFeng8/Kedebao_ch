@@ -374,7 +374,7 @@ void Core::onlength(double v)
             qDebug() << "Entering Braking Zone. Executing SLOW DOWN once.";
 
             // 執行降速指令
-            setMainFreqs(nowSpeed / 10.0);
+            setMainFreqs(20);
 
             // 標記為已執行，防止下一次 onlength 又跑進來
             m_isBrakingPerformed = true;
@@ -386,17 +386,23 @@ void Core::onlength(double v)
 
 void Core::onMS300Data(int id, double v)
 {
-    if (speed != v) 
+    if (id == 1 && v>68 && !m_isWaitingForStop) 
     {
-        speed = v;
-        writeRegisters(speed);
+        LowSpeed = true;
+        setMainFreqs(speed);
+    }
+    if (id ==2 && speed != v ) 
+    {
+            speed = v;
+            writeRegisters(speed);
+            m_proxy->setSpeed(v);
     }
     if (m_isWaitingForStop) {
         // 當速度小於一個極小值 (例如 0.15 m/min) 就視為已停止
         if (v <= 0.15) {
             qDebug() << "Speed reached zero! Executing Coil Stop...";
 
- 
+
             QVector<bool> stop(24, false);
             writeCoils(65, stop);
             isStop = true;
@@ -418,11 +424,11 @@ void Core::onMS300Data(int id, double v)
             //            });
             //    }
             //);
-           
+
             m_isWaitingForStop = false;
         }
     }
-    m_proxy->setSpeed(v);
+
     //writeRegisters(speed);
 }
 
@@ -519,8 +525,8 @@ void Core::setTensionSV_3(double v)
 
 void Core::TensionFailed(const QString& errorMsg)
 {
-    setSTOP();
-    m_isWaitingForStop = true;
+    //setSTOP();
+    //m_isWaitingForStop = true;
 }
 
 void Core::updateProxyProperty(int index, quint16 value)

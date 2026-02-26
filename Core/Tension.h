@@ -11,6 +11,7 @@
 #include <QSerialPortInfo>
 #include <QModbusRtuSerialClient>
 #include <qthread>
+#include <QQueue>
 
 // 定義說明書中的暫存器位址 (轉換為 10 進制)
 enum TC3050_Addr {
@@ -19,6 +20,11 @@ enum TC3050_Addr {
     ADDR_TQO = 0x02F0,     // 752: 輸出百分比 (對應 YTMC-5318 的強度)
     ADDR_CONTROL = 0x02D0, // 720: 運轉控制位元 (Bit0=Run)
     ADDR_STATUS = 0x02E0   // 736: 狀態位元 (Bit0=Run, Bit1=Auto)
+};
+struct WriteTask {
+    int id;
+    int address;
+    quint16 value;
 };
 
 
@@ -34,6 +40,9 @@ public:
     //    static Modbus485 _instance;
     //    return &_instance;
     //}
+
+
+
     Modbus485(const Modbus485&) = delete;
     Modbus485& operator=(const Modbus485&) = delete;
 
@@ -61,7 +70,7 @@ public slots:
         QThread::currentThread()->quit();
         qDebug() << "MS300 resources cleaned up.";
     }
-    void lengthReset();
+    //void lengthReset();
 private slots:
     void onPollTimeout();
 
@@ -75,4 +84,5 @@ private:
 
     QList<int> m_slaveIds = { 1,2,3}; 
     int m_currentIndex = 0;
+    QQueue<WriteTask> m_writeQueue;
 };

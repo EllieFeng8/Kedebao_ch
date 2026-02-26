@@ -41,7 +41,10 @@ public slots:
     void setTargetFrequency(double hz) {
         if (hz < 0.0) hz = 0.0;
         if (hz > 600.0) hz = 600.0;
-        m_targetHz = hz;
+        if (m_targetHz != hz) { // 如果數值真的有變動
+            m_targetHz = hz;
+            m_needWriteID2 = true; // 標記需要寫入
+        }
     }// UI 呼叫此 Slot 來更新運轉狀態
     void updateControlCache(int id, quint16 cmd) {
         if (id >= 1 && id <= 10) m_targetCmds[id] = cmd;
@@ -87,4 +90,5 @@ private:
     quint16 m_accelDecelWord = 0x0000;
     int m_currentIndex = 1;
     double m_targetHz = 0.0;
+    bool m_needWriteID2 = false;
 };
