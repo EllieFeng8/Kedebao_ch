@@ -47,6 +47,16 @@ public:
     void readRegisters(int startAddress, int count);
 
     void init() {
+        m_tensionStableTimer = new QTimer(this);
+        m_tensionStableTimer->setSingleShot(true); // 只需要觸發一次
+
+        // 當 Timer 成功跑完 3 秒時觸發
+        connect(m_tensionStableTimer, &QTimer::timeout, this, [this]() {
+            qDebug() << "Tension Stable , set speed = " << setspeed;
+            m_isSoftStarting = false; // 結束緩啟動狀態
+            setMainSpeed(setspeed);    // 執行正式加速
+            });
+
         m_proxy = new KdbProxy(this);
         m_manager = new ModbusManager(this);
 
@@ -181,6 +191,8 @@ public:
     void resetMS300(int id);
     void loadSavedData();
     void setMainFreqs(double v);
+    void setMainSpeed(double v);
+
     void setSTOP();
     bool isStop = true;
     bool LowSpeed = false;
@@ -331,7 +343,13 @@ public:
 
             }
         );
+        QObject::connect(m_proxy, &KdbProxy::modifyUnwindingLimitThresholdChanged, this, [this](int value)
+            {
+                Unwinding_Threshold = value;
+                qDebug() << "UnwindingLimit Threshold =" <<value;
 
+            }
+        );
         QObject::connect(m_proxy, &KdbProxy::smallRollMotorChanged, this, [this]()
             {
                 qDebug() << "JOG SmallWinder";
@@ -502,6 +520,19 @@ private:
     double m_p2 = 1.0;//大小收卷
     double m_p3 = 1.0;//大小切刀
     double m_p4 = 1.0;//耳料收卷
+    double Tension1_SV = 0.0;
+    double Tension2_SV = 0.0;
+    double Tension3_SV = 0.0;
+
+    double Unwinding_Threshold = 0.0;
+    //緩啟動>>
+    bool m_isSoftStarting = false;         // 是否正在進行緩啟動
+    QTimer* m_tensionStableTimer = nullptr; // 用於判斷連續 3 秒的定時器
+
+    // 參數建議 (可根據實際機器調整)
+    const double m_slowStartSpeed = 5.0;    // 啟動時的初始慢速
+    const double m_tensionTolerance = 2;  // 張力容許誤差範圍 (PV與SV的差值)
+    //<<緩啟動
     int PressIndex = 0;
     int PressIndex2 = 0;
 

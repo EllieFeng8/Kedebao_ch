@@ -27,7 +27,7 @@ void LengthController::initPort() {
         qDebug() << "COM2 (Length Controller) Connected";
         m_pollTimer = new QTimer(this);
         connect(m_pollTimer, &QTimer::timeout, this, &LengthController::onPollTimeout);
-        m_pollTimer->start(100); // 100ms 近高Ω
+        m_pollTimer->start(50); // 100ms 近高Ω
     }
     else {
         qDebug() << "Connect COM2 Fail:" << m_modbus->errorString();
@@ -53,7 +53,7 @@ void LengthController::onPollTimeout() {
                     int32_t pvRaw = (static_cast<int32_t>(reg1) << 16) | (reg0 & 0xFFFF);
 
                     double pv = static_cast<double>(pvRaw);
-                    emit lengthUpdated(pv);
+                    emit lengthUpdated(pv/100);
                 }
                 else {
                     qDebug() << "COM2 Read Error:" << reply->errorString();

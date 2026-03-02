@@ -392,6 +392,7 @@ class KdbProxy : public QObject
     Q_PROPERTY(double analogOutWinder READ getAnalogOutWinder WRITE setAnalogOutWinder NOTIFY analogOutWinderChanged)
     Q_PROPERTY(double analogOutCutter READ getAnalogOutCutter WRITE setAnalogOutCutter NOTIFY analogOutCutterChanged)
     Q_PROPERTY(double analogOutSelvedgeWinder READ getAnalogOutSelvedgeWinder WRITE setAnalogOutSelvedgeWinder NOTIFY analogOutSelvedgeWinderChanged)
+    Q_PROPERTY(double modifyUnwindingLimitThreshold READ getModifyUnwindingLimitThreshold WRITE setModifyUnwindingLimitThreshold NOTIFY modifyUnwindingLimitThresholdChanged)
 
     Q_PROPERTY(double modifyAnalogOutUnwinderMainDrive READ getModifyAnalogOutUnwinderMainDrive WRITE setModifyAnalogOutUnwinderMainDrive NOTIFY modifyAnalogOutUnwinderMainDriveChanged)
     Q_PROPERTY(double modifyAnalogOutWinder READ getModifyAnalogOutWinder WRITE setModifyAnalogOutWinder NOTIFY modifyAnalogOutWinderChanged)
@@ -2542,6 +2543,14 @@ public:
         emit modifyAnalogOutSelvedgeWinderChanged(m_modifyAnalogOutSelvedgeWinder);
         qDebug()<<"get setModifyAnalogOutSelvedgeWinder"<<m_modifyAnalogOutSelvedgeWinder;
     }
+    Q_INVOKABLE int getModifyUnwindingLimitThreshold() const { return m_modifyUnwindingLimitThreshold; }
+    void setModifyUnwindingLimitThreshold(double value)
+    {
+        if (m_modifyUnwindingLimitThreshold != value)
+            m_modifyUnwindingLimitThreshold = value;
+        emit modifyUnwindingLimitThresholdChanged(m_modifyUnwindingLimitThreshold);
+        qDebug() << "get setModifyUnwindingLimitThreshold" << m_modifyUnwindingLimitThreshold;
+    }
     //switch
     Q_INVOKABLE int getModifyAnalogOutSelvedgeWinderSwitch() const { return m_modifyAnalogOutSelvedgeWinderSwitch;}
     void setModifyAnalogOutSelvedgeWinderSwitch(int value)
@@ -2549,6 +2558,15 @@ public:
         if (m_modifyAnalogOutSelvedgeWinderSwitch != value)
             m_modifyAnalogOutSelvedgeWinderSwitch = value;
         emit modifyAnalogOutSelvedgeWinderSwitchChanged(m_modifyAnalogOutSelvedgeWinderSwitch);
+    }
+
+    //switch
+    Q_INVOKABLE int getModifyUnwindingLimitThresholdSwitch() const { return m_modifyUnwindingLimitThresholdSwitch; }
+    void setModifyUnwindingLimitThresholdSwitch(int value)
+    {
+        if (m_modifyUnwindingLimitThresholdSwitch != value)
+            m_modifyUnwindingLimitThresholdSwitch = value;
+        emit modifyUnwindingLimitThresholdSwitchChanged(m_modifyUnwindingLimitThreshold);
     }
 
     // ===== IPC INPUT WRITE =====
@@ -2899,6 +2917,7 @@ public:
     void smallRollModeChanged(int value);
     void restBtnChanged(int value);
 
+
     void metalDetectorChanged(int value);
     void gratingDetectionChanged(int value);
     void gratingDetection2Changed(int value);
@@ -3246,7 +3265,8 @@ public:
     void modifyAnalogOutWinderChanged(double value);
     void modifyAnalogOutCutterChanged(double value);
     void modifyAnalogOutSelvedgeWinderChanged(double value);
-
+    void modifyUnwindingLimitThresholdChanged(double value);
+    void modifyUnwindingLimitThresholdSwitchChanged(int value);
     //%
     void analogOutUnwinderMainDrivePcChanged(double value);
     void analogOutWinderPcChanged(double value);
@@ -3782,6 +3802,8 @@ public:
 
     // ===== Single Action Mode=====
     int m_singleActionMode = 0;
+    int m_modifyUnwindingLimitThreshold = 0;
+    int m_modifyUnwindingLimitThresholdSwitch = 1;
 
 };
 

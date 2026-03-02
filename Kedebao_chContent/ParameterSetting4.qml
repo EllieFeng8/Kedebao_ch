@@ -24,6 +24,8 @@ Rectangle {
     property bool clicked1:Kdb.modifyAnalogOutWinderSwitch
     property bool clicked2:Kdb.modifyAnalogOutCutterSwitch
     property bool clicked3:Kdb.modifyAnalogOutSelvedgeWinderSwitch
+    property bool clicked4:Kdb.modifyUnwindingLimitThresholdSwitch
+
     MouseArea {
         anchors.fill: parent
     }
@@ -222,6 +224,7 @@ Rectangle {
                 y: 20
                 focus: true
                 validator: DoubleValidator {}//限制只能輸入整數/double
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:22
@@ -383,7 +386,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:22
@@ -543,6 +546,7 @@ Rectangle {
                 y: 20
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 focus: true
+                inputMethodHints: Qt.ImhDigitsOnly
 
                 Rectangle {
                     height: 2
@@ -704,7 +708,7 @@ Rectangle {
                 validator: DoubleValidator {}//限制只能輸入整數/double
                 //placeholderText: "請輸入內容"
                 focus: true
-
+                inputMethodHints: Qt.ImhDigitsOnly
                 Rectangle {
                     height: 2
                     y:22
@@ -804,6 +808,241 @@ Rectangle {
             }
         }
 
+        //放捲頻率
+        // 限制閥值
+        Text {
+            id:text_4
+            anchors.top: text_3.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            //y: 165
+            width: setWidth1
+            height: 24
+            text: qsTr("放捲頻率\n限制閾值")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            // Text {
+            //     id: output5_3
+            //     width: 80
+            //     font.pixelSize: 20
+            //     horizontalAlignment: Text.AlignHCenter
+            //     x: 203
+            //     y: 20
+            //     text:Number(Kdb.unwindingLimitThreshold).toFixed(2)//Kdb.analogOutSelvedgeWinder//"V3"
+            //     color: "#aaaaaa"
+            //     //placeholderText: "請輸入內容"
+            //     focus: true
+            //
+            //     Rectangle {
+            //         height: 2
+            //         y:22
+            //         width: output5_3.width
+            //         color: "#aaaaaa"
+            //     }
+            // }
+            // Image {
+            //     id: switch5_3
+            //     x:282
+            //     y:6
+            //     scale: 0.5
+            //     source: root.clicked4 ?"assets/Group11.png" : "assets/Group 34.png"
+            //     MouseArea{
+            //         id:switch5_3MouseArea
+            //         anchors.fill: parent
+            //         cursorShape: Qt.PointingHandCursor
+            //         onClicked:{
+            //             root.clicked4 = !root.clicked4
+            //             //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
+            //         }
+            //     }
+            // }
+            //
+            TextInput {
+                id: output0_6
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                text:Number(Kdb.modifyUnwindingLimitThreshold)//Kdb.modifyAnalogOutSelvedgeWinder
+                // x: 386
+                x: 203
+                y: 20
+                validator: DoubleValidator {}//限制只能輸入整數/double
+                //placeholderText: "請輸入內容"
+                focus: true
+                inputMethodHints: Qt.ImhDigitsOnly
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output0_6.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: btn5
+                x:288//460
+                y:5
+                scale: 0.8
+                source: "assets/rectangle_35.png"
+                Text {
+                    id: btn5Name
+                    text: qsTr("OK")
+                    color: "#aaaaaa"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+                    font.bold: true
+                }
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btn5MouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: btn5MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.modifyUnwindingLimitThreshold !== Number(output0_6.text)) {
+                            Kdb.modifyUnwindingLimitThreshold = output0_6.text
+                            console.log("11 modifyUnwindingLimitThreshold changed~~~", Kdb.modifyUnwindingLimitThreshold);
+                        }
+                    }
+                }
+            }
+            // TextInput {
+            //     id: output0_24
+            //     width: 60
+            //     font.pixelSize: 20
+            //     horizontalAlignment: Text.AlignHCenter
+            //     text:Number(Kdb.unwindingLimitThresholdPc).toFixed(2)//Kdb.modifyAnalogOutUnwinderMainDrive
+            //     x: 531
+            //     y: 20
+            //     focus: true
+            //     validator: DoubleValidator {}//限制只能輸入整數/double
+            //     Rectangle {
+            //         height: 2
+            //         y:22
+            //         width: output0_2.width
+            //         color: "#aaaaaa"
+            //     }
+            //
+            // }
+            // Text {
+            //     id:output0_205
+            //     anchors.left:output0_24.right
+            //     y: 23
+            //     text:"%"
+            // }
+            // Image {
+            //     id: btn04
+            //     anchors.left:output0_205.right
+            //     anchors.leftMargin:10
+            //     y:6
+            //     scale: 0.8
+            //     source: "assets/rectangle_35.png"
+            //     Text {
+            //         text: qsTr("OK")
+            //         color: "#aaaaaa"
+            //         anchors.horizontalCenter: parent.horizontalCenter
+            //         anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+            //         font.bold: true
+            //     }
+            //     layer.enabled: true
+            //     layer.effect: MultiEffect {
+            //         shadowEnabled: btn04MouseArea.containsMouse ? true : false
+            //         shadowColor: "#58000000"
+            //         shadowBlur: 0.8
+            //     }
+            //     MouseArea {
+            //         id: btn04MouseArea
+            //         anchors.fill: parent
+            //         hoverEnabled: true
+            //         cursorShape: Qt.PointingHandCursor
+            //         onClicked:{
+            //             if(Kdb.unwindingLimitThresholdPc !== Number(output0_24.text)) {
+            //                 Kdb.unwindingLimitThresholdPc = output0_24.text
+            //                 console.log("11 unwindingLimitThresholdPc changed~~~", Kdb.unwindingLimitThresholdPc,typeof(Kdb.unwindingLimitThresholdPc));
+            //             }
+            //         }
+            //     }
+            // }
+        }
+
+        //剎車距離
+        Text {
+            id:text_5
+            anchors.top: text_4.bottom
+            anchors.topMargin: topMargin
+            x: 8
+            //y: 165
+            width: setWidth1
+            height: 24
+            text: qsTr("剎車距離")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+            TextInput {
+                id: output6_3
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                text:Number(Kdb.modifyBrakingDistance)//Kdb.modifyAnalogOutSelvedgeWinder
+                x: 203
+                y: -3
+                validator: DoubleValidator {}//限制只能輸入整數/double
+                maximumLength:4
+                focus: true
+                inputMethodHints: Qt.ImhDigitsOnly
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output6_3.width
+                    color: "#aaaaaa"
+                }
+            }
+            Text{
+                anchors.left:output6_3.right
+                anchors.top:text_5.top
+                font.pixelSize: 19
+                color: "#aaaaaa"
+                text:"公尺"
+            }
+            Image {
+                id: btn6
+                x:328
+                y:-16
+                scale: 0.8
+                source: "assets/rectangle_35.png"
+                Text {
+                    text: qsTr("OK")
+                    color: "#aaaaaa"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+                    font.bold: true
+                }
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btn6MouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: btn6MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.modifyBrakingDistance !== Number(output6_3.text)) {
+                            Kdb.modifyBrakingDistance = Number(output6_3.text)
+                            console.log("11 modifyBrakingDistance changed~~~", Kdb.modifyBrakingDistance,typeof (Kdb.modifyBrakingDistance));
+                        }
+                    }
+                }
+            }
+
+
+        }
     }
 
     //IPC-INPUT

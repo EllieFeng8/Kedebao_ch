@@ -220,6 +220,27 @@ void Core::on485Data(int id, double PV, double tqo)
     {
         m_proxy->setLargeRollTension(PV);
     }
+    // 假設 id == 1 是您要監控的張力控制器
+    if (m_isSoftStarting && id == 1) {
+        // 取得目前的張力設定值 (SV)
+        double target1SV = Tension1_SV;
+
+        // 判斷當前張力 (PV) 是否在設定值 (SV) 的誤差範圍內
+        if (qAbs(PV - target1SV) <= m_tensionTolerance) {
+            // 如果數值達標，且計時器還沒開始跑，則啟動計時
+            if (!m_tensionStableTimer->isActive()) {
+                qDebug() << "start    stable timer";
+                m_tensionStableTimer->start(3000);
+            }
+        }
+        else {
+            // 【關鍵】如果這 3 秒內有任何一次數值超標，立刻重置計時器
+            if (m_tensionStableTimer->isActive()) {
+                qDebug() << "restart  stable timer";
+                m_tensionStableTimer->stop();
+            }
+        }
+    }
 }
 
 void Core::onholdingRegisterReady( QVector<quint16> values)
@@ -374,7 +395,7 @@ void Core::onlength(double v)
             qDebug() << "Entering Braking Zone. Executing SLOW DOWN once.";
 
             // 執行降速指令
-            setMainFreqs(20);
+            setMainSpeed(20);
 
             // 標記為已執行，防止下一次 onlength 又跑進來
             m_isBrakingPerformed = true;
@@ -386,10 +407,10 @@ void Core::onlength(double v)
 
 void Core::onMS300Data(int id, double v)
 {
-    if (id == 1 && v>68 && !m_isWaitingForStop) 
+    if (id == 1 && Unwinding_Threshold != 0 && v> Unwinding_Threshold && !m_isWaitingForStop)
     {
         LowSpeed = true;
-        setMainFreqs(speed);
+        setMainSpeed(speed);
     }
     if (id ==2 && speed != v ) 
     {
@@ -399,13 +420,16 @@ void Core::onMS300Data(int id, double v)
     }
     if (m_isWaitingForStop) {
         // 當速度小於一個極小值 (例如 0.15 m/min) 就視為已停止
-        if (v <= 0.15) {
+        if (id==2 && v <= 0.05) {
             qDebug() << "Speed reached zero! Executing Coil Stop...";
-
-
-            QVector<bool> stop(24, false);
-            writeCoils(65, stop);
-            isStop = true;
+           
+            QTimer::singleShot(500, this,
+                [this]()
+                {
+                    QVector<bool> stop(24, false);
+                    writeCoils(65, stop);
+                    isStop = true;
+                });
             //QTimer::singleShot(500, this,
             //    [this]()
             //    {
@@ -446,8 +470,12 @@ void Core::setCurrentLength(int length)
 }
 void Core::setBrakingDistance(double BrakingDistance)
 {
-    qDebug() << "set BrakingDistance = " << BrakingDistance;
-    m_BrakingDistance = BrakingDistance;
+    if (m_BrakingDistance != BrakingDistance) 
+    {
+        qDebug() << "set BrakingDistance = " << BrakingDistance;
+        m_BrakingDistance = BrakingDistance; 
+    }
+
 }
 void Core::setMainFreqs(double v)
 { 
@@ -459,6 +487,18 @@ void Core::setMainFreqs(double v)
             Qt::QueuedConnection);
     }
 }
+
+void Core::setMainSpeed(double v)
+{
+
+    double Hz = v * (60.0 / 130.0);
+    qDebug() << "Set Speed";
+    {
+        QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
+            Qt::QueuedConnection);
+    }
+}
+
 void Core::setSTOP()
 {
     double Hz = 0 * (60.0 / 130.0);
@@ -507,18 +547,23 @@ void Core::onZeroSpeed02()
 
 void Core::setTensionSV_1(double v)
 {
-    QMetaObject::invokeMethod(m_tension, [this,v]() {m_tension->setTargetTension(1, v); },
+    Tension1_SV = v;
+    QMetaObject::invokeMethod(m_tension, [this, v]() {m_tension->setTargetTension(1, v); },
         Qt::QueuedConnection);
 }
 
 void Core::setTensionSV_2(double v)
 {
+    Tension2_SV = v;
+
     QMetaObject::invokeMethod(m_tension, [this,v]() {m_tension->setTargetTension(2, v); },
         Qt::QueuedConnection);
 }
 
 void Core::setTensionSV_3(double v)
 {
+    Tension3_SV = v;
+
     QMetaObject::invokeMethod(m_tension, [this,v]() {m_tension->setTargetTension(3, v); },
         Qt::QueuedConnection);
 }
@@ -755,11 +800,16 @@ void Core::handleDIOSignal(int bitIndex, bool state)
     switch (bitIndex) {
     case 0:
         m_proxy->setIpcStart(val);
-        setMainFreqs(setspeed);
+
         m_isBrakingPerformed = false;
         isStop = false;
+        m_tensionStableTimer->stop();
+
         if (state)
         {
+            m_isSoftStarting = true;
+            setMainSpeed(m_slowStartSpeed);
+            qDebug() << "SLOW START";
             m_manager->IpcStart(state);//動作  
         }
         break;
