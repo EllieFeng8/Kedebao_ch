@@ -822,42 +822,6 @@ Rectangle {
             font.pixelSize: 19
             horizontalAlignment: Text.AlignRight
 
-            // Text {
-            //     id: output5_3
-            //     width: 80
-            //     font.pixelSize: 20
-            //     horizontalAlignment: Text.AlignHCenter
-            //     x: 203
-            //     y: 20
-            //     text:Number(Kdb.unwindingLimitThreshold).toFixed(2)//Kdb.analogOutSelvedgeWinder//"V3"
-            //     color: "#aaaaaa"
-            //     //placeholderText: "請輸入內容"
-            //     focus: true
-            //
-            //     Rectangle {
-            //         height: 2
-            //         y:22
-            //         width: output5_3.width
-            //         color: "#aaaaaa"
-            //     }
-            // }
-            // Image {
-            //     id: switch5_3
-            //     x:282
-            //     y:6
-            //     scale: 0.5
-            //     source: root.clicked4 ?"assets/Group11.png" : "assets/Group 34.png"
-            //     MouseArea{
-            //         id:switch5_3MouseArea
-            //         anchors.fill: parent
-            //         cursorShape: Qt.PointingHandCursor
-            //         onClicked:{
-            //             root.clicked4 = !root.clicked4
-            //             //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
-            //         }
-            //     }
-            // }
-            //
             TextInput {
                 id: output0_6
                 width: 80
@@ -911,63 +875,7 @@ Rectangle {
                     }
                 }
             }
-            // TextInput {
-            //     id: output0_24
-            //     width: 60
-            //     font.pixelSize: 20
-            //     horizontalAlignment: Text.AlignHCenter
-            //     text:Number(Kdb.unwindingLimitThresholdPc).toFixed(2)//Kdb.modifyAnalogOutUnwinderMainDrive
-            //     x: 531
-            //     y: 20
-            //     focus: true
-            //     validator: DoubleValidator {}//限制只能輸入整數/double
-            //     Rectangle {
-            //         height: 2
-            //         y:22
-            //         width: output0_2.width
-            //         color: "#aaaaaa"
-            //     }
-            //
-            // }
-            // Text {
-            //     id:output0_205
-            //     anchors.left:output0_24.right
-            //     y: 23
-            //     text:"%"
-            // }
-            // Image {
-            //     id: btn04
-            //     anchors.left:output0_205.right
-            //     anchors.leftMargin:10
-            //     y:6
-            //     scale: 0.8
-            //     source: "assets/rectangle_35.png"
-            //     Text {
-            //         text: qsTr("OK")
-            //         color: "#aaaaaa"
-            //         anchors.horizontalCenter: parent.horizontalCenter
-            //         anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
-            //         font.bold: true
-            //     }
-            //     layer.enabled: true
-            //     layer.effect: MultiEffect {
-            //         shadowEnabled: btn04MouseArea.containsMouse ? true : false
-            //         shadowColor: "#58000000"
-            //         shadowBlur: 0.8
-            //     }
-            //     MouseArea {
-            //         id: btn04MouseArea
-            //         anchors.fill: parent
-            //         hoverEnabled: true
-            //         cursorShape: Qt.PointingHandCursor
-            //         onClicked:{
-            //             if(Kdb.unwindingLimitThresholdPc !== Number(output0_24.text)) {
-            //                 Kdb.unwindingLimitThresholdPc = output0_24.text
-            //                 console.log("11 unwindingLimitThresholdPc changed~~~", Kdb.unwindingLimitThresholdPc,typeof(Kdb.unwindingLimitThresholdPc));
-            //             }
-            //         }
-            //     }
-            // }
+
         }
 
         //剎車距離
@@ -1043,6 +951,148 @@ Rectangle {
 
 
         }
+
+        // 緩啟動threshold
+        Text {
+            id:text_6
+            anchors.top: text_5.bottom
+            anchors.topMargin: topMargin2
+            x: 8
+            //y: 165
+            width: setWidth1
+            height: 24
+            text: qsTr("緩啟動threshold")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            TextInput {
+                id: output6_6
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                text:Number(Kdb.softStartThreshold).toFixed(2)//Kdb.modifyAnalogOutSelvedgeWinder
+                // x: 386
+                x: 203
+                y: -3
+                validator: DoubleValidator {}//限制只能輸入整數/double
+                //placeholderText: "請輸入內容"
+                focus: true
+                inputMethodHints: Qt.ImhDigitsOnly
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output6_6.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: btn7
+                x:288//460
+                y:-16
+                scale: 0.8
+                source: "assets/rectangle_35.png"
+                Text {
+                    id: btn7Name
+                    text: qsTr("OK")
+                    color: "#aaaaaa"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+                    font.bold: true
+                }
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btn7MouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: btn7MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.softStartThreshold !== Number(output6_6.text)) {
+                            Kdb.softStartThreshold = output6_6.text
+                            console.log("11 softStartThreshold changed~~~",
+                                Kdb.softStartThreshold,
+                            typeof (Kdb.softStartThreshold));
+                        }
+                    }
+                }
+            }
+
+        }
+
+        // 緩啟動的速度
+        Text {
+            id:text_7
+            anchors.top: text_6.bottom
+            anchors.topMargin: topMargin2
+            x: 8
+            //y: 165
+            width: setWidth1
+            height: 24
+            text: qsTr("緩啟動速度")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
+
+            TextInput {
+                id: output7_3
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                text:Number(Kdb.softStartSpeed).toFixed(2)//Kdb.modifyAnalogOutSelvedgeWinder
+                // x: 386
+                x: 203
+                y: -3
+                validator: DoubleValidator {}//限制只能輸入整數/double
+                //placeholderText: "請輸入內容"
+                focus: true
+                inputMethodHints: Qt.ImhDigitsOnly
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output7_3.width
+                    color: "#aaaaaa"
+                }
+            }
+            Image {
+                id: btn8
+                x:288//460
+                y:-16
+                scale: 0.8
+                source: "assets/rectangle_35.png"
+                Text {
+                    text: qsTr("OK")
+                    color: "#aaaaaa"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+                    font.bold: true
+                }
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btn8MouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: btn8MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.softStartSpeed !== Number(output7_3.text)) {
+                            Kdb.softStartSpeed = output7_3.text
+                            console.log("11 softStartSpeed changed~~~",
+                                Kdb.softStartSpeed,
+                                typeof (Kdb.softStartSpeed));
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 
     //IPC-INPUT

@@ -416,6 +416,10 @@ class KdbProxy : public QObject
     Q_PROPERTY(double modifyAnalogOutSelvedgeWinder READ getModifyAnalogOutSelvedgeWinder WRITE setModifyAnalogOutSelvedgeWinder NOTIFY modifyAnalogOutSelvedgeWinderChanged)
     //放捲頻率限制閥值
     Q_PROPERTY(double modifyUnwindingLimitThreshold READ getModifyUnwindingLimitThreshold WRITE setModifyUnwindingLimitThreshold NOTIFY modifyUnwindingLimitThresholdChanged)
+    //緩啟動Threshold
+    Q_PROPERTY(double softStartThreshold READ getSoftStartThreshold WRITE setSoftStartThreshold NOTIFY softStartThresholdChanged)
+    //緩啟動速度
+    Q_PROPERTY(double softStartSpeed READ getSoftStartSpeed WRITE setSoftStartSpeed NOTIFY softStartSpeedChanged)
 
     // ===== ANALOG OUTPUT Switch=====
     Q_PROPERTY(int analogOutUnwinderMainDriveSwitch READ getAnalogOutUnwinderMainDriveSwitch WRITE setAnalogOutUnwinderMainDriveSwitch NOTIFY analogOutUnwinderMainDriveSwitchChanged)
@@ -2588,6 +2592,22 @@ public:
         emit modifyUnwindingLimitThresholdChanged(m_modifyUnwindingLimitThreshold);
         qDebug()<<"get setModifyUnwindingLimitThreshold"<<m_modifyUnwindingLimitThreshold;
     }
+    //緩啟動Threshold
+    Q_INVOKABLE double getSoftStartThreshold() const { return m_softStartThreshold;}
+    void setSoftStartThreshold(double value)
+    {
+        m_softStartThreshold = value;
+        emit softStartThresholdChanged(m_softStartThreshold);
+        qDebug()<<"get softStartThresholdChanged"<<m_softStartThreshold;
+    }
+    //緩啟動速度
+    Q_INVOKABLE double getSoftStartSpeed() const { return m_softStartSpeed;}
+    void setSoftStartSpeed(double value)
+    {
+        m_softStartSpeed = value;
+        emit softStartSpeedChanged(m_softStartSpeed);
+        qDebug()<<"get softStartSpeedChanged"<<m_softStartSpeed;
+    }
     //switch
     Q_INVOKABLE int getModifyAnalogOutSelvedgeWinderSwitch() const { return m_modifyAnalogOutSelvedgeWinderSwitch;}
     void setModifyAnalogOutSelvedgeWinderSwitch(int value)
@@ -3226,6 +3246,7 @@ public:
     void analogOutSelvedgeWinderChanged(double value);
     void unwindingLimitThresholdChanged(double value);
 
+
     //%
     void analogOutUnwinderMainDrivePcChanged(double value);
     void analogOutWinderPcChanged(double value);
@@ -3238,6 +3259,10 @@ public:
     void modifyAnalogOutCutterChanged(double value);
     void modifyAnalogOutSelvedgeWinderChanged(double value);
     void modifyUnwindingLimitThresholdChanged(double value);
+    //緩啟動Threshold
+    void softStartThresholdChanged(double value);
+    //緩啟動速度
+    void softStartSpeedChanged(double value);
     //===== ANALOG OUTPUT switch=====
     void analogOutUnwinderMainDriveSwitchChanged(int value);
     void analogOutWinderSwitchChanged(int value);
@@ -3365,7 +3390,7 @@ private:
 
     int m_modifycurrentLength = 0;
     int m_modifyspeed = 0;
-    double m_modifybrakingDistance = 1000;
+    double m_modifybrakingDistance = 1200;
 
     double m_modifyUnwindingTension = 0.0;
     double m_modifySmallWinderTensionOver = 0.0;
@@ -3697,6 +3722,10 @@ private:
     double m_modifyAnalogOutSelvedgeWinder = 0.0;
     //放捲頻率限制閥值
     double m_modifyUnwindingLimitThreshold = 3.3;
+    //緩啟動Threshold
+    double m_softStartThreshold = 2.1;
+    //緩啟動速度
+    double m_softStartSpeed = 1.1;
     // ===== ANALOG OUTPUT switch=====
     int m_analogOutUnwinderMainDriveSwitch = 0;
     int m_analogOutWinderSwitch = 0;
