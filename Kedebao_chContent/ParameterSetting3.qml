@@ -2527,7 +2527,7 @@ Rectangle {
             y: 205
             width: 223
             height: 24
-            text: qsTr("14")
+            text: qsTr("止退壓輪上壓")
             font.pixelSize: 19
             horizontalAlignment: Text.AlignRight
 
@@ -2576,7 +2576,7 @@ Rectangle {
             y: 205
             width: 223
             height: 24
-            text: qsTr("15")
+            text: qsTr("止退壓輪下壓")
             font.pixelSize: 19
             horizontalAlignment: Text.AlignRight
 
@@ -2625,7 +2625,7 @@ Rectangle {
             y: 205
             width: 223
             height: 24
-            text: qsTr("16")
+            text: qsTr("STO 警急停止")
             font.pixelSize: 19
             horizontalAlignment: Text.AlignRight
 
@@ -2665,55 +2665,7 @@ Rectangle {
                 }
             }
         }
-        //17
-        Text {
-            id:text_3_16
-            anchors.top: text_3_15.bottom
-            anchors.topMargin: topMargin
-            x: 8
-            y: 205
-            width: 223
-            height: 24
-            text: qsTr("17")
-            font.pixelSize: 19
-            horizontalAlignment: Text.AlignRight
 
-            Text {
-                id: output03_17
-                width: 80
-                font.pixelSize: 20
-                horizontalAlignment: Text.AlignHCenter
-                x: textLeft2
-                y: 0
-                text:Number(Kdb.output17).toFixed(2)//Kdb.smallRollModeSelect//"Q2.04"
-                color: "#aaaaaa"
-                //placeholderText: "請輸入內容"
-                focus: true
-
-                Rectangle {
-                    height: 2
-                    y:22
-                    width: output03_05.width
-                    color: "#aaaaaa"
-                }
-            }
-            Image {
-                id: switch3_17
-                x:switchLeft2
-                y:-16
-                scale: 0.5
-                source: root.clicked47 ?"assets/Group11.png" : "assets/Group 34.png"
-                MouseArea{
-                    id:switch3_17MouseArea
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked:{
-                        root.clicked47 = !root.clicked47
-                        //root.clicked ?"assets/Group11.png" : "assets/Group 34.png"
-                    }
-                }
-            }
-        }
 
 
     }
