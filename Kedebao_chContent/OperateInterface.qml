@@ -128,7 +128,7 @@ Rectangle {
                         btnMainMouseArea.enabled=Kdb.singleActionMode ? true :false
                         btnLargeMouseArea.enabled=Kdb.singleActionMode ? true :false
                         btnWasteBMouseArea.enabled=Kdb.singleActionMode ? true :false
-                        unwindingMouseArea.enabled=Kdb.singleActionMode ? true :false
+                        //unwindingMouseArea.enabled=Kdb.singleActionMode ? true :false
                         btnOppositeMouseArea.enabled=Kdb.singleActionMode ? true :false
                         btnCutterMouseArea.enabled=Kdb.singleActionMode ? true :false
                         btnWasteAMouseArea.enabled=Kdb.singleActionMode ? true :false
@@ -140,7 +140,7 @@ Rectangle {
                         output2_1.enabled = Kdb.singleActionMode ? true :false
                         output3_1.enabled = Kdb.singleActionMode ? true :false
                         output4_1.enabled = Kdb.singleActionMode ? true :false
-                        output5_1.enabled = Kdb.singleActionMode ? true :false
+                        //output5_1.enabled = Kdb.singleActionMode ? true :false
                         output6_1.enabled = Kdb.singleActionMode ? true :false
                         output7_1.enabled = Kdb.singleActionMode ? true :false
                         output8_1.enabled = Kdb.singleActionMode ? true :false
@@ -156,7 +156,7 @@ Rectangle {
         Text {
             id:text_0
             x: textLeft
-            y: 135
+            y: 205
             width: setWidth1
             height: 24
             text: qsTr("小捲馬達")
@@ -411,74 +411,74 @@ Rectangle {
     }
 }
 
-        Text {
-            id:text_5
-            x: textLeft
-            anchors.top: text_3.bottom
-            anchors.topMargin: topMargin
-            width: setWidth1
-            //height: 24
-            text: qsTr("對邊馬達")
-            font.pixelSize: fontSize
-            horizontalAlignment: Text.AlignRight
-
-            TextInput {
-                id: output5_1
-                width: 100
-                font.pixelSize: inputTextSize
-                horizontalAlignment: Text.AlignHCenter
-                x: textInputLeft
-                y: 0
-                text:Number(Kdb.edgeAlignMotor).toFixed(2)//Kdb.edgeAlignMotor
-                validator: DoubleValidator {}//限制只能輸入整數/double
-                //placeholderText: "請輸入內容"
-                focus: true
-                inputMethodHints: Qt.ImhDigitsOnly
-                Rectangle {
-                    height: 2
-                    y:dashPos
-                    width: output5_1.width
-                    color: "#aaaaaa"
-                }
-            }
-            Image {
-                id: btnOppositeMotor
-                x:350
-                y:btnPos
-                source: "assets/rectangle_35.png"
-                Text {
-                    id: btnOppositeName
-                    text: qsTr("吋動")
-                    color: "#aaaaaa"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
-                    font.bold: true
-                }
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    shadowEnabled: btnOppositeMouseArea.containsMouse ? true : false
-                    shadowColor: "#58000000"
-                    shadowBlur: 0.8
-                }
-                MouseArea {
-                    id: btnOppositeMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        if(Kdb.edgeAlignMotor !== Number(output5_1.text)) {
-                            Kdb.edgeAlignMotor = output5_1.text
-                            //console.log("11 edgeAlignMotor changed~~~", Kdb.edgeAlignMotor);
-                        }
-                    }
-                }
-            }
-        }
+        // Text {
+        //     id:text_5
+        //     x: textLeft
+        //     anchors.top: text_3.bottom
+        //     anchors.topMargin: topMargin
+        //     width: setWidth1
+        //     //height: 24
+        //     text: qsTr("對邊馬達")
+        //     font.pixelSize: fontSize
+        //     horizontalAlignment: Text.AlignRight
+        //
+        //     TextInput {
+        //         id: output5_1
+        //         width: 100
+        //         font.pixelSize: inputTextSize
+        //         horizontalAlignment: Text.AlignHCenter
+        //         x: textInputLeft
+        //         y: 0
+        //         text:Number(Kdb.edgeAlignMotor).toFixed(2)//Kdb.edgeAlignMotor
+        //         validator: DoubleValidator {}//限制只能輸入整數/double
+        //         //placeholderText: "請輸入內容"
+        //         focus: true
+        //         inputMethodHints: Qt.ImhDigitsOnly
+        //         Rectangle {
+        //             height: 2
+        //             y:dashPos
+        //             width: output5_1.width
+        //             color: "#aaaaaa"
+        //         }
+        //     }
+        //     Image {
+        //         id: btnOppositeMotor
+        //         x:350
+        //         y:btnPos
+        //         source: "assets/rectangle_35.png"
+        //         Text {
+        //             id: btnOppositeName
+        //             text: qsTr("吋動")
+        //             color: "#aaaaaa"
+        //             anchors.horizontalCenter: parent.horizontalCenter
+        //             anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+        //             font.bold: true
+        //         }
+        //         layer.enabled: true
+        //         layer.effect: MultiEffect {
+        //             shadowEnabled: btnOppositeMouseArea.containsMouse ? true : false
+        //             shadowColor: "#58000000"
+        //             shadowBlur: 0.8
+        //         }
+        //         MouseArea {
+        //             id: btnOppositeMouseArea
+        //             anchors.fill: parent
+        //             hoverEnabled: true
+        //             cursorShape: Qt.PointingHandCursor
+        //             onClicked: {
+        //                 if(Kdb.edgeAlignMotor !== Number(output5_1.text)) {
+        //                     Kdb.edgeAlignMotor = output5_1.text
+        //                     //console.log("11 edgeAlignMotor changed~~~", Kdb.edgeAlignMotor);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         Text {
             id:text_6
-            anchors.left: text_5.left
-            anchors.top: text_5.bottom
+            anchors.left: text_3.left
+            anchors.top: text_3.bottom
             anchors.topMargin: topMargin
             //y: smallMotor.bottom
             width: setWidth1
@@ -502,7 +502,7 @@ Rectangle {
                 Rectangle {
                     height: 2
                     y:dashPos
-                    width: output5_1.width
+                    width: output6_1.width
                     color: "#aaaaaa"
                 }
             }
@@ -543,8 +543,8 @@ Rectangle {
         Text {
             id:text_7
             x: 700
-            y: 136
-            //anchors.topMargin: topMargin
+
+            anchors.top: text_0.top
             //y: smallMotor.bottom
             width: setWidth1
             height: 24
@@ -567,7 +567,7 @@ Rectangle {
                 Rectangle {
                     height: 2
                     y:dashPos
-                    width: output5_1.width
+                    width: output7_1.width
                     color: "#aaaaaa"
                 }
             }

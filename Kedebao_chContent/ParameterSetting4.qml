@@ -807,13 +807,24 @@ Rectangle {
                 }
             }
         }
+        //其他參數
+        Text {
+            id: output4_3Text
+            text: "Other"
+            anchors.top: text_3.bottom
+            anchors.topMargin: topMargin
+            padding:10
+            font.pointSize: 14
+            font.weight: Font.Bold
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
 
         //放捲頻率
         // 限制閥值
         Text {
             id:text_4
-            anchors.top: text_3.bottom
-            anchors.topMargin: topMargin
+            anchors.top: output4_3Text.bottom
+            anchors.topMargin: 10
             x: 8
             //y: 165
             width: setWidth1
