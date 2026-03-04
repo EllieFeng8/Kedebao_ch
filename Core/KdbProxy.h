@@ -2896,7 +2896,16 @@ public:
             m_singleActionMode = value;
         emit singleActionModeChanged(m_singleActionMode);
     }
+
+    //異常提醒
+    Q_INVOKABLE void raiseAbnormal(const QString &msg) {
+        emit abnormalRaised(msg);
+    }
+
     signals:
+
+    //異常提醒
+    void abnormalRaised(const QString &msg);
 
     void bigRollModeChanged(int value);
     void smallRollModeChanged(int value);

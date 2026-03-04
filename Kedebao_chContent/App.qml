@@ -2,6 +2,8 @@ import QtQuick
 import Kedebao_ch
 import QtQuick.VirtualKeyboard
 import QtQuick.Controls
+import QtQuick.Layouts
+import Core 1.0
 
 Window {
     id:root
@@ -88,6 +90,94 @@ Window {
 
         // ⭐ 容器高度 = 把手 + 鍵盤
         height: handle.height + inputPanel.height
+    }
+    // ===== 對外呼叫 =====
+    function showAbnormal(msg) {
+        abnormalDialog.message = msg
+        abnormalDialog.open()
+        autoCloseTimer.restart()
+    }
+    // ===== 10秒計時器 =====
+    Timer {
+        id: autoCloseTimer
+        interval: 5 * 1000
+        repeat: false
+        onTriggered: abnormalDialog.close()
+    }
+
+    Connections {
+        target:Kdb // ← 這是你 main.cpp 設進來的 contextProperty 名稱
+        function onAbnormalRaised(msg) {
+            root.showAbnormal(msg)
+        }
+    }
+    Item {
+        id: root1
+        width: 800
+        height: 480
+        anchors.centerIn: parent
+
+
+        // ===== 異常 Dialog =====
+        Dialog {
+            id: abnormalDialog
+
+            modal: true          // 是否阻擋背景操作
+            focus: true
+            anchors.centerIn: parent
+
+            property string message: "異常發生"
+
+            width: 400
+            height: 180
+
+            background: Rectangle {
+                radius: 12
+                color: "#2b2b2b"
+                border.color: "#ff4444"
+                border.width: 2
+            }
+
+            contentItem: ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 20
+                spacing: 15
+
+                Label {
+                    text: "⚠ 異常警告"
+                    color: "#ff4444"
+                    font.pixelSize: 20
+                    font.bold: true
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
+                Label {
+                    text: abnormalDialog.message
+                    color: "white"
+                    font.pixelSize: 16
+                    horizontalAlignment: Text.AlignHCenter
+                    wrapMode: Text.WordWrap
+                    Layout.fillWidth: true
+                }
+
+                Button {
+                    text: "確定"
+                    Layout.alignment: Qt.AlignHCenter
+                    onClicked: {
+                        autoCloseTimer.stop()
+                        abnormalDialog.close()
+                    }
+                }
+            }
+
+        }
+
+        // ===== 測試 =====
+        Component.onCompleted: {
+            Qt.callLater(function() {
+                showAbnormal("異常提醒！")
+            })
+        }
     }
 }
 
