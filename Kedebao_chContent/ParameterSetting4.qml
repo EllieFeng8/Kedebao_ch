@@ -853,9 +853,17 @@ Rectangle {
                     color: "#aaaaaa"
                 }
             }
+            Text{
+                anchors.left:output0_6.right
+                anchors.top:output0_6.top
+                anchors.topMargin:4
+                font.pixelSize: 19
+                color: "#aaaaaa"
+                text:"Hz"
+            }
             Image {
                 id: btn5
-                x:288//460
+                x:338//460
                 y:5
                 scale: 0.8
                 source: "assets/rectangle_35.png"
@@ -929,7 +937,7 @@ Rectangle {
             }
             Image {
                 id: btn6
-                x:328
+                x:338
                 y:-16
                 scale: 0.8
                 source: "assets/rectangle_35.png"
@@ -972,7 +980,7 @@ Rectangle {
             //y: 165
             width: setWidth1
             height: 24
-            text: qsTr("緩啟動threshold")
+            text: qsTr("緩啟動靈敏度")
             font.pixelSize: 19
             horizontalAlignment: Text.AlignRight
 
@@ -996,9 +1004,17 @@ Rectangle {
                     color: "#aaaaaa"
                 }
             }
+            Text{
+                anchors.left:output6_6.right
+                anchors.top:output6_6.top
+                anchors.topMargin:4
+                font.pixelSize: 19
+                color: "#aaaaaa"
+                text:"公斤"
+            }
             Image {
                 id: btn7
-                x:288//460
+                x:338//460
                 y:-16
                 scale: 0.8
                 source: "assets/rectangle_35.png"
@@ -1067,9 +1083,17 @@ Rectangle {
                     color: "#aaaaaa"
                 }
             }
+            Text{
+                anchors.left:output7_3.right
+                anchors.top:output7_3.top
+                anchors.topMargin:4
+                font.pixelSize: 19
+                color: "#aaaaaa"
+                text:"m/min"
+            }
             Image {
                 id: btn8
-                x:288//460
+                x:338//460
                 y:-16
                 scale: 0.8
                 source: "assets/rectangle_35.png"
