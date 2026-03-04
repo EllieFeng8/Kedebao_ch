@@ -3370,7 +3370,7 @@ public:
     void singleActionModeChanged(int value);
 
 private:
-    int m_bigRollMode = 1;//默認大捲模式(1大捲模式,0小捲模式)
+    int m_bigRollMode = 0;//默認大捲模式(1大捲模式,0小捲模式)
     int m_restBtn = 0;//主畫面長度reset btn
 
     int m_metalDetector = 0;
@@ -3828,6 +3828,7 @@ private:
     // ===== Single Action Mode=====
     int m_singleActionMode = 0;
 
+    QString m_msg = "test";
 };
 
 
