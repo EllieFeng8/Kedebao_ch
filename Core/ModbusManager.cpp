@@ -69,7 +69,10 @@ void ModbusManager::createWorker()
         this, [this](QString msg) {
             emit workerError(msg);
         });
-
+    connect(m_worker, &ModbusWorker::isWorking, this, [this]()
+        {
+            emit isWorking();
+        });
     // 處理讀取 Holding Registers 的回傳數據
     connect(m_worker, &ModbusWorker::holdingRegisterReady,
         this, [this]( QVector<quint16> values) {
@@ -83,6 +86,7 @@ void ModbusManager::createWorker()
 
     // 5. 啟動執行緒
     m_thread->start();
+
 
 }
 
@@ -462,6 +466,7 @@ void ModbusManager::ModeSelect(double value)//o10
 void ModbusManager::io106(double value)//o11
 {
     bool v = (value > 0.0) ? true : false;
+
     qDebug() << "white light " << v;
     m_worker->set_IO106(value);
 
@@ -559,16 +564,16 @@ void ModbusManager::PressRoll(double v)
     {
         writeSingleCoil(89,true);
     }
-    QTimer::singleShot(500, this, 
-        [this]() 
-        {
-             writeSingleCoil(89, false);
-        });
+    //QTimer::singleShot(500, this, 
+    //    [this]() 
+    //    {
+    //         writeSingleCoil(89, false);
+    //    });
 }
 void ModbusManager::PressRollDown(double v)
 {
     {
-        writeSingleCoil(90, true);
+        writeCoils(89, { false,true });
     }
     QTimer::singleShot(500, this,
         [this]()

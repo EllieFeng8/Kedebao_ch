@@ -11,7 +11,7 @@ Core::Core(QObject* parent)
 }
 Core::~Core()
 {
-
+    saveProductionSettings();
     stopAll(); 
 
     dioWorker->stop();
@@ -230,7 +230,7 @@ void Core::on485Data(int id, double PV, double tqo)
             // 如果數值達標，且計時器還沒開始跑，則啟動計時
             if (!m_tensionStableTimer->isActive()) {
                 qDebug() << "start    stable timer";
-                m_tensionStableTimer->start(3000);
+                m_tensionStableTimer->start(800);
             }
         }
         else {
@@ -363,27 +363,33 @@ void Core::onlength(double v)
 
         setSTOP();
         m_isWaitingForStop = true;
-        QTimer::singleShot(500, this,
-            [this]()
-            {
-                writeCoils(89, { 1,0,0,1,0,1 });
-                QTimer::singleShot(200, this,
-                    [this]()
-                    {
-                        writeCoils(89, { 0,0,0,0,0,0 });
-                    });
-                PressIndex = 0;
-                PressIndex2 = 0;
-                QTimer::singleShot(1000, this,
-                    [this]()
-                    {
-                        writeRegisters(3);
-                    });
-            }
-        );
+
+        if (!onLength) {
+
+            QTimer::singleShot(500, this,
+                [this]()
+                {
+                    writeCoils(89, { 1,0,1,0,1,0 });
+                    QTimer::singleShot(500, this,
+                        [this]()
+                        {
+                            writeCoils(89, { 0,0,0,0,0,0 });
+                        });
+                    PressIndex = 0;
+                    PressIndex2 = 0;
+                    QTimer::singleShot(1000, this,
+                        [this]()
+                        {
+                            writeRegisters(3);
+                        });
+                }
+        
+            );
+    }
         // 為了安全，將目標長度重設為 0，避免在停止過程中重複觸發
         m_length = 0;
         m_isBrakingPerformed = false;
+        onLength = true;
         return;
         // 如果需要更新 UI 上的目標值顯示，可以視情況呼叫 m_proxy
     }
@@ -395,8 +401,9 @@ void Core::onlength(double v)
             qDebug() << "Entering Braking Zone. Executing SLOW DOWN once.";
 
             // 執行降速指令
-            setMainSpeed(20);
-
+            if (setspeed > 20) {
+                setMainSpeed(20);
+            }
             // 標記為已執行，防止下一次 onlength 又跑進來
             m_isBrakingPerformed = true;
         }
@@ -473,13 +480,15 @@ void Core::setBrakingDistance(double BrakingDistance)
     if (m_BrakingDistance != BrakingDistance) 
     {
         qDebug() << "set BrakingDistance = " << BrakingDistance;
-        m_BrakingDistance = BrakingDistance; 
+        m_BrakingDistance = BrakingDistance;    
     }
 
 }
 void Core::setMainFreqs(double v)
 { 
     setspeed = v;
+
+    m_proxy->setModifyBrakingDistance(setspeed * 0.08);
     double Hz = v * (60.0 / 130.0); 
     qDebug() << "change";
     {
@@ -662,21 +671,29 @@ void Core::updateProxyProperty(int index, quint16 value)
     case 39: m_proxy->setEmergencyStop7(value);
         m_proxy->setEmergencyStop7Light(value); break;
     case 40: m_proxy->setMainDriveLeftDoor1Open(value);
-        m_proxy->setMainDriveLeftDoor1OpenLight(value); break;
+        m_proxy->setMainDriveLeftDoor1OpenLight(value);
+        m_proxy->setDoorASignal(value); break;
     case 41: m_proxy->setMainDriveLeftDoor2Open(value);
-        m_proxy->setMainDriveLeftDoor2OpenLight(value); break;
+        m_proxy->setMainDriveLeftDoor2OpenLight(value);
+        m_proxy->setDoorBSignal(value); break;
     case 42: m_proxy->setMainDriveRightDoor3Open(value);
-        m_proxy->setMainDriveRightDoor3OpenLight(value); break;
+        m_proxy->setMainDriveRightDoor3OpenLight(value); 
+        m_proxy->setDoorCSignal(value); break;
     case 43: m_proxy->setMainDriveRightDoor4Open(value);
-        m_proxy->setMainDriveRightDoor4OpenLight(value); break;
+        m_proxy->setMainDriveRightDoor4OpenLight(value); 
+        m_proxy->setDoorDSignal(value); break;
     case 44: m_proxy->setLargeWinderLeftDoor5Open(value);
-        m_proxy->setLargeWinderLeftDoor5OpenLight(value); break;
+        m_proxy->setLargeWinderLeftDoor5OpenLight(value); 
+        m_proxy->setDoorESignal(value); break;
     case 45: m_proxy->setLargeWinderLeftDoor6Open(value);
-        m_proxy->setLargeWinderLeftDoor6OpenLight(value); break;
+        m_proxy->setLargeWinderLeftDoor6OpenLight(value); 
+        m_proxy->setDoorFSignal(value); break;
     case 46: m_proxy->setLargeWinderRightDoor7Open(value);
-        m_proxy->setLargeWinderRightDoor7OpenLight(value); break;
+        m_proxy->setLargeWinderRightDoor7OpenLight(value);
+        m_proxy->setDoorGSignal(value); break;
     case 47: m_proxy->setLargeWinderRightDoor8Open(value);
-        m_proxy->setLargeWinderRightDoor8OpenLight(value); break;
+        m_proxy->setLargeWinderRightDoor8OpenLight(value);
+        m_proxy->setDoorHSignal(value); break;
     case 48: m_proxy->setUnwindingFenceDetect1(value);
         m_proxy->setUnwindingFenceDetect1Light(value); break;
     case 49: m_proxy->setUnwindingFenceDetect2(value);
@@ -686,11 +703,14 @@ void Core::updateProxyProperty(int index, quint16 value)
     case 51: m_proxy->setLargeWinderFenceDetect4(value);
         m_proxy->setLargeWinderFenceDetect4Light(value); break;
     case 52: m_proxy->setUnwindingSafetyLightCurtainAlarm(value);
-        m_proxy->setUnwindingSafetyLightCurtainAlarmLight(value); break;
+        m_proxy->setUnwindingSafetyLightCurtainAlarmLight(value); 
+        m_proxy->setGratingDetection(value);  break;
     case 53: m_proxy->setInspectionSafetyLightCurtainAlarm(value);
-        m_proxy->setInspectionSafetyLightCurtainAlarmLight(value); break;
+        m_proxy->setInspectionSafetyLightCurtainAlarmLight(value); 
+        m_proxy->setGratingDetection2(value); break;
     case 54: m_proxy->setLargeWinderSafetyLightCurtainAlarm(value);
-        m_proxy->setLargeWinderSafetyLightCurtainAlarmLight(value); break;
+        m_proxy->setLargeWinderSafetyLightCurtainAlarmLight(value); 
+        m_proxy->setGratingDetection3(value); break;
     case 55: m_proxy->setSmallWinderZeroSpeedDetect(value);
         m_proxy->setSmallWinderZeroSpeedDetectLight(value); break;
     case 56: m_proxy->setLargeWinderZeroSpeedDetect(value);
@@ -707,56 +727,108 @@ void Core::updateProxyProperty(int index, quint16 value)
         m_proxy->setRightSelvedgeWinderAngleAlarmLight(value); break;
 
         // OUTPUT 64 ~ 102
-    case 64: m_proxy->setVfdAlarmReset(value); break;
-    case 65: m_proxy->setUnwinderForward(value); break;
-    case 66: m_proxy->setUnwinderReverse(value); break;
-    case 67: m_proxy->setMainDriveForward(value); break;
-    case 68: m_proxy->setMainDriveReverse(value); break;
-    case 69: m_proxy->setSmallWinderForward(value); break;
-    case 70: m_proxy->setSmallWinderReverse(value); break;
-    case 71: m_proxy->setLargeWinderForward(value); break;
-    case 72: m_proxy->setLargeWinderReverse(value); break;
-    case 73: m_proxy->setSmallCutterStart(value); break;
-    case 74: m_proxy->setSelvedgeFanStart(value); break;
-    case 75: m_proxy->setLargeCutterStart(value); break;
-    case 76: m_proxy->setLeftSelvedgeWinderForward(value); break;
-    case 77: m_proxy->setLeftSelvedgeWinderReverse(value); break;
-    case 78: m_proxy->setRightSelvedgeWinderForward(value); break;
-    case 79: m_proxy->setRightSelvedgeWinderReverse(value); break;
-    case 80: m_proxy->setWebAlignerStart(value); 
+    case 64: m_proxy->setVfdAlarmReset(value);
+        m_proxy->setVfdAlarmResetSwitch(value);  break;
+    case 65: m_proxy->setUnwinderForward(value); 
+        m_proxy->setUnwinderForwardSwitch(value); break;
+    case 66: m_proxy->setUnwinderReverse(value); 
+        m_proxy->setUnwinderReverseSwitch(value); break;
+    case 67: m_proxy->setMainDriveForward(value); 
+        m_proxy->setMainDriveForwardSwitch(value); break;
+    case 68: m_proxy->setMainDriveReverse(value);
+        m_proxy->setMainDriveReverseSwitch(value); break;
+    case 69: m_proxy->setSmallWinderForward(value);
+        m_proxy->setSmallWinderForwardSwitch(value); break;
+    case 70: m_proxy->setSmallWinderReverse(value);
+        m_proxy->setSmallWinderReverseSwitch(value); break;
+    case 71: m_proxy->setLargeWinderForward(value);
+        m_proxy->setLargeWinderForwardSwitch(value); break;
+    case 72: m_proxy->setLargeWinderReverse(value);
+        m_proxy->setLargeWinderReverseSwitch(value); break;
+    case 73: m_proxy->setSmallCutterStart(value); 
+        m_proxy->setSmallCutterStartSwitch(value); break;
+    case 74: m_proxy->setSelvedgeFanStart(value); 
+        m_proxy->setSelvedgeFanStartSwitch(value); break;
+    case 75: m_proxy->setLargeCutterStart(value); 
+        m_proxy->setLargeCutterStartSwitch(value); break;
+    case 76: m_proxy->setLeftSelvedgeWinderForward(value); 
+        m_proxy->setLeftSelvedgeWinderForwardSwitch(value); break;
+    case 77: m_proxy->setLeftSelvedgeWinderReverse(value); 
+        m_proxy->setLeftSelvedgeWinderReverseSwitch(value); break;
+    case 78: m_proxy->setRightSelvedgeWinderForward(value);
+        m_proxy->setRightSelvedgeWinderForwardSwitch(value); break;
+    case 79: m_proxy->setRightSelvedgeWinderReverse(value); 
+        m_proxy->setRightSelvedgeWinderReverseSwitch(value); break;
+    case 80: m_proxy->setWebAlignerStart(value);
+             m_proxy->setWebAlignerStartSwitch(value);
              m_proxy->setOppositeSide(value); break;
-    case 81: m_proxy->setUnwindingTensionAuto(value); break;
-    case 82: m_proxy->setUnwindingDiameterReset(value); break;
-    case 83: m_proxy->setSmallWinderTensionAuto(value); break;
-    case 84: m_proxy->setSmallWinderDiameterReset(value); break;
-    case 85: m_proxy->setLargeWinderTensionAuto(value); break;
-    case 86: m_proxy->setLargeWinderDiameterReset(value); break;
-    case 87: m_proxy->setLeftSelvedgeWinderAuto(value); break;
-    case 88: m_proxy->setRightSelvedgeWinderAuto(value); break;
-    case 89: m_proxy->setNipRollUp(value); break;
-    case 90: m_proxy->setNipRollDown(value); break;
-    case 91: m_proxy->setLeftPressPlateForward(value); break;
-    case 92: m_proxy->setLeftPressPlateBackward(value); break;
-    case 93: m_proxy->setRightPressPlateForward(value); break;
-    case 94: m_proxy->setRightPressPlateBackward(value); break;
-    case 95: m_proxy->setSmallCutterIn(value); break;
-    case 96: m_proxy->setLargeCutterIn(value); break;
-    case 97: m_proxy->setModeSelect(value); break;
-    case 98: m_proxy->setRunIndicator(value); break;
-    case 99: m_proxy->setAlarmIndicator(value); break;
-    case 100: m_proxy->setStopIndicator(value); break;
-    case 101: m_proxy->setBuzzer(value); break;
-    case 102: m_proxy->setSmallRollModeSelect(value); break;
-    case 103: m_proxy->setOutput8(value); break;
-    case 104: m_proxy->setOutput9(value); break;
-    case 105: m_proxy->setOutput10(value); break;
-    case 106: m_proxy->setOutput11(value); break;
-    case 107: m_proxy->setOutput12(value); break;
-    case 108: m_proxy->setOutput13(value); break;
-    case 109: m_proxy->setOutput14(value); break;
-    case 110: m_proxy->setOutput15(value); break;
-    case 111: m_proxy->setOutput16(value); break;
-    case 112: m_proxy->setOutput17(value); break;
+    case 81: m_proxy->setUnwindingTensionAuto(value); 
+        m_proxy->setUnwindingTensionAutoSwitch(value); break;
+    case 82: m_proxy->setUnwindingDiameterReset(value); 
+        m_proxy->setUnwindingDiameterResetSwitch(value); break;
+    case 83: m_proxy->setSmallWinderTensionAuto(value); 
+        m_proxy->setSmallWinderTensionAutoSwitch(value); break;
+    case 84: m_proxy->setSmallWinderDiameterReset(value); 
+        m_proxy->setSmallWinderDiameterResetSwitch(value); break;
+    case 85: m_proxy->setLargeWinderTensionAuto(value); 
+        m_proxy->setLargeWinderTensionAutoSwitch(value); break;
+    case 86: m_proxy->setLargeWinderDiameterReset(value);
+        m_proxy->setLargeWinderDiameterResetSwitch(value); break;
+    case 87: m_proxy->setLeftSelvedgeWinderAuto(value); 
+        m_proxy->setLeftSelvedgeWinderAutoSwitch(value); break;
+    case 88: m_proxy->setRightSelvedgeWinderAuto(value); 
+        m_proxy->setRightSelvedgeWinderAutoSwitch(value); break;
+    case 89: m_proxy->setNipRollUp(value); 
+        m_proxy->setNipRollUpSwitch(value);  break;
+    case 90: m_proxy->setNipRollDown(value); 
+        m_proxy->setNipRollDownSwitch(value); break;
+    case 91: m_proxy->setLeftPressPlateForward(value); 
+        m_proxy->setLeftPressPlateForwardSwitch(value); break;
+    case 92: m_proxy->setLeftPressPlateBackward(value); 
+        m_proxy->setLeftPressPlateBackwardSwitch(value); break;
+    case 93: m_proxy->setRightPressPlateForward(value); 
+        m_proxy->setRightPressPlateForwardSwitch(value); break;
+    case 94: m_proxy->setRightPressPlateBackward(value); 
+        m_proxy->setRightPressPlateBackwardSwitch(value); break;
+    case 95: m_proxy->setSmallCutterIn(value); 
+        m_proxy->setSmallCutterInSwitch(value); break;
+    case 96: m_proxy->setLargeCutterIn(value); 
+        m_proxy->setLargeCutterInSwitch(value); break;
+    case 97: m_proxy->setModeSelect(value);
+        m_proxy->setModeSelectSwitch(value); break;
+    case 98: m_proxy->setRunIndicator(value); 
+        m_proxy->setRunIndicatorSwitch(value); break;
+    case 99: m_proxy->setAlarmIndicator(value); 
+        m_proxy->setAlarmIndicatorSwitch(value); break;
+    case 100: m_proxy->setStopIndicator(value); 
+        m_proxy->setStopIndicatorSwitch(value); break;
+    case 101: m_proxy->setBuzzer(value); 
+        m_proxy->setBuzzerSwitch(value); break;
+    case 102: m_proxy->setSmallRollModeSelect(value); 
+        m_proxy->setSmallRollModeSelectSwitch(value); break;
+    case 103: m_proxy->setOutput8(value); 
+        m_proxy->setOutput8Switch(value); break;
+    case 104: m_proxy->setOutput9(value); 
+        m_proxy->setOutput9Switch(value); break;
+    case 105: m_proxy->setOutput10(value); 
+        m_proxy->setOutput10Switch(value); break;
+    case 106: m_proxy->setOutput11(value); 
+        m_proxy->setWhiteLight(value); 
+        m_proxy->setOutput11Switch(value); break;
+    case 107: m_proxy->setOutput12(value);
+        m_proxy->setUvLight(value); 
+        m_proxy->setOutput12Switch(value); break;
+    case 108: m_proxy->setOutput13(value); 
+        m_proxy->setBottomLight(value); 
+        m_proxy->setOutput13Switch(value); break;
+    case 109: m_proxy->setOutput14(value); 
+        m_proxy->setOutput14Switch(value); break;
+    case 110: m_proxy->setOutput15(value); 
+        m_proxy->setOutput15Switch(value); break;
+    case 111: m_proxy->setOutput16(value); 
+        m_proxy->setOutput16Switch(value); break;
+    case 112: m_proxy->setOutput17(value); 
+        m_proxy->setOutput17Switch(value); break;
 
 
     default: break;
@@ -808,6 +880,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         if (state)
         {
             m_isSoftStarting = true;
+            onLength = false;
             setMainSpeed(m_slowStartSpeed);
             qDebug() << "SLOW START";
             m_manager->IpcStart(state);//動作  

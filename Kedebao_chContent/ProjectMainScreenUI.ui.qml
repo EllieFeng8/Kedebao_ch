@@ -1149,7 +1149,7 @@ Rectangle {
                 font.pixelSize: 72
                 font.weight: Font.Normal
                 horizontalAlignment: Text.AlignLeft
-                text: Kdb.currentLength
+                text: Kdb.currentLength.toFixed(1)
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.WordWrap
             }

@@ -417,6 +417,10 @@ class KdbProxy : public QObject
     Q_PROPERTY(int modifyAnalogOutSelvedgeWinderSwitch READ getModifyAnalogOutSelvedgeWinderSwitch WRITE setModifyAnalogOutSelvedgeWinderSwitch NOTIFY modifyAnalogOutSelvedgeWinderSwitchChanged)
 
 
+    //緩啟動Threshold
+    Q_PROPERTY(double softStartThreshold READ getSoftStartThreshold WRITE setSoftStartThreshold NOTIFY softStartThresholdChanged)
+    //緩啟動速度
+    Q_PROPERTY(double softStartSpeed READ getSoftStartSpeed WRITE setSoftStartSpeed NOTIFY softStartSpeedChanged)
     // ===== IPC INPUT =====
     Q_PROPERTY(double ipcStart READ getIpcStart NOTIFY ipcStartChanged)
     Q_PROPERTY(double ipcStop READ getIpcStop NOTIFY ipcStopChanged)
@@ -510,6 +514,24 @@ public:
 
      Q_INVOKABLE int getMetalDetector() const { return m_metalDetector; }
      Q_INVOKABLE int getGratingDetection() const { return m_gratingDetection; }
+     void setGratingDetection(int value)
+     {
+         if (m_gratingDetection != value)
+             m_gratingDetection = value;
+         emit gratingDetectionChanged(m_gratingDetection);
+     }
+     void setGratingDetection2(int value)
+     {
+         if (m_gratingDetection2 != value)
+             m_gratingDetection2 = value;
+         emit gratingDetection2Changed(m_gratingDetection2);
+     }
+     void setGratingDetection3(int value)
+     {
+         if (m_gratingDetection3 != value)
+             m_gratingDetection3 = value;
+         emit gratingDetection3Changed(m_gratingDetection3);
+     }
      Q_INVOKABLE int getGratingDetection2() const { return m_gratingDetection2; }
      Q_INVOKABLE int getGratingDetection3() const { return m_gratingDetection3; }
      Q_INVOKABLE int getOppositeSide() const { return m_OppositeSideSignal; }
@@ -520,15 +542,68 @@ public:
          emit oppositeSideChanged(m_OppositeSideSignal);
      }
      Q_INVOKABLE int getDoorASignal() const { return m_doorASignal; }
+     void setDoorASignal(int value)
+     {
+         if (m_doorASignal != value)
+             m_doorASignal = value;
+         emit doorASignalChanged(m_doorASignal);
+     }
      Q_INVOKABLE int getDoorBSignal() const { return m_doorBSignal; }
+     void setDoorBSignal(int value)
+     {
+         if (m_doorBSignal != value)
+             m_doorBSignal = value;
+         emit doorBSignalChanged(m_doorBSignal);
+     }
      Q_INVOKABLE int getDoorCSignal() const { return m_doorCSignal; }
+     void setDoorCSignal(int value)
+     {
+         if (m_doorCSignal != value)
+             m_doorCSignal = value;
+         emit doorCSignalChanged(m_doorCSignal);
+     }
      Q_INVOKABLE int getDoorDSignal() const { return m_doorDSignal; }
+     void setDoorDSignal(int value)
+     {
+         if (m_doorDSignal != value)
+             m_doorDSignal = value;
+         emit doorDSignalChanged(m_doorDSignal);
+     }
      Q_INVOKABLE int getDoorESignal() const { return m_doorESignal; }
+     void setDoorESignal(int value)
+     {
+         if (m_doorESignal != value)
+             m_doorESignal = value;
+         emit doorESignalChanged(m_doorESignal);
+     }
      Q_INVOKABLE int getDoorFSignal() const { return m_doorFSignal; }
+     void setDoorFSignal(int value)
+     {
+         if (m_doorFSignal != value)
+             m_doorFSignal = value;
+         emit doorFSignalChanged(m_doorFSignal);
+     }
      Q_INVOKABLE int getDoorGSignal() const { return m_doorGSignal; }
+     void setDoorGSignal(int value)
+     {
+         if (m_doorGSignal != value)
+             m_doorGSignal = value;
+         emit doorGSignalChanged(m_doorGSignal);
+     }
      Q_INVOKABLE int getDoorHSignal() const { return m_doorHSignal; }
+     void setDoorHSignal(int value)
+     {
+         if (m_doorHSignal != value)
+             m_doorHSignal = value;
+         emit doorHSignalChanged(m_doorHSignal);
+     }
      Q_INVOKABLE int getDoorISignal() const { return m_doorISignal; }
-
+     void setDoorISignal(int value)
+     {
+         if (m_doorISignal != value)
+             m_doorISignal = value;
+         emit doorISignalChanged(m_doorISignal);
+     }
      Q_INVOKABLE int getUvLight() const { return m_uvLight; }
     void setUvLight(int value)
     {
@@ -554,7 +629,7 @@ public:
      Q_INVOKABLE double getSpeed() const { return m_speed; }
      Q_INVOKABLE double getBrakingDistance() const { return m_brakingDistance;}
      void setSpeed(int value) { m_speed = value; emit speedChanged(m_speed); };
-     void setCurrentLength(int v) { m_currentLength = v; emit currentLengthChanged(m_currentLength); }
+     void setCurrentLength(double v) { m_currentLength = v; emit currentLengthChanged(m_currentLength); }
      Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
      Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
      Q_INVOKABLE double getModifyBrakingDistance() const { return m_modifybrakingDistance;}
@@ -2569,6 +2644,23 @@ public:
         emit modifyUnwindingLimitThresholdSwitchChanged(m_modifyUnwindingLimitThreshold);
     }
 
+    //緩啟動Threshold
+    Q_INVOKABLE double getSoftStartThreshold() const { return m_softStartThreshold; }
+    void setSoftStartThreshold(double value)
+    {
+        m_softStartThreshold = value;
+        emit softStartThresholdChanged(m_softStartThreshold);
+        qDebug() << "get softStartThresholdChanged" << m_softStartThreshold;
+    }
+    //緩啟動速度
+    Q_INVOKABLE double getSoftStartSpeed() const { return m_softStartSpeed; }
+    void setSoftStartSpeed(double value)
+    {
+        m_softStartSpeed = value;
+        emit softStartSpeedChanged(m_softStartSpeed);
+        qDebug() << "get softStartSpeedChanged" << m_softStartSpeed;
+    }
+
     // ===== IPC INPUT WRITE =====
     Q_INVOKABLE double getIpcStart() const { return m_ipcStart; }
     Q_INVOKABLE double getIpcStop() const { return m_ipcStop; }
@@ -2591,6 +2683,7 @@ public:
             m_ipcAlarmReset = value;
         emit ipcAlarmResetChanged(m_ipcAlarmReset);
     }
+
     Q_INVOKABLE double getMainJogForward() const { return m_mainJogForward; }
     Q_INVOKABLE double getMainJogReverse() const { return m_mainJogReverse; }
     void setMainJogForward(double value)
@@ -2912,10 +3005,17 @@ public:
             m_singleActionMode = value;
         emit singleActionModeChanged(m_singleActionMode);
     }
+
+    Q_INVOKABLE void raiseAbnormal(const QString& msg) {
+        emit abnormalRaised(msg);
+    }
+
     signals:
     void bigRollModeChanged(int value);
     void smallRollModeChanged(int value);
     void restBtnChanged(int value);
+    //異常提醒
+    void abnormalRaised(const QString& msg);
 
 
     void metalDetectorChanged(int value);
@@ -3267,6 +3367,10 @@ public:
     void modifyAnalogOutSelvedgeWinderChanged(double value);
     void modifyUnwindingLimitThresholdChanged(double value);
     void modifyUnwindingLimitThresholdSwitchChanged(int value);
+    //緩啟動Threshold
+    void softStartThresholdChanged(double value);
+    //緩啟動速度
+    void softStartSpeedChanged(double value);
     //%
     void analogOutUnwinderMainDrivePcChanged(double value);
     void analogOutWinderPcChanged(double value);
@@ -3361,7 +3465,7 @@ public:
     void singleActionModeChanged(int value);
 
 public:
-    int m_bigRollMode = 1;//默認大捲模式(1大捲模式,0小捲模式)
+    int m_bigRollMode = 0;//默認大捲模式(1大捲模式,0小捲模式)
     int m_restBtn = 0;//主畫面長度reset btn
 
     int m_metalDetector = 0;
@@ -3804,6 +3908,10 @@ public:
     int m_singleActionMode = 0;
     int m_modifyUnwindingLimitThreshold = 0;
     int m_modifyUnwindingLimitThresholdSwitch = 1;
+    //緩啟動Threshold
+    double m_softStartThreshold = 2.1;
+    //緩啟動速度
+    double m_softStartSpeed = 1.1;
 
 };
 

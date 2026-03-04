@@ -63,6 +63,7 @@ void ModbusWorker::startWork()
     // 非同步嘗試連線；onStateChanged 會處理 Connected/Unconnected
     m_client->connectDevice();
     m_client2->connectDevice();
+    emit isWorking();
 }
 
 void ModbusWorker::stopWork()
@@ -93,6 +94,7 @@ void ModbusWorker::onStateChanged(QModbusDevice::State state)
         if (m_pollTimer && !m_pollTimer->isActive())
             m_pollTimer->start();
 
+        //emit isWorking();
         // 用 info-style 訊息也用 errorOccurred（Manager 可另作處理）
         //emit errorOccurred(QString("Connected"));
         //writeCoils(81, startAuto);

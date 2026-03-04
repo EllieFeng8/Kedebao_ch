@@ -312,7 +312,7 @@ signals:
     void writeDone(int address, bool ok, QString msg);
     void dataReady(QVector<quint16> values);  
     void dataReady2(QVector<quint16> values);   
-
+    void isWorking();
     void errorOccurred(QString msg);           
     void holdingRegisterReady( QVector<quint16> values);
 private:

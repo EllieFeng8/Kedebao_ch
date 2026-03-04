@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <Qmutex>
+#include <qsettings>
 #include <Qvector>
 #include "ModbusManager.h"
 #include "DIOModule.h"
@@ -50,11 +51,13 @@ public:
         m_tensionStableTimer = new QTimer(this);
         m_tensionStableTimer->setSingleShot(true); // 只需要觸發一次
 
+        connect(this, &Core::finishSoftStartSignal, this, &Core::startRealSpeed);
         // 當 Timer 成功跑完 3 秒時觸發
-        connect(m_tensionStableTimer, &QTimer::timeout, this, [this]() {
+        connect(m_tensionStableTimer, &QTimer::timeout, this, [=]() {
             qDebug() << "Tension Stable , set speed = " << setspeed;
             m_isSoftStarting = false; // 結束緩啟動狀態
-            setMainSpeed(setspeed);    // 執行正式加速
+
+            emit finishSoftStartSignal();
             });
 
         m_proxy = new KdbProxy(this);
@@ -154,7 +157,9 @@ public:
             this, &Core::onZeroSpeed01);
         connect(m_manager, &ModbusManager::Zerospeed02,
             this, &Core::onZeroSpeed02);
-
+        connect(m_manager, &ModbusManager::isWorking, this, [this]() {
+            loadProductionSettings();
+            });
 
 
         DataValues.resize(112);
@@ -178,7 +183,7 @@ public:
         coreConnect();
 
  
-
+        
     }
 
     void initDIO();
@@ -285,7 +290,12 @@ public:
         QObject::connect(m_proxy, &KdbProxy::whiteLightChanged, m_manager, &ModbusManager::io106);
 
         QObject::connect(m_proxy, &KdbProxy::output12Changed, m_manager, &ModbusManager::io107);//107 紫光燈
-        QObject::connect(m_proxy, &KdbProxy::uvLightChanged, m_manager, &ModbusManager::io107);
+        //QObject::connect(m_proxy, &KdbProxy::uvLightChanged, m_manager, &ModbusManager::io107);
+        QObject::connect(m_proxy, &KdbProxy::uvLightChanged, this,[this]()
+            {
+                m_proxy->abnormalRaised("aaa");
+            });
+
 
         QObject::connect(m_proxy, &KdbProxy::output13Changed, m_manager, &ModbusManager::io108);//108 下方照明燈
         QObject::connect(m_proxy, &KdbProxy::bottomLightChanged, m_manager, &ModbusManager::io108);
@@ -350,6 +360,24 @@ public:
 
             }
         );
+
+        QObject::connect(m_proxy, &KdbProxy::softStartSpeedChanged, this, [this](int value)
+            {
+                m_slowStartSpeed = value;
+                qDebug() << "m_slowStartSpeed =" << value;
+
+            }
+        );
+
+        QObject::connect(m_proxy, &KdbProxy::softStartThresholdChanged, this, [this](int value)
+            {
+                m_tensionTolerance = value;
+                qDebug() << "m_tensionTolerance =" << value;
+
+            }
+        );
+
+
         QObject::connect(m_proxy, &KdbProxy::smallRollMotorChanged, this, [this]()
             {
                 qDebug() << "JOG SmallWinder";
@@ -400,6 +428,10 @@ public slots:
     void setTensionSV_1(double v);
     void setTensionSV_2(double v);
     void setTensionSV_3(double v);
+    void startRealSpeed() {
+        qDebug() <<"startRealSpeed() setSpeed" << setspeed;
+        setMainSpeed(setspeed);    // 執行正式加速
+    }
     void ontest() 
     {
         DataValues[80] = 1;
@@ -409,6 +441,7 @@ public slots:
    
 signals:
     void holdingRegisterReady(QVector<quint16> values);
+    void finishSoftStartSignal();
     //void newDataReady( QVector<quint16> values);
     //void WorkerError( QString message);
     //void newTensionData(int id, double PV, double tqo);
@@ -447,7 +480,7 @@ private slots:
         }
         if (PressIndex2 == 1)
         {
-            writeCoils(91, { 0,0,1,0 });
+            writeCoils(91, { 0,0,0,1 });
             QTimer::singleShot(500, this,
                 [this]()
                 {
@@ -456,7 +489,7 @@ private slots:
         }
         else if (PressIndex2 == 0)
         {
-            writeCoils(91, { 0,1,0,1 });
+            writeCoils(91, { 1,0,1,0 });
             QTimer::singleShot(500, this,
                 [this]()
                 {
@@ -478,7 +511,7 @@ private slots:
         }
         if (PressIndex == 1)
         {
-            writeCoils(91, { 1,0,0,0 });
+            writeCoils(91, { 0,1,0,0 });
             QTimer::singleShot(500, this,
                 [this]()
                 {
@@ -487,7 +520,7 @@ private slots:
         }
         else if (PressIndex == 0)
         {
-            writeCoils(91, { 0,1,0,1 });
+            writeCoils(91, { 1,0,1,0 });
             QTimer::singleShot(500, this,
                 [this]()
                 {
@@ -511,6 +544,7 @@ private:
     bool m_LeftSelvedgeWinderSelect = false;
     bool m_RightSelvedgeWinderSelect = false;
     bool m_mode = false;
+    bool onLength=false;
     int targetAddr;
     int m_length = 0;
     double m_BrakingDistance = 0.0;
@@ -530,12 +564,12 @@ private:
     QTimer* m_tensionStableTimer = nullptr; // 用於判斷連續 3 秒的定時器
 
     // 參數建議 (可根據實際機器調整)
-    const double m_slowStartSpeed = 5.0;    // 啟動時的初始慢速
-    const double m_tensionTolerance = 2;  // 張力容許誤差範圍 (PV與SV的差值)
+    double m_slowStartSpeed = 5.0;    // 啟動時的初始慢速
+    double m_tensionTolerance = 2;  // 張力容許誤差範圍 (PV與SV的差值)
     //<<緩啟動
     int PressIndex = 0;
     int PressIndex2 = 0;
-
+    int setTime = 500;
     QVector<bool> targetWinder;
     QVector<bool> Winder1 = { 1,0,1 };
     QVector<bool> Winder2 = { 1,0,1,0,0,0,0,1,0,1 };
@@ -544,4 +578,43 @@ private:
     
     QVector<bool> StopWinderJog = { 0,0,0,0,0,0,0,0,0,0,0 };
 
+
+    void loadProductionSettings()
+    {
+        QSettings settings("production.ini", QSettings::IniFormat);
+
+        // 讀取數值，若檔案不存在則使用預設值 0.0
+        setspeed = settings.value("Production/SetSpeed", 0.0).toDouble();
+        m_length = settings.value("Production/TargetLength", 0).toInt();
+        m_BrakingDistance = settings.value("Production/BrakingDistance", 0.0).toDouble();
+        Tension1_SV = settings.value("Production/Tension1_SV", 0.0).toDouble();
+        Tension2_SV = settings.value("Production/Tension2_SV", 0.0).toDouble();
+        Tension3_SV = settings.value("Production/Tension3_SV", 0.0).toDouble();
+
+        // 同步更新到 Proxy (UI 層)，確保介面顯示正確
+        if (m_proxy) {
+            m_proxy->setModifySpeed(setspeed);
+            m_proxy->setModifyCurrentLength(m_length);
+            m_proxy->setModifyBrakingDistance(m_BrakingDistance);
+            m_proxy->setModifyUnwindingTension(Tension1_SV);
+            m_proxy->setModifySmallWinderTensionOver(Tension2_SV);
+            m_proxy->setModifyLargeWinderTensionOver(Tension3_SV);
+            m_proxy->setWhiteLight(1);
+        }
+    }
+
+    void saveProductionSettings()
+    {
+        QSettings settings("production.ini", QSettings::IniFormat);
+
+        settings.setValue("Production/SetSpeed", setspeed);
+        settings.setValue("Production/TargetLength", m_length);
+        settings.setValue("Production/BrakingDistance", m_BrakingDistance);
+        settings.setValue("Production/Tension1_SV", Tension1_SV);
+        settings.setValue("Production/Tension2_SV", Tension2_SV);
+        settings.setValue("Production/Tension3_SV", Tension3_SV);
+        settings.setValue("Production/time", setTime);
+
+        settings.sync(); 
+    }
 };

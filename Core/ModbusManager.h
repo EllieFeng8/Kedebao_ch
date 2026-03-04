@@ -135,7 +135,7 @@ public slots:
 signals:
     void workerData(QVector<quint16> v);
     void workerData2(QVector<quint16> v);
-
+    void isWorking();
     void workerError(QString msg);
     void holdingRegisterReady(QVector<quint16> values);
     void workerWriteDone( int address, bool ok, QString msg);

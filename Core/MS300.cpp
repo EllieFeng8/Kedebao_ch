@@ -65,7 +65,7 @@ void MS300::onPollTimeout()
                     if (id == 1)
                     {
                         double Hz = static_cast<double>(res.value(0)/100);
-                        qDebug() << "MS300 slave: 1 , Hz = " << Hz;
+                        //qDebug() << "MS300 slave: 1 , Hz = " << Hz;
                         emit dataUpdated(id, Hz);
                     }
                     if (id == 2)

@@ -12,6 +12,6 @@ import Core 1.0
 
 QtObject {
     id: appStatus
-    property bool isBig: true
+    property bool isBig: Kdb.bigRollMode
     property int pageNum : 4;
 }

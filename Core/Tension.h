@@ -13,14 +13,7 @@
 #include <qthread>
 #include <QQueue>
 
-// 定義說明書中的暫存器位址 (轉換為 10 進制)
-enum TC3050_Addr {
-    ADDR_PV = 0x02F8,      // 760: 現在張力 (顯示值)
-    ADDR_SV = 0x0202,      // 514: 設定張力
-    ADDR_TQO = 0x02F0,     // 752: 輸出百分比 (對應 YTMC-5318 的強度)
-    ADDR_CONTROL = 0x02D0, // 720: 運轉控制位元 (Bit0=Run)
-    ADDR_STATUS = 0x02E0   // 736: 狀態位元 (Bit0=Run, Bit1=Auto)
-};
+
 struct WriteTask {
     int id;
     int address;
@@ -56,6 +49,7 @@ signals:
 public slots:
     void initPort();
     void setTargetTension(int id, double kg);
+    //void executeWriteSync(WriteTask task);
     void cleanup() {
         if (m_pollTimer) {
             m_pollTimer->stop();
@@ -73,16 +67,20 @@ public slots:
     //void lengthReset();
 private slots:
     void onPollTimeout();
+    //void onPollTimeout2();
 
 
 
 private:
     double sv;
     QModbusRtuSerialClient* m_modbus = nullptr; 
+    QModbusRtuSerialClient* m_modbus2 = nullptr;
+
 
     QTimer* m_pollTimer = nullptr;
+    QTimer* m_pollTimer2 = nullptr;
 
-    QList<int> m_slaveIds = { 1,2,3}; 
+    QList<int> m_slaveIds = { 1,2}; 
     int m_currentIndex = 0;
     QQueue<WriteTask> m_writeQueue;
 };
