@@ -30,4 +30,5 @@ private:
     QModbusRtuSerialClient* m_modbus = nullptr;
     QTimer* m_pollTimer = nullptr;
     const int m_slaveId = 6;    // ©T©w³B²z ID 6
+    bool reset = false;
 };

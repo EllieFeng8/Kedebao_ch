@@ -36,12 +36,18 @@ void LengthController::initPort() {
 
 void LengthController::onPollTimeout() {
     if (!m_modbus || m_modbus->state() != QModbusDevice::ConnectedState) return;
+    //如果按下reset 處理reset
+    if (reset) 
+    {
+        lengthReset();
+    }
 
     // 讀取位址 0 開始的 2 個暫存器 (32-bit)
     QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 0, 2);
 
     if (auto* reply = m_modbus->sendReadRequest(readUnit, m_slaveId)) {
         if (!reply->isFinished()) {
+
             connect(reply, &QModbusReply::finished, this, [this, reply]() {
                 if (reply->error() == QModbusDevice::NoError) {
                     const QModbusDataUnit res = reply->result();
@@ -71,6 +77,7 @@ void LengthController::lengthReset() {
     // 寫入 Coil 0 進行歸零
     QModbusDataUnit writeUnit(QModbusDataUnit::Coils, 0, 1);
     writeUnit.setValue(0, true);
+
 
     if (m_modbus && m_modbus->state() == QModbusDevice::ConnectedState) {
         m_modbus->sendWriteRequest(writeUnit, m_slaveId);

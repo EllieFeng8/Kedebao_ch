@@ -600,6 +600,7 @@ private:
             m_proxy->setModifySmallWinderTensionOver(Tension2_SV);
             m_proxy->setModifyLargeWinderTensionOver(Tension3_SV);
             m_proxy->setWhiteLight(1);
+            m_proxy->setBigRollMode(0);
         }
     }
 

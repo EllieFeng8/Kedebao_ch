@@ -807,13 +807,24 @@ Rectangle {
                 }
             }
         }
+        //其他參數
+        Text {
+            id: output4_3Text
+            text: "Other"
+            anchors.top: text_3.bottom
+            anchors.topMargin: topMargin
+            padding:10
+            font.pointSize: 14
+            font.weight: Font.Bold
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
 
         //放捲頻率
         // 限制閥值
         Text {
             id:text_4
-            anchors.top: text_3.bottom
-            anchors.topMargin: topMargin
+            anchors.top: output4_3Text.bottom
+            anchors.topMargin: 10
             x: 8
             //y: 165
             width: setWidth1
@@ -842,9 +853,17 @@ Rectangle {
                     color: "#aaaaaa"
                 }
             }
+            Text{
+                anchors.left:output0_6.right
+                anchors.top:output0_6.top
+                anchors.topMargin:4
+                font.pixelSize: 19
+                color: "#aaaaaa"
+                text:"Hz"
+            }
             Image {
                 id: btn5
-                x:288//460
+                x:338//460
                 y:5
                 scale: 0.8
                 source: "assets/rectangle_35.png"
@@ -918,7 +937,7 @@ Rectangle {
             }
             Image {
                 id: btn6
-                x:328
+                x:338
                 y:-16
                 scale: 0.8
                 source: "assets/rectangle_35.png"
@@ -961,7 +980,7 @@ Rectangle {
             //y: 165
             width: setWidth1
             height: 24
-            text: qsTr("緩啟動threshold")
+            text: qsTr("緩啟動靈敏度")
             font.pixelSize: 19
             horizontalAlignment: Text.AlignRight
 
@@ -985,9 +1004,17 @@ Rectangle {
                     color: "#aaaaaa"
                 }
             }
+            Text{
+                anchors.left:output6_6.right
+                anchors.top:output6_6.top
+                anchors.topMargin:4
+                font.pixelSize: 19
+                color: "#aaaaaa"
+                text:"公斤"
+            }
             Image {
                 id: btn7
-                x:288//460
+                x:338//460
                 y:-16
                 scale: 0.8
                 source: "assets/rectangle_35.png"
@@ -1011,12 +1038,12 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
-                        //if(Kdb.softStartThreshold !== Number(output6_6.text)) {
+                        if(Kdb.softStartThreshold !== Number(output6_6.text)) {
                             Kdb.softStartThreshold = output6_6.text
                             console.log("11 softStartThreshold changed~~~",
                                 Kdb.softStartThreshold,
                             typeof (Kdb.softStartThreshold));
-                        //}
+                        }
                     }
                 }
             }
@@ -1056,9 +1083,17 @@ Rectangle {
                     color: "#aaaaaa"
                 }
             }
+            Text{
+                anchors.left:output7_3.right
+                anchors.top:output7_3.top
+                anchors.topMargin:4
+                font.pixelSize: 19
+                color: "#aaaaaa"
+                text:"m/min"
+            }
             Image {
                 id: btn8
-                x:288//460
+                x:338//460
                 y:-16
                 scale: 0.8
                 source: "assets/rectangle_35.png"
@@ -1081,12 +1116,12 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked:{
-                        //if(Kdb.softStartSpeed !== Number(output7_3.text)) {
+                        if(Kdb.softStartSpeed !== Number(output7_3.text)) {
                             Kdb.softStartSpeed = output7_3.text
                             console.log("11 softStartSpeed changed~~~",
                                 Kdb.softStartSpeed,
                                 typeof (Kdb.softStartSpeed));
-                        //}
+                        }
                     }
                 }
             }
