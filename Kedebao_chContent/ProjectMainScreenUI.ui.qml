@@ -14,6 +14,7 @@ Rectangle {
         GradientStop { position: 0.0; color: "#F0F1F3" }
         GradientStop { position: 1.0; color: "#EBEBEB" }
     }
+    property alias curLengthRec : curLengthRec
     property alias smallR: smallR
     property alias unWindingTensionPosition: unWindingTensionPosition
     property alias flipImgMouseArea: flipImgMouseArea
@@ -872,12 +873,7 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked:{
-                    if(Kdb.modifyLargeWinderTensionOver !== Number(bigCoilTension.text)) {
-                        Kdb.modifyLargeWinderTensionOver = bigCoilTension.text
-                        //console.log("11 modifyLargeWinderTensionOver changed~~~", Kdb.modifyLargeWinderTensionOver);
-                    }
-                }
+
             }
         }
         Text {
@@ -932,7 +928,7 @@ Rectangle {
             y: 203
             height: 55
             width: 93
-            color: "#565656"
+            color: focus? "#f45f91" : "#565656"
             font.pixelSize: 24
             font.weight: Font.Normal
             horizontalAlignment: Text.AlignLeft
@@ -1123,7 +1119,18 @@ Rectangle {
                 id: rectangle_31
                 x: -4
                 source: "assets/rectangle_31.png"
+
+                Rectangle{
+                    id:curLengthRec
+                    color:(Kdb.modifyCurrentLength - Kdb.currentLength) >Kdb.modifyBrakingDistance ? "#88ff0a" : "red"
+                    opacity: 0.08
+                    width:parent.width
+                    height:parent.height
+                    anchors.centerIn: parent
+                    radius:32
+                }
             }
+
             Text {
                 id: m__1
                 x: 27
@@ -1186,7 +1193,7 @@ Rectangle {
                     y: 28
                     height: 78
                     width: 158
-                    color: "#565656"
+                    color: focus? "#f45f91" : "#565656"
                     font.pixelSize: 54
                     font.weight: Font.Normal
                     horizontalAlignment: Text.AlignLeft
@@ -1221,12 +1228,12 @@ Rectangle {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked:{
-                            if(Kdb.modifyCurrentLength !== Number(lengthSet.text)) {
-                                Kdb.modifyCurrentLength = lengthSet.text
-                                //console.log("11 modifyCurrentLength changed~~~", Kdb.modifyCurrentLength);
-                            }
-                        }
+                        // onClicked:{
+                        //     if(Kdb.modifyCurrentLength !== Number(lengthSet.text)) {
+                        //         Kdb.modifyCurrentLength = lengthSet.text
+                        //         //console.log("11 modifyCurrentLength changed~~~", Kdb.modifyCurrentLength);
+                        //     }
+                        // }
                     }
                 }
             }
@@ -1329,7 +1336,7 @@ Rectangle {
                 y: 197
                 height: 54
                 width: 113
-                color: "#565656"
+                color: focus? "#f45f91" : "#565656"
                 font.pixelSize: 36
                 font.weight: Font.Normal
                 horizontalAlignment: Text.AlignLeft
@@ -1364,12 +1371,7 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked:{
-                    if(Kdb.modifySpeed !== Number(speedSet.text)) {
-                        Kdb.modifySpeed = speedSet.text
-                        //console.log("11 modifySpeed changed~~~", Kdb.modifySpeed);
-                    }
-                }
+
             }
         }
     }
@@ -1450,7 +1452,7 @@ Rectangle {
                 y: 196
                 height: 50
                 width: 95
-                color: "#565656"
+                color: focus? "#f45f91" : "#565656"
                 font.pixelSize: 24
                 font.weight: Font.Normal
                 horizontalAlignment: Text.AlignLeft
@@ -1489,12 +1491,7 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked:{
-                    if(Kdb.modifySmallWinderTensionOver !== Number(smallCoilTension.text)) {
-                        Kdb.modifySmallWinderTensionOver = smallCoilTension.text
-                        // console.log("11 modifySmallWinderTensionOver changed~~~", Kdb.modifySmallWinderTensionOver);
-                    }
-                }
+
             }
         }
 
@@ -1713,7 +1710,7 @@ Rectangle {
             y: 202
             height: 55
             width: 90
-            color: "#565656"
+            color: focus? "#f45f91" : "#565656"
             font.pixelSize: 20
             font.weight: Font.Normal
             horizontalAlignment: Text.AlignLeft
@@ -1752,12 +1749,7 @@ Rectangle {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked:{
-                    if(Kdb.modifyUnwindingTension !== Number(unwindingTension.text)) {
-                        Kdb.modifyUnwindingTension = unwindingTension.text
-                        //console.log("11 modifyUnwindingTension changed~~~", Kdb.modifyUnwindingTension);
-                    }
-                }
+
             }
         }
     }
