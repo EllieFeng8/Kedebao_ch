@@ -575,7 +575,10 @@ public:
 
      Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
      Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
-     Q_INVOKABLE double getModifyBrakingDistance() const { return m_modifybrakingDistance;}
+     Q_INVOKABLE double getModifyBrakingDistance() const {
+        double value = m_modifybrakingDistance;
+        return std::round(value * 100.0) / 100.0;
+    }
      void setModifyCurrentLength(int value){m_modifycurrentLength = value; emit modifyCurrentLengthChanged(m_brakingDistance);};
      void setModifySpeed(int value){m_modifyspeed = value; emit modifySpeedChanged(m_modifyspeed);};
      void setModifyBrakingDistance(double value){m_modifybrakingDistance = value; emit modifyBrakingDistanceChanged(m_modifybrakingDistance);};
@@ -3414,7 +3417,7 @@ private:
 
     int m_modifycurrentLength = 0;
     int m_modifyspeed = 0;
-    double m_modifybrakingDistance = 1200;
+    double m_modifybrakingDistance = 82.01991111;
 
     double m_modifyUnwindingTension = 0.0;
     double m_modifySmallWinderTensionOver = 0.0;
