@@ -421,6 +421,9 @@ class KdbProxy : public QObject
     //緩啟動速度
     Q_PROPERTY(double softStartSpeed READ getSoftStartSpeed WRITE setSoftStartSpeed NOTIFY softStartSpeedChanged)
 
+    //張力穩定時間
+    Q_PROPERTY(double tensionTime READ getTensionTime WRITE setTensionTime NOTIFY tensionTimeChanged)
+
     // ===== ANALOG OUTPUT Switch=====
     Q_PROPERTY(int analogOutUnwinderMainDriveSwitch READ getAnalogOutUnwinderMainDriveSwitch WRITE setAnalogOutUnwinderMainDriveSwitch NOTIFY analogOutUnwinderMainDriveSwitchChanged)
     Q_PROPERTY(int analogOutWinderSwitch READ getAnalogOutWinderSwitch WRITE setAnalogOutWinderSwitch NOTIFY analogOutWinderSwitchChanged)
@@ -2608,6 +2611,16 @@ public:
         emit softStartSpeedChanged(m_softStartSpeed);
         qDebug()<<"get softStartSpeedChanged"<<m_softStartSpeed;
     }
+
+    //張力穩定時間
+    Q_INVOKABLE double getTensionTime() const { return m_tensionTime;}
+    void setTensionTime(double value)
+    {
+        m_tensionTime = value;
+        emit tensionTimeChanged(m_tensionTime);
+        qDebug()<<"get tensionTimeChanged"<<m_tensionTime;
+    }
+
     //switch
     Q_INVOKABLE int getModifyAnalogOutSelvedgeWinderSwitch() const { return m_modifyAnalogOutSelvedgeWinderSwitch;}
     void setModifyAnalogOutSelvedgeWinderSwitch(int value)
@@ -3272,6 +3285,8 @@ public:
     void softStartThresholdChanged(double value);
     //緩啟動速度
     void softStartSpeedChanged(double value);
+    //張力穩定時間
+    void tensionTimeChanged(double value);
     //===== ANALOG OUTPUT switch=====
     void analogOutUnwinderMainDriveSwitchChanged(int value);
     void analogOutWinderSwitchChanged(int value);
@@ -3735,6 +3750,8 @@ private:
     double m_softStartThreshold = 2.1;
     //緩啟動速度
     double m_softStartSpeed = 1.1;
+    //張力穩定時間
+    double m_tensionTime = 2.1;
     // ===== ANALOG OUTPUT switch=====
     int m_analogOutUnwinderMainDriveSwitch = 0;
     int m_analogOutWinderSwitch = 0;
