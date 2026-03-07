@@ -1125,7 +1125,81 @@ Rectangle {
                     }
                 }
             }
+Text {
+            id:text_8
+            anchors.top: text_7.bottom
+            anchors.topMargin: topMargin2
+            x: 8
+            //y: 165
+            width: setWidth1
+            height: 24
+            text: qsTr("張力穩定時間")
+            font.pixelSize: 19
+            horizontalAlignment: Text.AlignRight
 
+            TextInput {
+                id: output8_3
+                width: 80
+                font.pixelSize: 20
+                horizontalAlignment: Text.AlignHCenter
+                text:Number(Kdb.tensionTime).toFixed(2)//Kdb.modifyAnalogOutSelvedgeWinder
+                // x: 386
+                x: 203
+                y: -3
+                validator: DoubleValidator {}//限制只能輸入整數/double
+                //placeholderText: "請輸入內容"
+                focus: true
+                inputMethodHints: Qt.ImhDigitsOnly
+                Rectangle {
+                    height: 2
+                    y:22
+                    width: output8_3.width
+                    color: "#aaaaaa"
+                }
+            }
+            Text{
+                anchors.left:output8_3.right
+                anchors.top:output8_3.top
+                anchors.topMargin:4
+                font.pixelSize: 19
+                color: "#aaaaaa"
+                text:"ms"
+            }
+            Image {
+                id: btn9
+                x:338//460
+                y:-16
+                scale: 0.8
+                source: "assets/rectangle_35.png"
+                Text {
+                    text: qsTr("OK")
+                    color: "#aaaaaa"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter // 垂直文字置中
+                    font.bold: true
+                }
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btn9MouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: btn9MouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked:{
+                        if(Kdb.tensionTime !== Number(output8_3.text)) {
+                            Kdb.tensionTime = output8_3.text
+                            console.log("11 tensionTime changed~~~",
+                                Kdb.tensionTime,
+                                typeof (Kdb.tensionTime));
+                        }
+                    }
+                }
+            }
+}
         }
 
     }

@@ -60,6 +60,21 @@ public:
             emit finishSoftStartSignal();
             });
 
+        m_tensionStableTimer2 = new QTimer(this);
+        m_tensionStableTimer2->setSingleShot(true); // 只需要觸發一次
+
+        connect(this, &Core::waitforPVSignal, this, [this]()
+            {
+                setMainSpeed(setspeed);
+                waitforPV = false;
+            });
+        // 當 Timer 成功跑完 3 秒時觸發
+        connect(m_tensionStableTimer2, &QTimer::timeout, this, [=]() {
+            qDebug() << "Tension Stable , set speed = " << setspeed;
+
+            emit waitforPVSignal();
+            });
+
         m_proxy = new KdbProxy(this);
         m_manager = new ModbusManager(this);
 
@@ -377,6 +392,13 @@ public:
             }
         );
 
+        QObject::connect(m_proxy, &KdbProxy::tensionTimeChanged, this, [this](int value)
+            {
+                stableTime = value;
+                qDebug() << "stableTime =" << value;
+
+            }
+        );
 
         QObject::connect(m_proxy, &KdbProxy::smallRollMotorChanged, this, [this]()
             {
@@ -426,11 +448,19 @@ public:
 public slots:
     void writeSingleCoil(int address, double value);
     void setTensionSV_1(double v);
+    void setSV_1(double v)
+    {
+        nowSV1 = v;
+        QMetaObject::invokeMethod(m_tension, [this, v]() {m_tension->setTargetTension(1, v); },
+            Qt::QueuedConnection);
+    }
     void setTensionSV_2(double v);
     void setTensionSV_3(double v);
     void startRealSpeed() {
         qDebug() <<"startRealSpeed() setSpeed" << setspeed;
-        setMainSpeed(setspeed);    // 執行正式加速
+        //setMainSpeed(setspeed);    // 加速
+        setTensionSV_1(Tension1_SV);
+        waitforPV = true;
     }
     void ontest() 
     {
@@ -439,9 +469,11 @@ public slots:
         qDebug() << "test";
     }
    
+
 signals:
     void holdingRegisterReady(QVector<quint16> values);
     void finishSoftStartSignal();
+    void waitforPVSignal();
     //void newDataReady( QVector<quint16> values);
     //void WorkerError( QString message);
     //void newTensionData(int id, double PV, double tqo);
@@ -481,20 +513,20 @@ private slots:
         if (PressIndex2 == 1)
         {
             writeCoils(91, { 0,0,0,1 });
-            QTimer::singleShot(500, this,
-                [this]()
-                {
-                    writeCoils(91, { 0, 0, 0, 0 });
-                });
+            //QTimer::singleShot(500, this,
+            //    [this]()
+            //    {
+            //        writeCoils(91, { 0, 0, 0, 0 });
+            //    });
         }
         else if (PressIndex2 == 0)
         {
             writeCoils(91, { 1,0,1,0 });
-            QTimer::singleShot(500, this,
-                [this]()
-                {
-                    writeCoils(91, { 0, 0, 0, 0 });
-                });
+            //QTimer::singleShot(500, this,
+            //    [this]()
+            //    {
+            //        writeCoils(91, { 0, 0, 0, 0 });
+            //    });
             PressIndex = 0;
             PressIndex2 = 0;
         }
@@ -512,20 +544,20 @@ private slots:
         if (PressIndex == 1)
         {
             writeCoils(91, { 0,1,0,0 });
-            QTimer::singleShot(500, this,
-                [this]()
-                {
-                    writeCoils(91, { 0, 0, 0, 0 });
-                });
+            //QTimer::singleShot(500, this,
+            //    [this]()
+            //    {
+            //        writeCoils(91, { 0, 0, 0, 0 });
+            //    });
         }
         else if (PressIndex == 0)
         {
             writeCoils(91, { 1,0,1,0 });
-            QTimer::singleShot(500, this,
-                [this]()
-                {
-                    writeCoils(91, { 0, 0, 0, 0 });
-                });
+            //QTimer::singleShot(500, this,
+            //    [this]()
+            //    {
+            //        writeCoils(91, { 0, 0, 0, 0 });
+            //    });
             PressIndex = 0;
             PressIndex2 = 0;
         }
@@ -555,13 +587,17 @@ private:
     double m_p3 = 1.0;//大小切刀
     double m_p4 = 1.0;//耳料收卷
     double Tension1_SV = 0.0;
+    double nowSV1 = 0.0;
+    double slowSV = 6.0;
     double Tension2_SV = 0.0;
     double Tension3_SV = 0.0;
-
+    int stableTime = 800;
     double Unwinding_Threshold = 0.0;
     //緩啟動>>
     bool m_isSoftStarting = false;         // 是否正在進行緩啟動
+    bool waitforPV = false;
     QTimer* m_tensionStableTimer = nullptr; // 用於判斷連續 3 秒的定時器
+    QTimer* m_tensionStableTimer2 = nullptr; // 用於判斷連續 3 秒的定時器
 
     // 參數建議 (可根據實際機器調整)
     double m_slowStartSpeed = 5.0;    // 啟動時的初始慢速
@@ -590,6 +626,10 @@ private:
         Tension1_SV = settings.value("Production/Tension1_SV", 0.0).toDouble();
         Tension2_SV = settings.value("Production/Tension2_SV", 0.0).toDouble();
         Tension3_SV = settings.value("Production/Tension3_SV", 0.0).toDouble();
+        m_slowStartSpeed = settings.value("Production/softstart_speed", 0.0).toDouble();
+        m_tensionTolerance = settings.value("Production/softstart_threshold", 0.0).toDouble();
+        Unwinding_Threshold = settings.value("Production/Unwinder_threshold", 0.0).toDouble();
+        stableTime = settings.value("Production/stable_Time", 0).toInt();
 
         // 同步更新到 Proxy (UI 層)，確保介面顯示正確
         if (m_proxy) {
@@ -599,6 +639,12 @@ private:
             m_proxy->setModifyUnwindingTension(Tension1_SV);
             m_proxy->setModifySmallWinderTensionOver(Tension2_SV);
             m_proxy->setModifyLargeWinderTensionOver(Tension3_SV);
+            m_proxy->setSoftStartThreshold(m_tensionTolerance);
+            m_proxy->setSoftStartSpeed(m_slowStartSpeed);
+            m_proxy->setModifyUnwindingLimitThreshold(Unwinding_Threshold);
+            m_proxy->setTensionTime(stableTime);
+            
+            
             m_proxy->setWhiteLight(1);
             m_proxy->setBigRollMode(0);
         }
@@ -614,7 +660,10 @@ private:
         settings.setValue("Production/Tension1_SV", Tension1_SV);
         settings.setValue("Production/Tension2_SV", Tension2_SV);
         settings.setValue("Production/Tension3_SV", Tension3_SV);
-        settings.setValue("Production/time", setTime);
+        settings.setValue("Production/stable_Time", stableTime);
+        settings.setValue("Production/softstart_speed", m_slowStartSpeed);
+        settings.setValue("Production/softstart_threshold", m_tensionTolerance);
+        settings.setValue("Production/Unwinder_threshold", Unwinding_Threshold);
 
         settings.sync(); 
     }

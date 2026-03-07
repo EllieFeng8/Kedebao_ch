@@ -562,7 +562,7 @@ void ModbusManager::IpcStop(double val, bool v)
 void ModbusManager::PressRoll(double v)
 {
     {
-        writeSingleCoil(89,true);
+        writeCoils(89, { true,false });
     }
     //QTimer::singleShot(500, this, 
     //    [this]() 

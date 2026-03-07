@@ -421,6 +421,7 @@ class KdbProxy : public QObject
     Q_PROPERTY(double softStartThreshold READ getSoftStartThreshold WRITE setSoftStartThreshold NOTIFY softStartThresholdChanged)
     //緩啟動速度
     Q_PROPERTY(double softStartSpeed READ getSoftStartSpeed WRITE setSoftStartSpeed NOTIFY softStartSpeedChanged)
+    Q_PROPERTY(double tensionTime READ getTensionTime WRITE setTensionTime NOTIFY tensionTimeChanged)
     // ===== IPC INPUT =====
     Q_PROPERTY(double ipcStart READ getIpcStart NOTIFY ipcStartChanged)
     Q_PROPERTY(double ipcStop READ getIpcStop NOTIFY ipcStopChanged)
@@ -632,7 +633,10 @@ public:
      void setCurrentLength(double v) { m_currentLength = v; emit currentLengthChanged(m_currentLength); }
      Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
      Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
-     Q_INVOKABLE double getModifyBrakingDistance() const { return m_modifybrakingDistance;}
+     Q_INVOKABLE double getModifyBrakingDistance() const {
+         double value = m_modifybrakingDistance;
+         return std::round(value * 100.0) / 100.0;
+     }
      void setModifyCurrentLength(int value){m_modifycurrentLength = value; emit modifyCurrentLengthChanged(m_modifycurrentLength);};
      void setModifySpeed(int value){m_modifyspeed = value; emit modifySpeedChanged(m_modifyspeed);};
      void setModifyBrakingDistance(double value){m_modifybrakingDistance = value; emit modifyBrakingDistanceChanged(m_modifybrakingDistance);};
@@ -1575,8 +1579,8 @@ public:
     Q_INVOKABLE double getSmallWinderTensionOver() const { return m_smallWinderTensionOver; }
     void setSmallWinderTensionOver(double value)
     {
-        if (m_smallWinderTensionOver == value)
-            return;
+        //if (m_smallWinderTensionOver == value)
+            //return;
         m_smallWinderTensionOver = value;
         emit smallWinderTensionOverChanged(m_smallWinderTensionOver);
     }
@@ -2609,7 +2613,14 @@ public:
             m_modifyAnalogOutCutterSwitch = value;
         emit modifyAnalogOutCutterSwitchChanged(m_modifyAnalogOutCutterSwitch);
     }
-
+    //張力穩定時間
+    Q_INVOKABLE double getTensionTime() const { return m_tensionTime; }
+    void setTensionTime(double value)
+    {
+        m_tensionTime = value;
+        emit tensionTimeChanged(m_tensionTime);
+        qDebug() << "get tensionTimeChanged" << m_tensionTime;
+    }
     Q_INVOKABLE double getModifyAnalogOutSelvedgeWinder() const { return m_modifyAnalogOutSelvedgeWinder;}
     void setModifyAnalogOutSelvedgeWinder(double value)
     {
@@ -3371,6 +3382,7 @@ public:
     void softStartThresholdChanged(double value);
     //緩啟動速度
     void softStartSpeedChanged(double value);
+    void tensionTimeChanged(double value);
     //%
     void analogOutUnwinderMainDrivePcChanged(double value);
     void analogOutWinderPcChanged(double value);
@@ -3663,9 +3675,9 @@ public:
     int m_largeWinderZeroSpeedDetectLight = 0;
 
     // =====INPUT-4 Tension Over =====
-    double m_unwindingTensionOver = 0.0;
-    double m_smallWinderTensionOver = 0.0;
-    double m_largeWinderTensionOver = 0.0;
+    double m_unwindingTensionOver = 1.0;
+    double m_smallWinderTensionOver = 1.0;
+    double m_largeWinderTensionOver = 1.0;
 
     int m_unwindingTensionOverLight = 0;
     int m_smallWinderTensionOverLight = 0;
@@ -3912,6 +3924,7 @@ public:
     double m_softStartThreshold = 2.1;
     //緩啟動速度
     double m_softStartSpeed = 1.1;
+    double m_tensionTime = 2.1;
 
 };
 

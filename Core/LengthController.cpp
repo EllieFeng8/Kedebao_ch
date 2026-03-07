@@ -36,12 +36,9 @@ void LengthController::initPort() {
 
 void LengthController::onPollTimeout() {
     if (!m_modbus || m_modbus->state() != QModbusDevice::ConnectedState) return;
-    //如果按下reset 處理reset
-    if (reset) 
-    {
-        lengthReset();
-    }
-
+    
+    m_pollTimer->stop();
+    
     // 讀取位址 0 開始的 2 個暫存器 (32-bit)
     QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 0, 2);
 
@@ -65,24 +62,30 @@ void LengthController::onPollTimeout() {
                     qDebug() << "COM2 Read Error:" << reply->errorString();
                 }
                 reply->deleteLater();
+                m_pollTimer->start(30);
                 });
         }
         else {
             delete reply;
+            m_pollTimer->start(30);
         }
     }
 }
 
 void LengthController::lengthReset() {
     // 寫入 Coil 0 進行歸零
+    m_pollTimer->stop();
     QModbusDataUnit writeUnit(QModbusDataUnit::Coils, 0, 1);
     writeUnit.setValue(0, true);
 
-
+     
     if (m_modbus && m_modbus->state() == QModbusDevice::ConnectedState) {
         m_modbus->sendWriteRequest(writeUnit, m_slaveId);
         qDebug() << "COM2: Length Reset sent to ID" << m_slaveId;
+
     }
+    m_pollTimer->start(30);
+
 }
 
 void LengthController::stopPolling() {

@@ -19,7 +19,31 @@ ProjectMainScreenUI {
     }
 
 
+    lenthSettingmouseArea.onClicked:{
+        Kdb.modifyCurrentLength = lengthSet.text
+        // calcLength(Kdb.modifyCurrentLength);
+        lengthSet.focus= false
 
+
+    }
+//focus? "#eebcc6" : "#565656"f45f91
+    speedSettingmouseArea.onClicked:{
+        Kdb.modifySpeed = speedSet.text
+        speedSet.focus= false
+    }
+    smallCoilTensionMouseArea.onClicked:{
+        Kdb.modifySmallWinderTensionOver = smallCoilTension.text
+        smallCoilTension.focus = false
+    }
+    unwindingTensionMouseArea.onClicked:{
+        Kdb.modifyUnwindingTension = unwindingTension.text
+        unwindingTension.focus = false
+
+    }
+    bigCoilTensionMouseArea.onClicked:{
+        Kdb.modifyLargeWinderTensionOver = bigCoilTension.text
+        bigCoilTension.focus = false
+    }
     settingMouseArea.onClicked: {
         modeScreen.visible = true
     }
@@ -67,4 +91,15 @@ ProjectMainScreenUI {
     }
 
 
+    // function calcLength (length) {
+    //     const value = length - Kdb.currentLength
+    //     if (value < Kdb.modifyBrakingDistance){
+    //         curLengthRec.color="red"
+    //         return 0;
+    //     }
+    //     else{
+    //         curLengthRec.color="#88ff0a"
+    //         return 1;
+    //     }
+    // }
 }

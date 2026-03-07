@@ -210,7 +210,24 @@ void Core::on485Data(int id, double PV, double tqo)
     //emit newTensionData(id,PV,tqo);
     if (id == 1)
     {
+        double target1SV = nowSV1;
         m_proxy->setUnwindingTension(PV);
+        if (waitforPV) {
+            if (qAbs(PV - target1SV) <= m_tensionTolerance) {
+                // 如果數值達標，且計時器還沒開始跑，則啟動計時
+                if (!m_tensionStableTimer2->isActive()) {
+                    qDebug() << "start  stable timer2";
+                    m_tensionStableTimer2->start(stableTime);
+                }
+            }
+            else {
+                // 【關鍵】如果這 3 秒內有任何一次數值超標，立刻重置計時器
+                if (m_tensionStableTimer2->isActive()) {
+                    qDebug() << "restart  stable timer2";
+                    m_tensionStableTimer2->stop();
+                }
+            }
+        }
     }
     else if (id == 2)
     {
@@ -223,20 +240,20 @@ void Core::on485Data(int id, double PV, double tqo)
     // 假設 id == 1 是您要監控的張力控制器
     if (m_isSoftStarting && id == 1) {
         // 取得目前的張力設定值 (SV)
-        double target1SV = Tension1_SV;
 
+        double target1SV = nowSV1;
         // 判斷當前張力 (PV) 是否在設定值 (SV) 的誤差範圍內
         if (qAbs(PV - target1SV) <= m_tensionTolerance) {
             // 如果數值達標，且計時器還沒開始跑，則啟動計時
             if (!m_tensionStableTimer->isActive()) {
-                qDebug() << "start    stable timer";
-                m_tensionStableTimer->start(800);
+                qDebug() << "start  stable timer";
+                m_tensionStableTimer->start(stableTime);
             }
         }
         else {
             // 【關鍵】如果這 3 秒內有任何一次數值超標，立刻重置計時器
             if (m_tensionStableTimer->isActive()) {
-                qDebug() << "restart  stable timer";
+                qDebug() << "restart stable timer";
                 m_tensionStableTimer->stop();
             }
         }
@@ -356,7 +373,7 @@ void Core::onlength(double v)
 {
     m_proxy->setCurrentLength(v);
     
-    if (m_length > 0 && v >= (double)m_length) {
+    if (m_length > 0 && v >= (double)m_length-0.1 && !onLength) {//距離到 停止
 
         qDebug() << "Target length reached!" << v << "/" << m_length;
 
@@ -364,45 +381,41 @@ void Core::onlength(double v)
         setSTOP();
         m_isWaitingForStop = true;
 
-        if (!onLength) {
+        if (!onLength && isStop) {
 
             QTimer::singleShot(500, this,
                 [this]()
                 {
                     writeCoils(89, { 1,0,1,0,1,0 });
-                    QTimer::singleShot(500, this,
-                        [this]()
-                        {
-                            writeCoils(89, { 0,0,0,0,0,0 });
-                        });
-                    PressIndex = 0;
-                    PressIndex2 = 0;
-                    QTimer::singleShot(1000, this,
-                        [this]()
-                        {
-                            writeRegisters(3);
-                        });
-                }
-        
-            );
-    }
-        // 為了安全，將目標長度重設為 0，避免在停止過程中重複觸發
-        m_length = 0;
-        m_isBrakingPerformed = false;
-        onLength = true;
-        return;
-        // 如果需要更新 UI 上的目標值顯示，可以視情況呼叫 m_proxy
-    }
+                });
+            //QThread::msleep(100);
+            //QTimer::singleShot(500, this,
+            //    [this]()
+            //    {
+            //        writeCoils(89, { 1,0,0,0,0,0 });
+            //    });
+            //PressIndex = 0;
+            //PressIndex2 = 0;
+            QTimer::singleShot(1000, this,
+                [this]()
+                {
+                    writeRegisters(3);
+                });
 
-    if (m_length > 0 && m_BrakingDistance > 0 && !m_isBrakingPerformed) {
+            onLength = true;
+        }
+        m_isBrakingPerformed = false;
+        return;
+    } 
+    if (m_length > 0 && m_BrakingDistance > 0 && !m_isBrakingPerformed) {//剎車距離到 減速
         double remainingDistance = (double)m_length - v;
 
         if (remainingDistance <= m_BrakingDistance) {
             qDebug() << "Entering Braking Zone. Executing SLOW DOWN once.";
 
             // 執行降速指令
-            if (setspeed > 20) {
-                setMainSpeed(20);
+            if (setspeed > 10) {
+                setMainSpeed(10);
             }
             // 標記為已執行，防止下一次 onlength 又跑進來
             m_isBrakingPerformed = true;
@@ -414,7 +427,7 @@ void Core::onlength(double v)
 
 void Core::onMS300Data(int id, double v)
 {
-    if (id == 1 && Unwinding_Threshold != 0 && v> Unwinding_Threshold && !m_isWaitingForStop)
+    if (id == 1 && Unwinding_Threshold != 0 && v> Unwinding_Threshold && !m_isWaitingForStop && !m_isBrakingPerformed)
     {
         LowSpeed = true;
         setMainSpeed(speed);
@@ -427,16 +440,12 @@ void Core::onMS300Data(int id, double v)
     }
     if (m_isWaitingForStop) {
         // 當速度小於一個極小值 (例如 0.15 m/min) 就視為已停止
-        if (id==2 && v <= 0.05) {
+        if (id == 2 && v <= 0.05) {
             qDebug() << "Speed reached zero! Executing Coil Stop...";
-           
-            QTimer::singleShot(500, this,
-                [this]()
-                {
-                    QVector<bool> stop(24, false);
-                    writeCoils(65, stop);
-                    isStop = true;
-                });
+
+            QVector<bool> stop(24, false);
+            writeCoils(65, stop);
+            isStop = true;
             //QTimer::singleShot(500, this,
             //    [this]()
             //    {
@@ -488,7 +497,7 @@ void Core::setMainFreqs(double v)
 { 
     setspeed = v;
 
-    m_proxy->setModifyBrakingDistance(setspeed * 0.08);
+    m_proxy->setModifyBrakingDistance(setspeed * 0.0775);
     double Hz = v * (60.0 / 130.0); 
     qDebug() << "change";
     {
@@ -557,6 +566,7 @@ void Core::onZeroSpeed02()
 void Core::setTensionSV_1(double v)
 {
     Tension1_SV = v;
+    nowSV1 = v;
     QMetaObject::invokeMethod(m_tension, [this, v]() {m_tension->setTargetTension(1, v); },
         Qt::QueuedConnection);
 }
@@ -882,6 +892,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
             m_isSoftStarting = true;
             onLength = false;
             setMainSpeed(m_slowStartSpeed);
+            setSV_1(slowSV);
             qDebug() << "SLOW START";
             m_manager->IpcStart(state);//動作  
         }
@@ -890,9 +901,11 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         m_proxy->setIpcStop(val);
         if (state)
         {
-            setSTOP();
+   
             m_isWaitingForStop = true;
-
+            m_tensionStableTimer->stop();
+            m_tensionStableTimer2->stop();
+            setSTOP();
  
         }
         qDebug() << "DI Bit 1 changed" << state ;//Log 
