@@ -5,3 +5,4 @@
 /.vs
 /out/build/debug
 /out/build
+/Core/ModbusWorker.cpp
