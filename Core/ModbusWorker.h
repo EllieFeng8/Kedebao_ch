@@ -247,8 +247,8 @@ private slots:
     void onStateChanged(QModbusDevice::State state);
     void onErrorOccurred(QModbusDevice::Error error);
     void poll();
-    void onReply();
-    void onReply2();
+    void onReply(QModbusReply* reply);
+    void onReply2(QModbusReply* reply);
 
 public slots:
     void writeCoils(int startAddress, const QVector<bool>& values);

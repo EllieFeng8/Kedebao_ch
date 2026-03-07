@@ -1,6 +1,7 @@
 #include "ModbusWorker.h"
 #include <QDebug>
 #include <Qvariant>
+#include <qeventloop>
 ModbusWorker::ModbusWorker( QObject* parent)
     : QObject(parent),
     m_workerId(0),
@@ -130,6 +131,7 @@ void ModbusWorker::poll()
         qDebug() << "m_client is not connect";
         return;
     }
+    m_pollTimer->stop();
     //Flag
     bool f_vfdAlarmReset = false;               //64
     bool f_unwinderForward = false;             //65
@@ -735,34 +737,39 @@ void ModbusWorker::poll()
     
     //ADAM-5000(192.168.1.201)
 
-    QModbusDataUnit unit(QModbusDataUnit::Coils, 0, 112);
-    QModbusReply* reply = m_client->sendReadRequest(unit, 1);
+// --- 第一台設備讀取 (Coils 0-112) ---
+    QModbusDataUnit unit1(QModbusDataUnit::Coils, 0, 112);
+    if (auto* reply = m_client->sendReadRequest(unit1, 1)) {
+        QEventLoop loop;
+        connect(reply, &QModbusReply::finished, &loop, &QEventLoop::quit);
+        loop.exec(); // 等待直到讀取完成
 
-    if (!reply) {
-        emit errorOccurred(QString("sendReadRequest failed"));
-        return;
+        onReply(reply); // 手動呼叫處理函式
+        reply->deleteLater();
     }
-    reply->setParent(this);
-    connect(reply, &QModbusReply::finished, this, &ModbusWorker::onReply, Qt::QueuedConnection);
     
-    //ADAM-5000(192.168.1.202)
+    // --- 第二台設備讀取 (ADAM-5000, Coils 0-16) ---
     QModbusDataUnit unit2(QModbusDataUnit::Coils, 0, 16);
-    QModbusReply* reply2 = m_client2->sendReadRequest(unit2, 1);
+    if (auto* reply2 = m_client2->sendReadRequest(unit2, 1)) {
+        QEventLoop loop;
+        connect(reply2, &QModbusReply::finished, &loop, &QEventLoop::quit);
+        loop.exec();
 
-    if (!reply2) {
-        emit errorOccurred(QString("sendReadRequest failed"));
-        return;
+        // 如果 onReply2 邏輯不同，可另寫 processReply2，
+        // 如果邏輯一樣，直接共用 processReply
+        onReply2(reply2);
+        reply2->deleteLater();
     }
-    reply2->setParent(this);
-    connect(reply2, &QModbusReply::finished, this, &ModbusWorker::onReply2, Qt::QueuedConnection);
-
     //Analog output READ
     readRegisters(56, 4);
+    if (m_running) {
+        m_pollTimer->start();
+    }
 }
 
-void ModbusWorker::onReply()
+void ModbusWorker::onReply(QModbusReply* reply)
 {
-    QModbusReply* reply = qobject_cast<QModbusReply*>(sender());
+    //QModbusReply* reply = qobject_cast<QModbusReply*>(sender());
     if (!reply) return;
     
     if (reply->error() == QModbusDevice::NoError) {
@@ -783,9 +790,9 @@ void ModbusWorker::onReply()
     reply->deleteLater();
 }
 
-void ModbusWorker::onReply2()
+void ModbusWorker::onReply2(QModbusReply* reply)
 {
-    QModbusReply* reply = qobject_cast<QModbusReply*>(sender());
+    //QModbusReply* reply = qobject_cast<QModbusReply*>(sender());
     if (!reply) return;
 
     if (reply->error() == QModbusDevice::NoError) {
@@ -828,7 +835,7 @@ void ModbusWorker::writeCoils(int startAddress, const QVector<bool>& values)
 
     for (int i = 0; i < values.size(); ++i)
         unit.setValue(i, values[i]);
-        
+
     // 發送寫入請求 (FC 15)
     QModbusReply* reply = m_client->sendWriteRequest(unit, 1);
     if (!reply)
@@ -836,20 +843,19 @@ void ModbusWorker::writeCoils(int startAddress, const QVector<bool>& values)
         emit writeDone(startAddress, false, "sendWriteRequest failed");
         return;
     }
-    
-    reply->setParent(this);
 
-    // 完成 callback
-    connect(reply, &QModbusReply::finished, this,
-        [this, startAddress, reply]()
-        {
-            if (reply->error() == QModbusDevice::NoError)
-                emit writeDone(startAddress, true, "OK");
-            else
-                emit writeDone(startAddress, false, reply->errorString());
+    QEventLoop loop;
+    connect(reply, &QModbusReply::finished, &loop, &QEventLoop::quit);
+    loop.exec(); // 等待直到讀取完
 
-            reply->deleteLater();
-        });
+
+    if (reply->error() == QModbusDevice::NoError)
+        emit writeDone(startAddress, true, "OK");
+    else
+        emit writeDone(startAddress, false, reply->errorString());
+
+    reply->deleteLater();
+
 }
 
 void ModbusWorker::writeRegister(int startAddress, double values)
@@ -866,7 +872,7 @@ void ModbusWorker::writeRegister(int startAddress, double values)
         1
     );
 
-        unit.setValue(0, values);
+    unit.setValue(0, values);
 
     QModbusReply* reply = m_client->sendWriteRequest(unit, 1);
 
@@ -876,13 +882,15 @@ void ModbusWorker::writeRegister(int startAddress, double values)
         return;
     }
 
-    connect(reply, &QModbusReply::finished, this, [this, reply]() {
-        if (reply->error() != QModbusDevice::NoError)
-        {
-            emit errorOccurred("writeRegisters reply: " + reply->errorString());
-        }
-        reply->deleteLater();
-        });
+    QEventLoop loop;
+    connect(reply, &QModbusReply::finished, &loop, &QEventLoop::quit);
+    loop.exec(); // 等待直到讀取完
+
+    if (reply->error() != QModbusDevice::NoError)
+    {
+        emit errorOccurred("writeRegisters reply: " + reply->errorString());
+    }
+    reply->deleteLater();
 }
 
 void ModbusWorker::writeRegisters(int startAddress, QVector<double> values)
@@ -893,14 +901,10 @@ void ModbusWorker::writeRegisters(int startAddress, QVector<double> values)
         return;
     }
 
-    QModbusDataUnit unit(
-        QModbusDataUnit::HoldingRegisters,
-        startAddress,
-        values.size()
-    );
+    QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, startAddress, values.size());
 
     for (int i = 0; i < values.size(); i++)
-        unit.setValue(i, values[i]*409.5);
+        unit.setValue(i, values[i] * 409.5);
 
     QModbusReply* reply = m_client->sendWriteRequest(unit, 1);
 
@@ -909,14 +913,21 @@ void ModbusWorker::writeRegisters(int startAddress, QVector<double> values)
         emit errorOccurred("writeRegisters send failed");
         return;
     }
+    // 3. 建立區域 EventLoop 確保同步完成
+    QEventLoop loop;
 
-    connect(reply, &QModbusReply::finished, this, [this, reply]() {
-        if (reply->error() != QModbusDevice::NoError)
-        {
-            emit errorOccurred("writeRegisters reply: " + reply->errorString());
-        }
-        reply->deleteLater();
-        });
+    // 確保無論成功或被手動銷毀都能退出 loop
+    connect(reply, &QModbusReply::finished, &loop, &QEventLoop::quit);
+
+    // 啟動迴圈，執行緒會在此等待直到 Modbus Server 回應
+    loop.exec();
+
+    if (reply->error() != QModbusDevice::NoError)
+    {
+        emit errorOccurred("writeRegisters reply: " + reply->errorString());
+    }
+    reply->deleteLater();
+
 }
 
 void ModbusWorker::readRegisters(int startAddress, int count)
@@ -929,27 +940,36 @@ void ModbusWorker::readRegisters(int startAddress, int count)
     QModbusDataUnit unit(QModbusDataUnit::HoldingRegisters, startAddress, count);
 
     QModbusReply* reply = m_client->sendReadRequest(unit, 1);
+
     if (!reply) {
         emit errorOccurred("readRegisters send failed");
         return;
     }
+    // 2. 建立區域 EventLoop
+    QEventLoop loop;
 
-    connect(reply, &QModbusReply::finished, this, [this, reply]() {
-        if (reply->error() == QModbusDevice::NoError) {
+    // 3. 連接完成訊號到 EventLoop 的 quit 槽
+    // 無論成功或失敗，只要 reply 結束就跳出 loop
+    connect(reply, &QModbusReply::finished, &loop, &QEventLoop::quit);
 
-            QVector<quint16> values;
-            const QModbusDataUnit unit = reply->result();
-            for (uint i = 0; i < unit.valueCount(); i++)
-                values.append(unit.value(i));
+    // 4. 開始事件循環 (程式碼會在此阻塞，但 thread 不會當死，仍能處理其他事件)
+    loop.exec();
 
-            emit holdingRegisterReady(values);
+    if (reply->error() == QModbusDevice::NoError) {
 
-        }
-        else {
-            emit errorOccurred("readRegisters reply error: " + reply->errorString());
-        }
-        reply->deleteLater();
-        });
+        QVector<quint16> values;
+        const QModbusDataUnit unit = reply->result();
+        for (uint i = 0; i < unit.valueCount(); i++)
+            values.append(unit.value(i));
+
+        emit holdingRegisterReady(values);
+
+    }
+    else {
+        emit errorOccurred("readRegisters reply error: " + reply->errorString());
+    }
+    reply->deleteLater();
+
 }
 void ModbusWorker::writeSingleCoil(int address, bool value)
 {
@@ -974,21 +994,29 @@ void ModbusWorker::writeSingleCoil(int address, bool value)
         return;
     }
 
-    reply->setParent(this);
+    // 2. 建立區域 EventLoop
+    QEventLoop loop;
+
+    // 3. 連接完成訊號到 EventLoop 的 quit 槽
+    // 無論成功或失敗，只要 reply 結束就跳出 loop
+    connect(reply, &QModbusReply::finished, &loop, &QEventLoop::quit);
+
+    // 4. 開始事件循環 (程式碼會在此阻塞，但 thread 不會當死，仍能處理其他事件)
+    loop.exec();
 
     // 處理寫入結果
-    connect(reply, &QModbusReply::finished, this, [this, address, reply]() {
-        if (reply->error() == QModbusDevice::NoError) {
-            //qDebug() << "Worker" << m_workerId << "write single coil @ addr:" << address << "success";
-            emit writeDone(address, true, "OK");
-        }
-        else {
-            qDebug() << "Worker" << m_workerId << "write single coil error:" <<address << reply->errorString();
-            emit writeDone(address, false, reply->errorString());
-        }
-        reply->deleteLater();
-        });
+
+    if (reply->error() == QModbusDevice::NoError) {
+        //qDebug() << "Worker" << m_workerId << "write single coil @ addr:" << address << "success";
+        emit writeDone(address, true, "OK");
+    }
+    else {
+        qDebug() << "Worker" << m_workerId << "write single coil error:" << address << reply->errorString();
+        emit writeDone(address, false, reply->errorString());
+    }
+    reply->deleteLater();
 }
+
 
 void ModbusWorker::set_VfdAlarmReset(double value)
 {
