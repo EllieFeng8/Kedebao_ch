@@ -162,6 +162,7 @@ qt6_add_qml_module(Kedebao_chContent
         "assets/rectangle_4.png"
         "assets/rectangle_4@2x.png"
         "assets/rectangle_5.png"
+        "assets/Group 71.png"
         "assets/rectangle_5@2x.png"
         "assets/rectangle_6.png"
         "assets/rectangle_6@2x.png"
