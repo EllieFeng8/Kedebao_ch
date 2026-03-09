@@ -54,7 +54,6 @@ public:
         connect(this, &Core::finishSoftStartSignal, this, &Core::startRealSpeed);
         // 當 Timer 成功跑完 3 秒時觸發
         connect(m_tensionStableTimer, &QTimer::timeout, this, [=]() {
-            qDebug() << "Tension Stable , set speed = " << setspeed;
             m_isSoftStarting = false; // 結束緩啟動狀態
 
             emit finishSoftStartSignal();
@@ -63,16 +62,21 @@ public:
         m_tensionStableTimer2 = new QTimer(this);
         m_tensionStableTimer2->setSingleShot(true); // 只需要觸發一次
 
-        connect(this, &Core::waitforPVSignal, this, [this]()
+        connect(this, &Core::waitforPVSignal, this, [this]() //緩啟動 第二段張力穩定後 提速
             {
-                setMainSpeed(setspeed);
-                waitforPV = false;
+                if (!m_isWaitingForStop) {
+                    qDebug() << "Tension Stable , set speed = " << setspeed;
+                    setMainSpeed(setspeed);
+                    waitforPV = false;
+                }
             });
         // 當 Timer 成功跑完 3 秒時觸發
-        connect(m_tensionStableTimer2, &QTimer::timeout, this, [=]() {
-            qDebug() << "Tension Stable , set speed = " << setspeed;
-
-            emit waitforPVSignal();
+        connect(m_tensionStableTimer2, &QTimer::timeout, this, [=]() 
+            {
+                if (!m_isWaitingForStop)
+                {
+                    emit waitforPVSignal();
+                }
             });
 
         m_proxy = new KdbProxy(this);
@@ -305,11 +309,11 @@ public:
         QObject::connect(m_proxy, &KdbProxy::whiteLightChanged, m_manager, &ModbusManager::io106);
 
         QObject::connect(m_proxy, &KdbProxy::output12Changed, m_manager, &ModbusManager::io107);//107 紫光燈
-        //QObject::connect(m_proxy, &KdbProxy::uvLightChanged, m_manager, &ModbusManager::io107);
-        QObject::connect(m_proxy, &KdbProxy::uvLightChanged, this,[this]()
-            {
-                m_proxy->abnormalRaised("aaa");
-            });
+        QObject::connect(m_proxy, &KdbProxy::uvLightChanged, m_manager, &ModbusManager::io107);
+        //QObject::connect(m_proxy, &KdbProxy::uvLightChanged, this,[this]()
+        //    {
+        //        m_proxy->abnormalRaised("aaa");
+        //    });
 
 
         QObject::connect(m_proxy, &KdbProxy::output13Changed, m_manager, &ModbusManager::io108);//108 下方照明燈
@@ -457,8 +461,7 @@ public slots:
     void setTensionSV_2(double v);
     void setTensionSV_3(double v);
     void startRealSpeed() {
-        qDebug() <<"startRealSpeed() setSpeed" << setspeed;
-        //setMainSpeed(setspeed);    // 加速
+        qDebug() << "Tension Stable , set Real SV = " << Tension1_SV;
         setTensionSV_1(Tension1_SV);
         waitforPV = true;
     }

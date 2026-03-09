@@ -3675,9 +3675,9 @@ public:
     int m_largeWinderZeroSpeedDetectLight = 0;
 
     // =====INPUT-4 Tension Over =====
-    double m_unwindingTensionOver = 1.0;
-    double m_smallWinderTensionOver = 1.0;
-    double m_largeWinderTensionOver = 1.0;
+    double m_unwindingTensionOver = 0.0;
+    double m_smallWinderTensionOver = 0.0;
+    double m_largeWinderTensionOver = 0.0;
 
     int m_unwindingTensionOverLight = 0;
     int m_smallWinderTensionOverLight = 0;

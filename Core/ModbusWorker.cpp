@@ -37,14 +37,14 @@ void ModbusWorker::startWork()
     if (!m_pollTimer) {
 
         m_pollTimer = new QTimer(this);
-        m_pollTimer->setInterval(100);
+        m_pollTimer->setInterval(30);
         connect(m_pollTimer, &QTimer::timeout, this, &ModbusWorker::poll, Qt::DirectConnection);
         // DirectConnection 因為 timer 與 this 在同一 thread (保障)
     }
 
     if (!m_reconnectTimer) {
         m_reconnectTimer = new QTimer(this);
-        m_reconnectTimer->setInterval(2000);
+        m_reconnectTimer->setInterval(1000);
         m_reconnectTimer->setSingleShot(true);
         connect(m_reconnectTimer, &QTimer::timeout, this, &ModbusWorker::startWork, Qt::QueuedConnection);
     }
@@ -52,17 +52,17 @@ void ModbusWorker::startWork()
     // 設定連線參數
     m_client->setConnectionParameter(QModbusDevice::NetworkAddressParameter, m_ip);
     m_client->setConnectionParameter(QModbusDevice::NetworkPortParameter, m_port);
-    m_client->setTimeout(1000);
-    m_client->setNumberOfRetries(2);
+    m_client->setTimeout(100);
+    m_client->setNumberOfRetries(1);
     qDebug() << "connecting to" << m_ip << ":" << m_port;
     m_client2->setConnectionParameter(QModbusDevice::NetworkAddressParameter, "192.168.1.202");
     m_client2->setConnectionParameter(QModbusDevice::NetworkPortParameter, 502);
-    m_client2->setTimeout(1000);
-    m_client2->setNumberOfRetries(2);
+    m_client2->setTimeout(100);
+    m_client2->setNumberOfRetries(1);
     qDebug() << "connecting to" << "192.168.1.202" << ":" << "502";
 
     // 非同步嘗試連線；onStateChanged 會處理 Connected/Unconnected
-    m_client->connectDevice();
+    m_client->connectDevice(); 
     m_client2->connectDevice();
     emit isWorking();
 }

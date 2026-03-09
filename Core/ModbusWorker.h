@@ -81,14 +81,14 @@ public:
 
         //===OUTPUT3=====
          flag_IO96 = false;       //96
-         flag_IO97 = false;          //97
+         flag_IO97 = false;       //97
 
-         flag_IO98 = false;        //98
-         flag_IO99 = false;      //99
+         flag_IO98 = false;       //98
+         flag_IO99 = false;       //99
          flag_IO100 = false;      //100
 
-         flag_IO101 = false;              //101
-         flag_IO102 = false; //102
+         flag_IO101 = false;      //101
+         flag_IO102 = false;      //102
     }
     //Output flag 
     bool flag_vfdAlarmReset = false;               //64
@@ -138,18 +138,18 @@ public:
     bool flag_rightPressPlateForward = false;  //93
     bool flag_rightPressPlateBackward = false; //94
 
-    bool flag_IO95 = false;       //95
+    bool flag_IO95 = false;        //95
 
     //===OUTPUT3=====
-    bool flag_IO96 = false;       //96
-    bool flag_IO97 = false;          //97
+    bool flag_IO96 = false;        //96
+    bool flag_IO97 = false;        //97
 
     bool flag_IO98 = false;        //98
-    bool flag_IO99 = false;      //99
-    bool flag_IO100 = false;      //100
+    bool flag_IO99 = false;        //99
+    bool flag_IO100 = false;       //100
 
-    bool flag_IO101 = false;              //101
-    bool flag_IO102 = false; //102
+    bool flag_IO101 = false;       //101
+    bool flag_IO102 = false;       //102
     bool flag_IO103 = false;
     bool flag_IO104 = false;
     bool flag_IO105 = false;

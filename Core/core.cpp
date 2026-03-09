@@ -396,25 +396,23 @@ void Core::onlength(double v)
             //    });
             //PressIndex = 0;
             //PressIndex2 = 0;
-            QTimer::singleShot(1000, this,
-                [this]()
-                {
-                    writeRegisters(3);
-                });
+
 
             onLength = true;
         }
         m_isBrakingPerformed = false;
         return;
     } 
-    if (m_length > 0 && m_BrakingDistance > 0 && !m_isBrakingPerformed) {//剎車距離到 減速
+    if (m_length > 0 && m_BrakingDistance > 0 && !m_isBrakingPerformed && !m_isWaitingForStop) {//剎車距離到 減速 
         double remainingDistance = (double)m_length - v;
 
         if (remainingDistance <= m_BrakingDistance) {
             qDebug() << "Entering Braking Zone. Executing SLOW DOWN once.";
+            m_tensionStableTimer->stop();
+            m_tensionStableTimer2->stop();
 
             // 執行降速指令
-            if (setspeed > 10) {
+            if (speed > 10) {
                 setMainSpeed(10);
             }
             // 標記為已執行，防止下一次 onlength 又跑進來
@@ -591,6 +589,7 @@ void Core::TensionFailed(const QString& errorMsg)
 {
     //setSTOP();
     //m_isWaitingForStop = true;
+    m_proxy->abnormalRaised(errorMsg);
 }
 
 void Core::updateProxyProperty(int index, quint16 value)
@@ -886,10 +885,11 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         m_isBrakingPerformed = false;
         isStop = false;
         m_tensionStableTimer->stop();
-
+        m_tensionStableTimer2->stop();
+        m_isSoftStarting = true;
         if (state)
         {
-            m_isSoftStarting = true;
+            //m_isSoftStarting = true;0
             onLength = false;
             setMainSpeed(m_slowStartSpeed);
             setSV_1(slowSV);
@@ -901,7 +901,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         m_proxy->setIpcStop(val);
         if (state)
         {
-   
+            m_isSoftStarting = false;
             m_isWaitingForStop = true;
             m_tensionStableTimer->stop();
             m_tensionStableTimer2->stop();

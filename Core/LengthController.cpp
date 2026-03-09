@@ -66,7 +66,8 @@ void LengthController::onPollTimeout() {
                 });
         }
         else {
-            delete reply;
+
+            reply->deleteLater();
             m_pollTimer->start(30);
         }
     }
