@@ -617,35 +617,68 @@ Rectangle {
     }
     Item {
         id: group_43
-        x: 1763
+        x: 1783
         y: 47
         height: 100
         width: 100
-        Image {
-            id: flipImg
-            x: -4
-            source: "assets/rectangle_2.png"
-
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                shadowEnabled: flipImgMouseArea.containsMouse ? true : false
-                shadowColor: "#58000000"
-                shadowBlur: 0.8
-            }
-
-            MouseArea {
+        // Image {
+        //         id: flipImg
+        //         x: -4
+        //         scale:1.3
+        //         source: "assets/rectangle_2.png"
+            Text {
                 id: flipImgMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
+                color: "red"
+                font.pixelSize: 60
+                font.weight: Font.DemiBold
+                // anchors.verticalCenter: parent.verticalCenter//文字垂直置中
+                anchors.horizontalCenter: parent.horizontalCenter//文字水平置中
+                lineHeight: 22
+                lineHeightMode: Text.FixedHeight
+                text: AppState.isBig ? "大捲" : "小捲"
+                verticalAlignment: Text.AlignVCenter
             }
-        }
-        Image {
-            id: flip_1
-            x: 28
-            y: 28
-            source: "assets/flip_1.png"
-        }
+            Text {
+                //id: flipImgMouseArea
+                anchors.left: flipImgMouseArea.left
+                anchors.leftMargin:30
+                anchors.top: flipImgMouseArea.bottom
+                color: "#000000"
+                font.pixelSize: 32
+                font.weight: Font.DemiBold
+                // anchors.verticalCenter: parent.verticalCenter//文字垂直置中
+                anchors.horizontalCenter: parent.horizontalCenter//文字水平置中
+                lineHeight: 22
+                lineHeightMode: Text.FixedHeight
+                text: "模式"
+                verticalAlignment: Text.AlignVCenter
+            }
+        // }
+        // Image {
+        //     id: flipImg
+        //     x: -4
+        //     source: "assets/rectangle_2.png"
+        //
+        //     layer.enabled: true
+        //     layer.effect: MultiEffect {
+        //         shadowEnabled: flipImgMouseArea.containsMouse ? true : false
+        //         shadowColor: "#58000000"
+        //         shadowBlur: 0.8
+        //     }
+        //
+        //     MouseArea {
+        //         id: flipImgMouseArea
+        //         anchors.fill: parent
+        //         hoverEnabled: true
+        //         cursorShape: Qt.PointingHandCursor
+        //     }
+        // }
+        // Image {
+        //     id: flip_1
+        //     x: 28
+        //     y: 28
+        //     source: "assets/flip_1.png"
+        // }
     }
 
 
@@ -1122,8 +1155,12 @@ Rectangle {
 
                 Rectangle{
                     id:curLengthRec
-                    color:(Kdb.modifyCurrentLength - Kdb.currentLength) >Kdb.modifyBrakingDistance ? "#88ff0a" : "red"
-                    opacity: 0.08
+                    color:(Kdb.currentLength >= Kdb.modifyCurrentLength)
+                        ? "#ec222d"
+                        : ((Kdb.modifyCurrentLength - Kdb.currentLength) > Kdb.modifyBrakingDistance
+                            ? "#88ff0a"
+                            : "#fcc827")
+                    opacity: 0.5
                     width:parent.width
                     height:parent.height
                     anchors.centerIn: parent

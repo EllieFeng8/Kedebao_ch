@@ -65,23 +65,23 @@ ProjectMainScreenUI {
     //console.log("Kdb.bigRollCutter",Kdb.bigRollCutter)
     }
 
-    flipImgMouseArea.onClicked: {
-        isFlip = !isFlip
-        //console.log("isFlip:",isFlip)
-        //modelPic.source = clicked3 ? "assets/bigpic.png" : "assets/image 5.png"
-        bigRollTensionSetting.x =isFlip ? 1596 :  422
-        bigmodelPic.x = isFlip ? -1100 :  0
-        // bigRollTensionSetting.y =isFlip ? 580 :  651
-        unWindingTensionPosition.x =isFlip ? 370 :  1545
-        smallRollCutterRec1.x = isFlip ? -187 :  100
-
-        pressurePlate.x = isFlip ? 1260 :  370//小
-        pressureRollerUp.x =isFlip ? 1550 :  660//小
-
-
-
-
-    }
+    // flipImgMouseArea.onClicked: {
+    //     isFlip = !isFlip
+    //     //console.log("isFlip:",isFlip)
+    //     //modelPic.source = clicked3 ? "assets/bigpic.png" : "assets/image 5.png"
+    //     bigRollTensionSetting.x =isFlip ? 1596 :  422
+    //     bigmodelPic.x = isFlip ? -1100 :  0
+    //     // bigRollTensionSetting.y =isFlip ? 580 :  651
+    //     unWindingTensionPosition.x =isFlip ? 370 :  1545
+    //     smallRollCutterRec1.x = isFlip ? -187 :  100
+    //
+    //     pressurePlate.x = isFlip ? 1260 :  370//小
+    //     pressureRollerUp.x =isFlip ? 1550 :  660//小
+    //
+    //
+    //
+    //
+    // }
 
     ModeSwitch{
         id: modeScreen
