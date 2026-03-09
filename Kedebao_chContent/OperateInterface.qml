@@ -605,6 +605,64 @@ Rectangle {
             }
         }
 
+        //卷曲鬆緊調整
+        Text {
+            id:text_8
+            x: 700
+
+            anchors.top: text_1.top
+            //y: smallMotor.bottom
+            width: setWidth1
+            height: 24
+            text: qsTr("卷曲鬆緊調整")
+            font.pixelSize: fontSize
+            horizontalAlignment: Text.AlignRight
+
+            // TextInput {
+            //     id: output8_1
+            //     width: 100
+            //     font.pixelSize: inputTextSize
+            //     horizontalAlignment: Text.AlignHCenter
+            //     x: textInputLeft
+            //     y: 0
+            //     text:Number(Kdb.curlingAdjust).toFixed(2)//Kdb.wasteRollMotorA
+            //     validator: DoubleValidator {}//限制只能輸入整數/double
+            //     //placeholderText: "請輸入內容"
+            //     focus: true
+            //     inputMethodHints: Qt.ImhDigitsOnly
+            //     Rectangle {
+            //         height: 2
+            //         y:dashPos
+            //         width: output7_1.width
+            //         color: "#aaaaaa"
+            //     }
+            // }
+            Image {
+                //id: btnWasteAMotor
+                x: textInputLeft
+                y: -8
+                source: Kdb.curlingAdjust ?"assets/Group11.png" : "assets/Group 34.png"
+                scale:0.6
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: btnWasteAMouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: curlAdjustMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                            Kdb.curlingAdjust = !Kdb.curlingAdjust
+                            console.log("11 curlingAdjust changed~~~", Kdb.curlingAdjust);
+
+                    }
+                }
+            }
+        }
+
     }
 
 }

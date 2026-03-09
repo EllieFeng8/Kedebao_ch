@@ -492,6 +492,9 @@ class KdbProxy : public QObject
     Q_PROPERTY(double cutterWheelMotor READ getCutterWheelMotor WRITE setCutterWheelMotor NOTIFY cutterWheelMotorChanged)
     Q_PROPERTY(double wasteRollMotorA READ getWasteRollMotorA WRITE setWasteRollMotorA NOTIFY wasteRollMotorAChanged)
 
+    //卷曲鬆緊調整
+    Q_PROPERTY(bool curlingAdjust READ getCurlingAdjust WRITE setCurlingAdjust NOTIFY curlingAdjustChanged)
+
     Q_PROPERTY(double unwindingTension READ getUnwindingTension WRITE setUnwindingTension NOTIFY unwindingTensionChanged)
     Q_PROPERTY(double smallRollTension READ getSmallRollTension WRITE setSmallRollTension NOTIFY smallRollTensionChanged)
     Q_PROPERTY(double largeRollTension READ getLargeRollTension WRITE setLargeRollTension NOTIFY largeRollTensionChanged)
@@ -2810,6 +2813,14 @@ public:
         emit wasteRollMotorASwitchChanged(m_wasteRollMotorASwitch);
     }
 
+    Q_INVOKABLE bool getCurlingAdjust() const { return m_curlingAdjust; }
+    void setCurlingAdjust(bool value)
+    {
+        m_curlingAdjust = value;
+        emit curlingAdjustChanged(m_curlingAdjust);
+    }
+
+
     // =====控制介面 Tension Control =====
     Q_INVOKABLE double getUnwindingTension() const { return m_unwindingTension; }
     void setUnwindingTension(double value)
@@ -3352,6 +3363,9 @@ public:
     void cutterWheelMotorChanged(double value);
     void wasteRollMotorAChanged(double value);
 
+    //卷曲鬆緊調整
+    void curlingAdjustChanged(bool value);
+
     void unwindingTensionChanged(double value);
     void smallRollTensionChanged(double value);
     void largeRollTensionChanged(double value);
@@ -3411,13 +3425,13 @@ private:
     int m_whiteLight = 0;
     int m_bottomLight = 0;
 
-    double m_currentLength = 0;
+    double m_currentLength = 100;
     double m_speed = 0;
     double m_brakingDistance = 0;
 
     int m_modifycurrentLength = 0;
     int m_modifyspeed = 0;
-    double m_modifybrakingDistance = 82.01991111;
+    double m_modifybrakingDistance = 82;
 
     double m_modifyUnwindingTension = 0.0;
     double m_modifySmallWinderTensionOver = 0.0;
@@ -3432,19 +3446,19 @@ private:
     int m_bigRollCutter = 0;
 
     //=====INPUT-1 READ functions =====
-    double m_unwinderVfdFreqAlarm = 0.0;
-    double m_mainDriveVfdFreqAlarm = 0.0;
-    double m_smallWinderVfdFreqAlarm = 0.0;
-    double m_largeWinderVfdFreqAlarm = 0.0;
-    double m_smallCutterVfdFreqAlarm = 0.0;
-    double m_selvedgeFanVfdFreqAlarm = 0.0;
+    double m_unwinderVfdFreqAlarm = 1.0;
+    double m_mainDriveVfdFreqAlarm = 1.0;
+    double m_smallWinderVfdFreqAlarm = 1.0;
+    double m_largeWinderVfdFreqAlarm = 1.0;
+    double m_smallCutterVfdFreqAlarm = 1.0;
+    double m_selvedgeFanVfdFreqAlarm = 1.0;
 
-    double m_leftFanOverloadAlarm = 0.0;
-    double m_rightFanOverloadAlarm = 0.0;
+    double m_leftFanOverloadAlarm = 1.0;
+    double m_rightFanOverloadAlarm = 1.0;
 
-    double m_largeCutterVfdFreqAlarm = 0.0;
-    double m_leftSelvedgeWinderVfdAlarm = 0.0;
-    double m_rightSelvedgeWinderVfdAlarm = 0.0;
+    double m_largeCutterVfdFreqAlarm = 1.0;
+    double m_leftSelvedgeWinderVfdAlarm = 1.0;
+    double m_rightSelvedgeWinderVfdAlarm = 1.0;
 
     double m_webAlignerVfdFreqAlarm = 0.0;
 
@@ -3453,26 +3467,26 @@ private:
     double m_smallWinderPowerLoss = 0.0;
     double m_largeWinderPowerLoss = 0.0;
     //input1 Light
-    int m_unwinderVfdFreqAlarmLight = 0;
-    int m_mainDriveVfdFreqAlarmLight = 0;
+    int m_unwinderVfdFreqAlarmLight = 1;
+    int m_mainDriveVfdFreqAlarmLight = 1;
     int m_smallWinderVfdFreqAlarmLight = 0;
-    int m_largeWinderVfdFreqAlarmLight = 0;
-    int m_smallCutterVfdFreqAlarmLight = 0;
-    int m_selvedgeFanVfdFreqAlarmLight = 0;
+    int m_largeWinderVfdFreqAlarmLight = 1;
+    int m_smallCutterVfdFreqAlarmLight = 1;
+    int m_selvedgeFanVfdFreqAlarmLight = 1;
 
-    int m_leftFanOverloadAlarmLight = 0;
-    int m_rightFanOverloadAlarmLight = 0;
+    int m_leftFanOverloadAlarmLight = 1;
+    int m_rightFanOverloadAlarmLight = 1;
 
-    int m_largeCutterVfdFreqAlarmLight = 0;
-    int m_leftSelvedgeWinderVfdAlarmLight = 0;
-    int m_rightSelvedgeWinderVfdAlarmLight = 0;
+    int m_largeCutterVfdFreqAlarmLight = 1;
+    int m_leftSelvedgeWinderVfdAlarmLight = 1;
+    int m_rightSelvedgeWinderVfdAlarmLight = 1;
 
-    int m_webAlignerVfdFreqAlarmLight = 0;
+    int m_webAlignerVfdFreqAlarmLight = 1;
 
-    int m_unwinderPowerLossLight = 0;
-    int m_mainDrivePowerLossLight = 0;
-    int m_smallWinderPowerLossLight = 0;
-    int m_largeWinderPowerLossLight = 0;
+    int m_unwinderPowerLossLight = 1;
+    int m_mainDrivePowerLossLight = 1;
+    int m_smallWinderPowerLossLight = 1;
+    int m_largeWinderPowerLossLight = 1;
     // ===== INPUT-2 Power Loss =====
     double m_smallCutterPowerLoss = 0.0;
     double m_selvedgeFanPowerLoss = 0.0;
@@ -3493,23 +3507,23 @@ private:
     double m_rightSelvedgeWinderDisconnect = 0.0;
 
     // ===== INPUT-2 Power Loss Light=====
-    int m_smallCutterPowerLossLight = 0;
-    int m_selvedgeFanPowerLossLight = 0;
-    int m_largeCutterPowerLossLight = 0;
-    int m_leftSelvedgeWinderPowerLossLight = 0;
-    int m_rightSelvedgeWinderPowerLossLight = 0;
-    int m_webAlignerPowerLossLight = 0;
+    int m_smallCutterPowerLossLight = 1;
+    int m_selvedgeFanPowerLossLight = 1;
+    int m_largeCutterPowerLossLight = 1;
+    int m_leftSelvedgeWinderPowerLossLight = 1;
+    int m_rightSelvedgeWinderPowerLossLight = 1;
+    int m_webAlignerPowerLossLight = 1;
 
-    int m_unwinderDisconnectLight = 0;
-    int m_mainDriveDisconnectLight = 0;
-    int m_smallWinderDisconnectLight = 0;
-    int m_largeWinderDisconnectLight = 0;
-    int m_smallCutterDisconnectLight = 0;
-    int m_leftFanDisconnectLight = 0;
-    int m_rightFanDisconnectLight = 0;
-    int m_largeCutterDisconnectLight = 0;
-    int m_leftSelvedgeWinderDisconnectLight = 0;
-    int m_rightSelvedgeWinderDisconnectLight = 0;
+    int m_unwinderDisconnectLight = 1;
+    int m_mainDriveDisconnectLight = 1;
+    int m_smallWinderDisconnectLight = 1;
+    int m_largeWinderDisconnectLight = 1;
+    int m_smallCutterDisconnectLight = 1;
+    int m_leftFanDisconnectLight = 1;
+    int m_rightFanDisconnectLight = 1;
+    int m_largeCutterDisconnectLight = 1;
+    int m_leftSelvedgeWinderDisconnectLight = 1;
+    int m_rightSelvedgeWinderDisconnectLight = 1;
 
     // ===== INPUT-3 =====
     double m_webAlignerDisconnect = 0.0;
@@ -3557,41 +3571,41 @@ private:
     double m_largeWinderFenceDetect3 = 0.0;
     double m_largeWinderFenceDetect4 = 0.0;
 
-    int m_unwindingFenceDetect1Light = 0;
-    int m_unwindingFenceDetect2Light = 0;
-    int m_largeWinderFenceDetect3Light = 0;
-    int m_largeWinderFenceDetect4Light = 0;
+    int m_unwindingFenceDetect1Light = 1;
+    int m_unwindingFenceDetect2Light = 1;
+    int m_largeWinderFenceDetect3Light = 1;
+    int m_largeWinderFenceDetect4Light = 1;
     // =====INPUT-4 Safety Light Curtain =====
-    int m_unwindingSafetyLightCurtainAlarm = 0;
-    int m_inspectionSafetyLightCurtainAlarm =0;
-    int m_largeWinderSafetyLightCurtainAlarm = 0;
+    int m_unwindingSafetyLightCurtainAlarm = 1;
+    int m_inspectionSafetyLightCurtainAlarm =1;
+    int m_largeWinderSafetyLightCurtainAlarm = 1;
 
-    int m_unwindingSafetyLightCurtainAlarmLight = 0;
-    int m_inspectionSafetyLightCurtainAlarmLight = 0;
-    int m_largeWinderSafetyLightCurtainAlarmLight = 0;
+    int m_unwindingSafetyLightCurtainAlarmLight = 1;
+    int m_inspectionSafetyLightCurtainAlarmLight = 1;
+    int m_largeWinderSafetyLightCurtainAlarmLight = 1;
 
     // =====INPUT-4 Zero Speed Detect =====
     double m_smallWinderZeroSpeedDetect = 0.0;
     double m_largeWinderZeroSpeedDetect = 0.0;
 
-    int m_smallWinderZeroSpeedDetectLight = 0;
-    int m_largeWinderZeroSpeedDetectLight = 0;
+    int m_smallWinderZeroSpeedDetectLight = 1;
+    int m_largeWinderZeroSpeedDetectLight = 1;
 
     // =====INPUT-4 Tension Over =====
     double m_unwindingTensionOver = 0.0;
     double m_smallWinderTensionOver = 0.0;
     double m_largeWinderTensionOver = 0.0;
 
-    int m_unwindingTensionOverLight = 0;
-    int m_smallWinderTensionOverLight = 0;
-    int m_largeWinderTensionOverLight = 0;
+    int m_unwindingTensionOverLight = 1;
+    int m_smallWinderTensionOverLight = 1;
+    int m_largeWinderTensionOverLight = 1;
 
     // =====INPUT-4 Angle Alarm =====
     double m_leftSelvedgeWinderAngleAlarm = 0.0;
     double m_rightSelvedgeWinderAngleAlarm = 0.0;
 
-    int m_leftSelvedgeWinderAngleAlarmLight = 0;
-    int m_rightSelvedgeWinderAngleAlarmLight = 0;
+    int m_leftSelvedgeWinderAngleAlarmLight = 1;
+    int m_rightSelvedgeWinderAngleAlarmLight = 1;
     // =====OUTPUT-1 Angle Alarm =====
     double m_vfdAlarmReset = 0.0;
 
@@ -3819,6 +3833,9 @@ private:
     double m_edgeAlignMotor = 0.0;
     double m_cutterWheelMotor = 0.0;
     double m_wasteRollMotorA = 0.0;
+
+    //卷曲鬆緊調整
+    bool m_curlingAdjust = 0;
 
     double m_unwindingTension = 0.0;
     double m_smallRollTension = 0.0;
