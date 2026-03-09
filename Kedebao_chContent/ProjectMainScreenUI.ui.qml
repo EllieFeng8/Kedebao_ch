@@ -14,6 +14,7 @@ Rectangle {
         GradientStop { position: 0.0; color: "#F0F1F3" }
         GradientStop { position: 1.0; color: "#EBEBEB" }
     }
+    property alias diaRestMouseArea : diaRestMouseArea
     property alias curLengthRec : curLengthRec
     property alias smallR: smallR
     property alias unWindingTensionPosition: unWindingTensionPosition
@@ -680,12 +681,55 @@ Rectangle {
         //     source: "assets/flip_1.png"
         // }
     }
+    //卷徑復歸
+    Item {
+        id: diameterReset
+        x: 1574
+        y: 190
+        height: 111
+        width: 333
 
+        Image {
+            //id: rectangle_5
+            x: -4
+            scale:diaRestMouseArea.containsMouse ? 1.1 :1
+            source: "assets/Group 71.png"
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: diaRestMouseArea.containsMouse ? true : false
+                shadowColor: "lightgray"
+                shadowBlur: 0.8
+            }
+        }
+        Text {
+            //id: element_6
+            anchors.left: diameterReset.left
+            anchors.leftMargin: 10
+            y: 32
+            height: 48
+            width: 96
+            color: "#000000"
+            font.pixelSize: diaRestMouseArea.containsMouse ? 35 : 32
+            font.weight: Font.DemiBold
+            horizontalAlignment: Text.AlignLeft
+            lineHeight: 22
+            lineHeightMode: Text.FixedHeight
+            text: "卷徑復歸"
+            verticalAlignment: Text.AlignVCenter
+        }
+        MouseArea {
+            id: diaRestMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
 
+        }
+    }
 
+    //白光燈
     Item {
         id: group_33
-        x: 1034
+        x: 834
         y: 190
         height: 111
         width: 333
@@ -743,9 +787,10 @@ Rectangle {
             }
         }
     }
+    //下方照明燈
     Item {
         id: group_50
-        x: 1404
+        x: 1204
         y: 190
         height: 111
         width: 333
@@ -805,9 +850,10 @@ Rectangle {
             }
         }
     }
+    //紫光燈
     Item {
         id: group_5
-        x: 664
+        x: 464
         y: 190
         height: 111
         width: 333

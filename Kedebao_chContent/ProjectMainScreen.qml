@@ -8,7 +8,7 @@ ProjectMainScreenUI {
     resetMouseArea.onClicked: {
         //console.log("resetMouseAreaonClicked")
         Kdb.modifyCurrentLength = 0
-        Kdb.currentLength = 0
+        // Kdb.currentLength = 0
         // speedSet.text = "0"
         // brakeDistance.text = "0"
         // unwindingTension.text = "0"
@@ -23,27 +23,54 @@ ProjectMainScreenUI {
         Kdb.modifyCurrentLength = lengthSet.text
         // calcLength(Kdb.modifyCurrentLength);
         lengthSet.focus= false
-
-
     }
+    lengthSet.onEditingFinished:{
+        Kdb.modifyCurrentLength = lengthSet.text
+        // unwindingTension.focus = false
+        console.log("Kdb.modifyCurrentLength:",Kdb.modifyCurrentLength)
+    }
+
 //focus? "#eebcc6" : "#565656"f45f91
     speedSettingmouseArea.onClicked:{
         Kdb.modifySpeed = speedSet.text
         speedSet.focus= false
     }
+    speedSet.onEditingFinished:{
+        Kdb.modifySpeed = speedSet.text
+        // unwindingTension.focus = false
+        console.log("Kdb.modifySpeed:",Kdb.modifySpeed)
+    }
+
     smallCoilTensionMouseArea.onClicked:{
         Kdb.modifySmallWinderTensionOver = smallCoilTension.text
         smallCoilTension.focus = false
     }
+    smallCoilTension.onEditingFinished:{
+        Kdb.modifySmallWinderTensionOver = smallCoilTension.text
+        // unwindingTension.focus = false
+        console.log("Kdb.modifySmallWinderTensionOver:",Kdb.modifySmallWinderTensionOver)
+    }
+
     unwindingTensionMouseArea.onClicked:{
         Kdb.modifyUnwindingTension = unwindingTension.text
         unwindingTension.focus = false
 
     }
+    unwindingTension.onEditingFinished:{
+        Kdb.modifyUnwindingTension = unwindingTension.text
+        // unwindingTension.focus = false
+        console.log("Kdb.modifyUnwindingTension:",Kdb.modifyUnwindingTension)
+    }
     bigCoilTensionMouseArea.onClicked:{
         Kdb.modifyLargeWinderTensionOver = bigCoilTension.text
         bigCoilTension.focus = false
     }
+    bigCoilTension.onEditingFinished:{
+        Kdb.modifyLargeWinderTensionOver = bigCoilTension.text
+        // unwindingTension.focus = false
+        console.log("Kdb.modifyLargeWinderTensionOver:",Kdb.modifyLargeWinderTensionOver)
+    }
+
     settingMouseArea.onClicked: {
         modeScreen.visible = true
     }
@@ -82,7 +109,10 @@ ProjectMainScreenUI {
     //
     //
     // }
-
+    diaRestMouseArea.onClicked: {
+        Kdb.unwindingDiameterResetSwitch = !Kdb.unwindingDiameterResetSwitch
+        console.log("Kdb.unwindingDiameterResetSwitch",Kdb.unwindingDiameterResetSwitch)
+    }
     ModeSwitch{
         id: modeScreen
         visible: false
