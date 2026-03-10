@@ -423,6 +423,8 @@ class KdbProxy : public QObject
 
     //張力穩定時間
     Q_PROPERTY(double tensionTime READ getTensionTime WRITE setTensionTime NOTIFY tensionTimeChanged)
+    //第二段張力穩定時間
+    Q_PROPERTY(double secTensionTime READ getSecTensionTime WRITE setSecTensionTime NOTIFY secTensionTimeChanged)
 
     // ===== ANALOG OUTPUT Switch=====
     Q_PROPERTY(int analogOutUnwinderMainDriveSwitch READ getAnalogOutUnwinderMainDriveSwitch WRITE setAnalogOutUnwinderMainDriveSwitch NOTIFY analogOutUnwinderMainDriveSwitchChanged)
@@ -2626,6 +2628,14 @@ public:
         emit tensionTimeChanged(m_tensionTime);
         qDebug()<<"get tensionTimeChanged"<<m_tensionTime;
     }
+    //第二段張力穩定時間
+    Q_INVOKABLE double getSecTensionTime() const { return m_secTensionTime;}
+    void setSecTensionTime(double value)
+    {
+        m_secTensionTime = value;
+        emit secTensionTimeChanged(m_secTensionTime);
+        qDebug()<<"get secTensionTimeChanged"<<m_secTensionTime;
+    }
 
     //switch
     Q_INVOKABLE int getModifyAnalogOutSelvedgeWinderSwitch() const { return m_modifyAnalogOutSelvedgeWinderSwitch;}
@@ -3301,6 +3311,8 @@ public:
     void softStartSpeedChanged(double value);
     //張力穩定時間
     void tensionTimeChanged(double value);
+    //第二段張力穩定時間
+    void secTensionTimeChanged(double value);
     //===== ANALOG OUTPUT switch=====
     void analogOutUnwinderMainDriveSwitchChanged(int value);
     void analogOutWinderSwitchChanged(int value);
@@ -3769,6 +3781,8 @@ private:
     double m_softStartSpeed = 1.1;
     //張力穩定時間
     double m_tensionTime = 2.1;
+    //第二段張力穩定時間
+    double m_secTensionTime = 3.1;
     // ===== ANALOG OUTPUT switch=====
     int m_analogOutUnwinderMainDriveSwitch = 0;
     int m_analogOutWinderSwitch = 0;
