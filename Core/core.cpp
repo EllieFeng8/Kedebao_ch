@@ -217,7 +217,7 @@ void Core::on485Data(int id, double PV, double tqo)
                 // 如果數值達標，且計時器還沒開始跑，則啟動計時
                 if (!m_tensionStableTimer2->isActive()) {
                     qDebug() << "start  stable timer2";
-                    m_tensionStableTimer2->start(stableTime);
+                    m_tensionStableTimer2->start(stableTime2);
                 }
             }
             else {
@@ -403,7 +403,7 @@ void Core::onlength(double v)
         m_isBrakingPerformed = false;
         return;
     } 
-    if (m_length > 0 && m_BrakingDistance > 0 && !m_isBrakingPerformed && !m_isWaitingForStop) {//剎車距離到 減速 
+    if (m_length > 0 && !m_isBrakingPerformed && !m_isWaitingForStop) {//剎車距離到 減速 
         double remainingDistance = (double)m_length - v;
 
         if (remainingDistance <= m_BrakingDistance) {
@@ -417,7 +417,10 @@ void Core::onlength(double v)
             }
             // 標記為已執行，防止下一次 onlength 又跑進來
             m_isBrakingPerformed = true;
+            
         }
+        m_proxy->setModifyBrakingDistance(speed * 0.0765);
+
     }
 }
 
@@ -494,8 +497,6 @@ void Core::setBrakingDistance(double BrakingDistance)
 void Core::setMainFreqs(double v)
 { 
     setspeed = v;
-
-    m_proxy->setModifyBrakingDistance(setspeed * 0.0775);
     double Hz = v * (60.0 / 130.0); 
     qDebug() << "change";
     {
@@ -889,7 +890,6 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         m_isSoftStarting = true;
         if (state)
         {
-            //m_isSoftStarting = true;0
             onLength = false;
             setMainSpeed(m_slowStartSpeed);
             setSV_1(slowSV);
@@ -902,6 +902,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         if (state)
         {
             m_isSoftStarting = false;
+            waitforPV = false;
             m_isWaitingForStop = true;
             m_tensionStableTimer->stop();
             m_tensionStableTimer2->stop();

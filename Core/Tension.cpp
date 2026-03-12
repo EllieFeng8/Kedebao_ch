@@ -226,7 +226,7 @@ void Modbus485::onPollTimeout() {
     //if (m_slaveIds.isEmpty()) return;
     int id = m_slaveIds[m_currentIndex];
     if (id == 1) {
-        QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 752, 6);
+        QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 758, 1);
 
         auto* reply = m_modbus->sendReadRequest(readUnit, 1);
         if (reply) {
@@ -235,7 +235,7 @@ void Modbus485::onPollTimeout() {
                     const QModbusDataUnit res = reply->result();
                     if (id <= 3) {
                         double tqo = res.value(0) / 40.95;
-                        double pv = res.value(4) / 10.0;
+                        double pv = res.value(0) / 10.0;
                         emit dataUpdated(id, pv, tqo);
                     }
                 }
@@ -257,7 +257,7 @@ void Modbus485::onPollTimeout() {
     }
     else if(id ==2)
     {
-        QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 752, 6);
+        QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 758, 1);
         //QThread::msleep(200);
         //qDebug() << "ID 2 task Read";
         auto* reply = m_modbus2->sendReadRequest(readUnit, 2);
@@ -267,7 +267,7 @@ void Modbus485::onPollTimeout() {
                     const QModbusDataUnit res = reply->result();
                     if (id <= 3) {
                         double tqo = res.value(0) / 40.95;
-                        double pv = res.value(4) / 10.0;
+                        double pv = res.value(0) / 10.0;
                         emit dataUpdated(id, pv, tqo);
                         qDebug() << "COM1 PV = "<<pv;
                     }

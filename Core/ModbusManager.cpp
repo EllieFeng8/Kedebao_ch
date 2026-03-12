@@ -580,6 +580,11 @@ void ModbusManager::PressRollDown(double v)
         {
             writeSingleCoil(90, false);
         });
+    QTimer::singleShot(2800, this,
+        [this]()
+        {
+            writeSingleCoil(90, true);
+        });
 }
 void ModbusManager::PressPlate(double value)
 {

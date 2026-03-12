@@ -422,6 +422,7 @@ class KdbProxy : public QObject
     //緩啟動速度
     Q_PROPERTY(double softStartSpeed READ getSoftStartSpeed WRITE setSoftStartSpeed NOTIFY softStartSpeedChanged)
     Q_PROPERTY(double tensionTime READ getTensionTime WRITE setTensionTime NOTIFY tensionTimeChanged)
+    Q_PROPERTY(double secTensionTime READ getSecTensionTime WRITE setSecTensionTime NOTIFY secTensionTimeChanged)
     // ===== IPC INPUT =====
     Q_PROPERTY(double ipcStart READ getIpcStart NOTIFY ipcStartChanged)
     Q_PROPERTY(double ipcStop READ getIpcStop NOTIFY ipcStopChanged)
@@ -2621,6 +2622,14 @@ public:
         emit tensionTimeChanged(m_tensionTime);
         qDebug() << "get tensionTimeChanged" << m_tensionTime;
     }
+    //第二段張力穩定時間
+    Q_INVOKABLE double getSecTensionTime() const { return m_secTensionTime; }
+    void setSecTensionTime(double value)
+    {
+        m_secTensionTime = value;
+        emit secTensionTimeChanged(m_secTensionTime);
+        qDebug() << "get secTensionTimeChanged" << m_secTensionTime;
+    }
     Q_INVOKABLE double getModifyAnalogOutSelvedgeWinder() const { return m_modifyAnalogOutSelvedgeWinder;}
     void setModifyAnalogOutSelvedgeWinder(double value)
     {
@@ -3383,6 +3392,7 @@ public:
     //緩啟動速度
     void softStartSpeedChanged(double value);
     void tensionTimeChanged(double value);
+    void secTensionTimeChanged(double value);
     //%
     void analogOutUnwinderMainDrivePcChanged(double value);
     void analogOutWinderPcChanged(double value);
@@ -3925,7 +3935,7 @@ public:
     //緩啟動速度
     double m_softStartSpeed = 1.1;
     double m_tensionTime = 2.1;
-
+    double m_secTensionTime = 0.6;
 };
 
 

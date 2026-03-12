@@ -610,6 +610,11 @@ void ModbusWorker::poll()
         if (f_unwindingDiameterReset)
         {
             writeSingleCoil(82, _unwindingDiameterReset);
+            QTimer::singleShot(500, this,
+                [this]()
+                {
+                    writeSingleCoil(82, false);
+                });
         }
         if (f_smallWinderTensionAuto)
         {

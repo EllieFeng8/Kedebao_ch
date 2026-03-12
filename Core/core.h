@@ -266,7 +266,7 @@ public:
         QObject::connect(m_proxy, &KdbProxy::rightSelvedgeWinderReverseChanged, m_manager, &ModbusManager::RightSelvedgeWinderReverse);//79
         QObject::connect(m_proxy, &KdbProxy::webAlignerStartChanged, m_manager, &ModbusManager::WebAlignerStart);//80
         QObject::connect(m_proxy, &KdbProxy::unwindingTensionAutoChanged, m_manager, &ModbusManager::UnwindingTensionAuto);//81
-        QObject::connect(m_proxy, &KdbProxy::unwindingDiameterResetChanged, m_manager, &ModbusManager::UnwindingDiameterRe);//82
+        QObject::connect(m_proxy, &KdbProxy::unwindingDiameterResetSwitchChanged, m_manager, &ModbusManager::UnwindingDiameterRe);//82
         QObject::connect(m_proxy, &KdbProxy::smallWinderTensionAutoChanged, m_manager, &ModbusManager::SmallWinderTensionAuto);//83
         QObject::connect(m_proxy, &KdbProxy::smallWinderDiameterResetChanged, m_manager, &ModbusManager::SmallWinderDiameterRe);//84
         QObject::connect(m_proxy, &KdbProxy::largeWinderTensionAutoChanged, m_manager, &ModbusManager::LargeWinderTensionAuto);//85
@@ -403,7 +403,13 @@ public:
 
             }
         );
+        QObject::connect(m_proxy, &KdbProxy::secTensionTimeChanged, this, [this](int value)
+            {
+                stableTime2 = value;
+                qDebug() << "stableTime2 =" << value;
 
+            }
+        );
         QObject::connect(m_proxy, &KdbProxy::smallRollMotorChanged, this, [this]()
             {
                 qDebug() << "JOG SmallWinder";
@@ -463,6 +469,7 @@ public slots:
     void startRealSpeed() {
         qDebug() << "Tension Stable , set Real SV = " << Tension1_SV;
         setTensionSV_1(Tension1_SV);
+        setMainSpeed(9.00);
         waitforPV = true;
     }
     void ontest() 
@@ -595,6 +602,8 @@ private:
     double Tension2_SV = 0.0;
     double Tension3_SV = 0.0;
     int stableTime = 800;
+    int stableTime2 = 300;
+
     double Unwinding_Threshold = 0.0;
     //緩啟動>>
     bool m_isSoftStarting = false;         // 是否正在進行緩啟動
@@ -633,6 +642,7 @@ private:
         m_tensionTolerance = settings.value("Production/softstart_threshold", 0.0).toDouble();
         Unwinding_Threshold = settings.value("Production/Unwinder_threshold", 0.0).toDouble();
         stableTime = settings.value("Production/stable_Time", 0).toInt();
+        stableTime2 = settings.value("Production/stable_Time2", 0).toInt();
 
         // 同步更新到 Proxy (UI 層)，確保介面顯示正確
         if (m_proxy) {
@@ -646,7 +656,8 @@ private:
             m_proxy->setSoftStartSpeed(m_slowStartSpeed);
             m_proxy->setModifyUnwindingLimitThreshold(Unwinding_Threshold);
             m_proxy->setTensionTime(stableTime);
-            
+            m_proxy->setSecTensionTime(stableTime2);
+
             
             m_proxy->setWhiteLight(1);
             m_proxy->setBigRollMode(0);
@@ -664,6 +675,7 @@ private:
         settings.setValue("Production/Tension2_SV", Tension2_SV);
         settings.setValue("Production/Tension3_SV", Tension3_SV);
         settings.setValue("Production/stable_Time", stableTime);
+        settings.setValue("Production/stable_Time2", stableTime2);
         settings.setValue("Production/softstart_speed", m_slowStartSpeed);
         settings.setValue("Production/softstart_threshold", m_tensionTolerance);
         settings.setValue("Production/Unwinder_threshold", Unwinding_Threshold);
