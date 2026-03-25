@@ -17,6 +17,7 @@ qt6_add_qml_module(Kedebao_chContent
         "IndicatorUI.qml"
         "ModeSwitch.qml"
         "ModeSwitchUI.ui.qml"
+        "ErrorLog.qml"
         "OperateInterface.qml"
         "ParameterSetting.qml"
         "ParameterSetting2.qml"

@@ -18,6 +18,7 @@ Rectangle {
     property alias smallRollText: smallRollText
     property alias basicSwitchbig: basicSwitchbig
     property alias basicSwitchbigMouseArea: basicSwitchbigMouseArea
+    property alias errorLogMouseArea:errorLogMouseArea
 
     property alias backMouseArea: backMouseArea
     MouseArea {
@@ -157,6 +158,51 @@ Rectangle {
             }
         }
     }
+    //異常紀錄
+    Rectangle {
+        width: 321
+        height: 140
+        //anchors.horizontalCenter: parent.horizontalCenter
+        y: 30
+        x:1503
+        radius: 40
+        //border.color:"#b7c6c6c6"
+        gradient: Gradient {
+            //orientation: Gradient.Horizontal
+            GradientStop {
+                position: 0.0
+                color: "#FEFBFC"
+            }
+            GradientStop {
+                position: 0.5
+                color: "#eaeaea"
+            }
+        }
+
+        Text {
+            id: errorLog
+            font.weight: Font.Bold
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            font.pointSize: errorLogMouseArea.containsMouse ? 35 : 30
+            text: "異常紀錄"
+            color:"#16121c"
+        }
+
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            shadowEnabled:  true
+            shadowColor: errorLogMouseArea.containsMouse ?"#58000000" : "#c4c4c6"
+            shadowBlur: 0.8
+        }
+        MouseArea {
+            id: errorLogMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+        }
+    }
+
     //參數
     Rectangle {
         width: 842

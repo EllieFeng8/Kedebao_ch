@@ -526,9 +526,11 @@ class KdbProxy : public QObject
     // ===== Single Action Mode=====
     Q_PROPERTY(int singleActionMode READ getSingleActionMode WRITE setSingleActionMode NOTIFY singleActionModeChanged)
 
-
+    //=======ERROR LOG========
+    Q_PROPERTY(QString errorLog READ getErrorLog WRITE setErrorLog NOTIFY errorLogChanged)
 public:
-    explicit KdbProxy(QObject* parent = nullptr) : QObject(parent) {}
+    explicit KdbProxy(QObject* parent = nullptr) : QObject(parent) {
+    }
     //默認大捲模式(m_bigRollMode = 1大捲模式,0小捲模式)
     Q_INVOKABLE int getBigRollMode() const { return m_bigRollMode; }
     void setBigRollMode(int value) { m_bigRollMode = value; emit bigRollModeChanged(m_bigRollMode);}
@@ -2939,6 +2941,14 @@ public:
         emit abnormalRaised(msg);
     }
 
+    // ===== ERROR LOG =====
+    Q_INVOKABLE QString getErrorLog() const { return m_errorLog; }
+    void setErrorLog(const QString value)
+    {
+        m_errorLog = value;
+        emit errorLogChanged(m_errorLog);
+    }
+
     signals:
 
     //異常提醒
@@ -3413,6 +3423,9 @@ public:
     // ===== Single Action Mode=====
     void singleActionModeChanged(int value);
 
+    // ===== ERROR LOG =====
+    void errorLogChanged(QString value);
+
 private:
     int m_bigRollMode = 0;//默認大捲模式(1大捲模式,0小捲模式)
     int m_restBtn = 0;//主畫面長度reset btn
@@ -3879,7 +3892,8 @@ private:
     // ===== Single Action Mode=====
     int m_singleActionMode = 0;
 
-    QString m_msg = "test";
+    // QString m_msg = "test";
+    QString m_errorLog = "test111111111\n 11111111111111111111111111111111111111";
 };
 
 

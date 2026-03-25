@@ -26,6 +26,9 @@ ModeSwitchUI {
         operateScreen.visible = true
     }
 
+    errorLogMouseArea.onClicked: {
+        errorLog.visible = true
+    }
 
     ParameterSetting{
         id: parameterSetting
@@ -58,6 +61,13 @@ ModeSwitchUI {
 
     OperateInterface{
         id: operateScreen
+        visible: false
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+    }
+
+    ErrorLog {
+        id:errorLog
         visible: false
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
