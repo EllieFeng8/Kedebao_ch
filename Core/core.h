@@ -68,6 +68,7 @@ public:
                     qDebug() << "Tension Stable , set speed = " << setspeed;
                     setMainSpeed(setspeed);
                     waitforPV = false;
+                    Unwinding_Reset = false;
                 }
             });
         // 當 Timer 成功跑完 3 秒時觸發
@@ -179,16 +180,11 @@ public:
         connect(m_manager, &ModbusManager::isWorking, this, [this]() {
             loadProductionSettings();
             });
-
+        connect(m_manager, &ModbusManager::ErrMsg, this, [this](QString msg) {
+            //m_proxy->raiseAbnormal(msg);
+            });
 
         DataValues.resize(112);
-//目前開啟程式預設開啟Auto 所以預設Auto的幾個位置=1
-        //DataValues[81] = 1;
-        //DataValues[83] = 1;
-        //DataValues[85] = 1;
-        //DataValues[87] = 1;
-        //DataValues[88] = 1;
-        //
         DataValues2.resize(16);
 
 
@@ -239,7 +235,7 @@ public:
     void coreConnect()
     {
         //main Screen
-        QObject::connect(m_proxy, &KdbProxy::bigRollModeChanged, this,&Core::modeSelect);
+        QObject::connect(m_proxy, &KdbProxy::bigRollModeChanged, this,&Core::UImodeSelect);
         QObject::connect(m_proxy, &KdbProxy::restBtnChanged,m_Length,&LengthController::lengthReset );
 
         QObject::connect(m_proxy, &KdbProxy::pressureRollerChanged, m_manager, &ModbusManager::PressRoll);
@@ -267,6 +263,14 @@ public:
         QObject::connect(m_proxy, &KdbProxy::webAlignerStartChanged, m_manager, &ModbusManager::WebAlignerStart);//80
         QObject::connect(m_proxy, &KdbProxy::unwindingTensionAutoChanged, m_manager, &ModbusManager::UnwindingTensionAuto);//81
         QObject::connect(m_proxy, &KdbProxy::unwindingDiameterResetSwitchChanged, m_manager, &ModbusManager::UnwindingDiameterRe);//82
+        QObject::connect(m_proxy, &KdbProxy::unwindingDiameterResetChanged, m_manager, &ModbusManager::UnwindingDiameterRe);//82
+
+        QObject::connect(m_proxy, &KdbProxy::unwindingDiameterResetSwitchChanged, this, [this]() 
+            {
+                Unwinding_Reset = true;
+                qDebug() << "Unwinding_Reset";
+            });//82
+
         QObject::connect(m_proxy, &KdbProxy::smallWinderTensionAutoChanged, m_manager, &ModbusManager::SmallWinderTensionAuto);//83
         QObject::connect(m_proxy, &KdbProxy::smallWinderDiameterResetChanged, m_manager, &ModbusManager::SmallWinderDiameterRe);//84
         QObject::connect(m_proxy, &KdbProxy::largeWinderTensionAutoChanged, m_manager, &ModbusManager::LargeWinderTensionAuto);//85
@@ -304,6 +308,7 @@ public:
         QObject::connect(m_proxy, &KdbProxy::output8Changed, m_manager, &ModbusManager::StopIndicator);//103 指示燈 停止
         QObject::connect(m_proxy, &KdbProxy::output9Changed, m_manager, &ModbusManager::Buzzer);//104 蜂鳴器
         QObject::connect(m_proxy, &KdbProxy::output10Changed, m_manager, &ModbusManager::ModeSelect);//105 模式選擇
+        //QObject::connect(m_proxy, &KdbProxy::output10Changed, this, [this](double v) {m_proxy->setBigRollMode(v?0:1); });//105 模式選擇
 
         QObject::connect(m_proxy, &KdbProxy::output11Changed, m_manager, &ModbusManager::io106);//106 日光燈
         QObject::connect(m_proxy, &KdbProxy::whiteLightChanged, m_manager, &ModbusManager::io106);
@@ -312,7 +317,7 @@ public:
         QObject::connect(m_proxy, &KdbProxy::uvLightChanged, m_manager, &ModbusManager::io107);
         //QObject::connect(m_proxy, &KdbProxy::uvLightChanged, this,[this]()
         //    {
-        //        m_proxy->abnormalRaised("aaa");
+        //        m_proxy->raiseAbnormal(QString::fromLocal8Bit("紫光燈異常警告"));
         //    });
 
 
@@ -504,10 +509,13 @@ private slots:
     void TensionFailed(const QString& errorMsg);
     void onMS300Data(int id, double v);
     void setCurrentLength(int length);
+    void UImodeSelect(double v)
+    {
+        m_manager->ModeSelect(v?0.0:1);
+    }
     void modeSelect(double v)
     {
-        bool value = (v != 1.0) ? true : false;
-        writeSingleCoil(105, value);
+        m_manager->ModeSelect(v);
     }
     void setBrakingDistance(double BrakingDistance);
     void PressPlate(double value)
@@ -608,6 +616,7 @@ private:
     //緩啟動>>
     bool m_isSoftStarting = false;         // 是否正在進行緩啟動
     bool waitforPV = false;
+    bool Unwinding_Reset = false;
     QTimer* m_tensionStableTimer = nullptr; // 用於判斷連續 3 秒的定時器
     QTimer* m_tensionStableTimer2 = nullptr; // 用於判斷連續 3 秒的定時器
 

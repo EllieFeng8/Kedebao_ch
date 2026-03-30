@@ -3026,7 +3026,7 @@ public:
         emit singleActionModeChanged(m_singleActionMode);
     }
 
-    Q_INVOKABLE void raiseAbnormal(const QString& msg) {
+    Q_INVOKABLE void raiseAbnormal(QString msg) {
         emit abnormalRaised(msg);
     }
 
@@ -3035,7 +3035,7 @@ public:
     void smallRollModeChanged(int value);
     void restBtnChanged(int value);
     //異常提醒
-    void abnormalRaised(const QString& msg);
+    void abnormalRaised(QString msg);
 
 
     void metalDetectorChanged(int value);
@@ -3934,8 +3934,8 @@ public:
     double m_softStartThreshold = 2.1;
     //緩啟動速度
     double m_softStartSpeed = 1.1;
-    double m_tensionTime = 2.1;
-    double m_secTensionTime = 0.6;
+    double m_tensionTime = 1000;
+    double m_secTensionTime = 600;
 };
 
 

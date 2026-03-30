@@ -81,7 +81,7 @@ bool DIOModule::initialize(const wchar_t* deviceDescription)
         // 確保在 return 之前啟動計時器
         m_timer = new QTimer(this);
         connect(m_timer, &QTimer::timeout, this, &DIOModule::process);
-        m_timer->start(50);
+        m_timer->start(30);
     }
 
     return success;
@@ -145,32 +145,72 @@ bool DIOModule::setOutput(int bit, bool high)
     return doCtrl->Write(0, currentOutputState) == Success;
 }
 
+//void DIOModule::process() {
+//
+//
+//
+//    //while (m_running) 
+//    //{
+//        uint8_t p0 = 0, p1 = 0;
+//
+//        if (readInputs(p0, p1)) 
+//        {
+//            uint16_t currentState = (static_cast<uint16_t>(p1) << 8) | p0;
+//            //QString binaryStr = QString("%1").arg(currentState, 16, 2, QChar('0'));
+//
+//            //qDebug() << "Current DI State: [" << binaryStr.mid(0, 8) << "|" << binaryStr.mid(8, 8) << "]";
+//            uint16_t changed = currentState ^ lastState;
+//
+//            for (int i = 0; i < 16; ++i) 
+//            {
+//                if ((changed >> i) & 1) 
+//                {   // 只有變動的位元才處理
+//                    bool state = (currentState >> i) & 1;
+//                    emit bitChanged(i, state);
+//                }
+//            }
+//            lastState = currentState;
+//        }
+//        //QThread::msleep(50);
+//    //}
+//}
 void DIOModule::process() {
+    uint8_t p0 = 0, p1 = 0;
 
+    if (readInputs(p0, p1)) {
+        // 將兩組 8-bit 合併為 16-bit
+        uint16_t currentRaw = (static_cast<uint16_t>(p1) << 8) | p0;
 
+        for (int i = 0; i < 16; ++i) {
 
-    //while (m_running) 
-    //{
-        uint8_t p0 = 0, p1 = 0;
+            bool currentBit = (currentRaw >> i) & 1;
+            bool lastRawBit = (m_lastRawState >> i) & 1;
 
-        if (readInputs(p0, p1)) 
-        {
-            uint16_t currentState = (static_cast<uint16_t>(p1) << 8) | p0;
-            QString binaryStr = QString("%1").arg(currentState, 16, 2, QChar('0'));
+            if (currentBit == lastRawBit) {
+                // 如果跟上次一樣，累加計數器
+                m_debounceCounters[i]++;
 
-            //qDebug() << "Current DI State: [" << binaryStr.mid(0, 8) << "|" << binaryStr.mid(8, 8) << "]";
-            uint16_t changed = currentState ^ lastState;
+                // 當連續達到 3 次 (90ms) 穩定
+                if (m_debounceCounters[i] >= DEBOUNCE_THRESHOLD) {
+                    bool lastStableBit = (m_lastStableState >> i) & 1;
 
-            for (int i = 0; i < 16; ++i) 
-            {
-                if ((changed >> i) & 1) 
-                {   // 只有變動的位元才處理
-                    bool state = (currentState >> i) & 1;
-                    emit bitChanged(i, state);
+                    // 如果確認後的穩定值與記錄不同，發出訊號
+                    if (currentBit != lastStableBit) {
+                        if (currentBit) m_lastStableState |= (1 << i);
+                        else m_lastStableState &= ~(1 << i);
+
+                        // 發送給 ModbusManager
+                        emit bitChanged(i, currentBit);
+                    }
                 }
             }
-            lastState = currentState;
+            else {
+                // 只要有一次不同（跳動），立即重置該位元的計數器
+                m_debounceCounters[i] = 0;
+            }
         }
-        //QThread::msleep(50);
-    //}
+        m_lastRawState = currentRaw;
+
+
+    }
 }

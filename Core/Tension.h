@@ -75,12 +75,12 @@ private:
     double sv;
     QModbusRtuSerialClient* m_modbus = nullptr; 
     QModbusRtuSerialClient* m_modbus2 = nullptr;
-
+    QModbusRtuSerialClient* m_modbus3 = nullptr;
 
     QTimer* m_pollTimer = nullptr;
     QTimer* m_pollTimer2 = nullptr;
 
-    QList<int> m_slaveIds = { 1,2}; 
+    QList<int> m_slaveIds = { 1,2,3}; 
     int m_currentIndex = 0;
     QQueue<WriteTask> m_writeQueue;
 };

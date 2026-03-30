@@ -307,7 +307,7 @@ public slots:
     void set_IO110(double);
     void set_IO111(double);
     void set_IO112(double);
-
+    void set_EStop(bool v);
 signals:
     void writeDone(int address, bool ok, QString msg);
     void dataReady(QVector<quint16> values);  
@@ -319,7 +319,7 @@ private:
     int m_workerId;
     QString m_ip;
     int m_port;
-
+    bool E_Stop=false;
 
     QModbusTcpClient* m_client = nullptr;
     QModbusTcpClient* m_client2 = nullptr;

@@ -41,5 +41,9 @@ private:
     QMutex mutex;
     bool m_running = true;
     uint16_t lastState = 0;
+    uint16_t m_lastRawState = 0;    // 紀錄上一次 30ms 的原始值
+    uint16_t m_lastStableState = 0; // 紀錄最終穩定的狀態
+    int m_debounceCounters[16] = { 0 }; // 16 個通道獨立的計數器
+    const int DEBOUNCE_THRESHOLD = 3; // 門檻值：連續 3 次相同才更新
 };
 

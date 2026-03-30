@@ -132,6 +132,14 @@ void ModbusWorker::poll()
         return;
     }
     m_pollTimer->stop();
+
+    if(E_Stop)
+    {
+        QVector<bool> stop(24, false);
+        writeCoils(65, stop);
+        writeSingleCoil(102, true);
+        E_Stop = false;
+    }
     //Flag
     bool f_vfdAlarmReset = false;               //64
     bool f_unwinderForward = false;             //65
@@ -610,7 +618,7 @@ void ModbusWorker::poll()
         if (f_unwindingDiameterReset)
         {
             writeSingleCoil(82, _unwindingDiameterReset);
-            QTimer::singleShot(500, this,
+            QTimer::singleShot(1000, this,
                 [this]()
                 {
                     writeSingleCoil(82, false);
@@ -666,75 +674,80 @@ void ModbusWorker::poll()
         }
         if (f_IO95)
         {
-            writeSingleCoil(95, _IO95);
+            writeSingleCoil(95, _IO95);//小卷切刀
         }
         if (f_IO96)
         {
-            writeSingleCoil(96, _IO96);
+            writeSingleCoil(96, _IO96);//小卷切刀2
         }
         if (f_IO97)
         {
-            writeSingleCoil(97, _IO97);
+            writeSingleCoil(97, _IO97);//小卷切刀3
         }
         if (f_IO98)
         {
-            writeSingleCoil(98, _IO98);
+            writeSingleCoil(98, _IO98);//小卷切刀4
         }
         if (f_IO99)
         {
-            writeSingleCoil(99, _IO99);
+            writeSingleCoil(99, _IO99);//小卷切刀5
         }
         if (f_IO100)
         {
-            writeSingleCoil(100, _IO100);
+            writeSingleCoil(100, _IO100);//大捲切刀
         }
         if (f_IO101)
         {
-            writeSingleCoil(101, _IO101);
+            writeSingleCoil(101, _IO101);//運轉燈
         }
         if (f_IO102)
         {
-            writeSingleCoil(102, _IO102);
+            writeSingleCoil(102, _IO102);//異常指示燈
         }
         if (f_IO103)
         {
-            writeSingleCoil(103, _IO103);
+            writeSingleCoil(103, _IO103);//停止指示燈
         }
         if (f_IO104)
         {
-            writeSingleCoil(104, _IO104);
+            writeSingleCoil(104, _IO104);//蜂鳴器
         }
         if (f_IO105)
         {
-            writeSingleCoil(105, _IO105);
+            writeSingleCoil(105, _IO105);//模式選擇
         }
         if (f_IO106)
         {
-            writeSingleCoil(106, _IO106);
+            writeSingleCoil(106, _IO106);//日光燈
         }
         if (f_IO107)
         {
-            writeSingleCoil(107, _IO107);
+            writeSingleCoil(107, _IO107);//紫光燈
         }
         if (f_IO108)
         {
-            writeSingleCoil(108, _IO108);
+            writeSingleCoil(108, _IO108);//下方照明燈
         }
         if (f_IO109)
         {
-            writeSingleCoil(109, _IO109);
+            writeSingleCoil(109, _IO109);//止退壓輪 進
         }
         if (f_IO110)
         {
-            writeSingleCoil(110, _IO110);
+            writeSingleCoil(110, _IO110);//止退壓輪 出
         }
-        if (f_IO111)
+        if (f_IO111) //STO 
         {
             writeSingleCoil(111, _IO111);
         }
         if (f_IO112)
         {
-            writeSingleCoil(112, _IO112);
+            //writeSingleCoil(112, true);
+            //QTimer::singleShot(1000, this,
+            //    [this]()
+            //    {
+            //        writeSingleCoil(112, false);
+            //    });
         }
         initFlag();
     }
@@ -819,7 +832,7 @@ void ModbusWorker::onReply2(QModbusReply* reply)
 }
 void ModbusWorker::writeCoils(int startAddress, const QVector<bool>& values)
 {
-    qDebug() << "[Modbus]  write coils. Address:" << startAddress << "Count:" << values.size() << "Values:" << values;
+    //qDebug() << "[Modbus]  write coils. Address:" << startAddress << "Count:" << values.size() << "Values:" << values;
     if (!m_running)
         return;
 
@@ -1369,6 +1382,11 @@ void ModbusWorker::set_IO112(double value)
 
     flag_IO112 = true;
     m_IO112 = value;
+}
+void ModbusWorker::set_EStop(bool value)
+{
+    E_Stop = true;
+    qDebug() << "E-STOP";
 }
 void ModbusWorker::StartAuto()
 {

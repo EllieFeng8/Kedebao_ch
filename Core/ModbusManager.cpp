@@ -44,21 +44,68 @@ void ModbusManager::createWorker()
     connect(m_worker, &ModbusWorker::dataReady,
         this, [this](QVector<quint16> v) {
             emit workerData(v);
-            QVector<bool> stop(24, false);
-            hasAlarmFunc(v);
-            bool hasAlarm = hasAlarmFunc(v);
-            if (hasAlarm && !m_alarmActive)
+            bool currentRunning = isRunning(v);
+            // 只有當「本次狀態」跟「上次狀態」不同時，才執行寫入
+            if (currentRunning != m_lastRunningStatus)
             {
-                qDebug() << "has alarm";
-                QMetaObject::invokeMethod(
-                    m_worker, [this, v,stop] { m_worker->writeCoils(65,stop); },
-                    Qt::QueuedConnection
-                ); // 直接呼叫
-                m_alarmActive = true; // 標記已處理
+                if (currentRunning)
+                {
+                    // 轉為運轉：亮運行燈(101)，熄停止燈(103)
+                    writeSingleCoil(101, true);  // 運轉燈亮
+                    QTimer::singleShot(10, this,
+                        [this]()
+                        {
+                            writeSingleCoil(103, false); // 停止燈滅
+                        });
+                }
+                else
+                {
+                    // 轉為停止：熄運行燈(101)，亮停止燈(103)
+                    writeSingleCoil(101, false);  // 運轉燈滅
+                    QTimer::singleShot(10, this,
+                        [this]()
+                        {
+                            writeSingleCoil(103, true); // 停止燈亮
+                        });
+                }
+
+                // 更新舊狀態紀錄
+                m_lastRunningStatus = currentRunning;
             }
-            else if (!hasAlarm)
-            {
-                m_alarmActive = false; // alarm 消失，可再次觸發
+
+
+            bool hasAlarm = hasAlarmFunc(v); // 取得所有異常狀態
+
+            // --- 1. 定義「當前模式是否應亮燈」的邏輯 ---
+            bool shouldLightShow = false;
+
+            if (m_ModeSelet) {
+                // 小捲模式：只看小捲異常
+                shouldLightShow = small_Alarm;
+            }
+            else {
+                // 大捲模式：只看大捲異常
+                shouldLightShow = big_Alarm;
+            }
+
+            // --- 2. 只有在燈號狀態真正需要改變時，才寫入 Modbus ---
+            // 假設您在 .h 有定義 m_lastLightStatus (初始值 false)
+            if (shouldLightShow != m_lastLightStatus) {
+                writeSingleCoil(102, shouldLightShow);
+                m_lastLightStatus = shouldLightShow;
+                qDebug() << "Indicator Light 102 changed to:" << shouldLightShow
+                    << (m_ModeSelet ? "(Small Mode)" : "(Large Mode)");
+            }
+
+            // --- 3. 緊急停止 (EStop) 邏輯依然保持 ---
+            if (shouldLightShow) {
+                QMetaObject::invokeMethod(m_worker, [this] {
+                    m_worker->set_EStop(true);
+                    }, Qt::QueuedConnection);
+                m_alarmActive = true;
+            }
+            else if (!shouldLightShow) {
+                m_alarmActive = false;
             }
         });
     connect(m_worker, &ModbusWorker::dataReady2,
@@ -461,6 +508,12 @@ void ModbusManager::ModeSelect(double value)//o10
     m_ModeSelet = v;
     qDebug() << "ModeSelect" << v;
     m_worker->set_IO105(value);
+    m_worker->set_IO111(true);
+    QTimer::singleShot(500, this,
+        [this]()
+        {
+            m_worker->set_IO111(false);
+        });
 
 }
 void ModbusManager::io106(double value)//o11
@@ -518,30 +571,38 @@ void ModbusManager::IpcStart(bool v)
     //writeCoils(81, m_worker->startAuto);
     
     if (m_ModeSelet)
-    {
-        writeCoils(65, {1,0,1,0,0,1,0,0,1,1,0,0,0,0,0,1,1,0,1,0,1,0,1,1}); //小卷模式 正轉啟動
+    {   
+        writeCoils(109, { false,true });
+        QTimer::singleShot(500, this,
+            [this]()
+            {
+                writeCoils(65, { 1,0,1,0,1,0,0,0,1,1,0,0,0,0,0,1,1,0,1,0,0,0,0,0 }); //小卷模式 正轉啟動
+            });
+        
     }
     else
     {
-
-        writeCoils(65, {1,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,1,0,1,0,1,1});//大捲模式 正轉啟動
-    }
+        writeCoils(109, { false,true });
+        QTimer::singleShot(500, this,
+            [this]()
+            {
+                writeCoils(65, { 1,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,0,0,1,0,1,1 });//大捲模式 正轉啟動
+            });
+    }       
 }
-void ModbusManager::IpcStop(double val, bool v)
+void ModbusManager::IpcStop()
 {
     QVector<bool> stop(24, false);
-    bool StopBtn = true;
-    qDebug() << "IpcStop"; 
-        if (val <= 0.05)
+    writeCoils(65, stop);
+    writeCoils(109, { true,false });
+    QTimer::singleShot(2000, this,
+        [this]()
         {
-
-            writeCoils(65, stop);
-            StopBtn = false;
-        }
-        else
-        {
-            qDebug()<<" NowSpeed != 0";
-        }
+            QVector<double> values;
+            values.resize(4);
+            values.fill(20);
+            writeRegisters(values);
+        });
 }
 //void ModbusManager::PressPlate(double value)
 //{

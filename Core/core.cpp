@@ -213,18 +213,31 @@ void Core::on485Data(int id, double PV, double tqo)
         double target1SV = nowSV1;
         m_proxy->setUnwindingTension(PV);
         if (waitforPV) {
-            if (qAbs(PV - target1SV) <= m_tensionTolerance) {
-                // 如果數值達標，且計時器還沒開始跑，則啟動計時
-                if (!m_tensionStableTimer2->isActive()) {
-                    qDebug() << "start  stable timer2";
-                    m_tensionStableTimer2->start(stableTime2);
+            if (!Unwinding_Reset) {
+                if (qAbs(PV - target1SV) <= m_tensionTolerance) {
+                    // 如果數值達標，且計時器還沒開始跑，則啟動計時
+                    if (!m_tensionStableTimer2->isActive()) {
+                        qDebug() << "start  stable timer2";
+                        m_tensionStableTimer2->start(stableTime2);
+                    }
+                }
+                else {
+                    // 【關鍵】如果這 3 秒內有任何一次數值超標，立刻重置計時器
+                    if (m_tensionStableTimer2->isActive()) {
+                        qDebug() << "restart  stable timer2";
+                        m_tensionStableTimer2->stop();
+                    }
                 }
             }
-            else {
-                // 【關鍵】如果這 3 秒內有任何一次數值超標，立刻重置計時器
-                if (m_tensionStableTimer2->isActive()) {
-                    qDebug() << "restart  stable timer2";
-                    m_tensionStableTimer2->stop();
+            else if (Unwinding_Reset) 
+            {
+                if (qAbs(PV - target1SV) <= m_tensionTolerance) {
+                    // 如果數值達標，且計時器還沒開始跑，則啟動計時
+                    if (!m_tensionStableTimer2->isActive()) {
+                        qDebug() << "start  stable timer2";
+                        m_tensionStableTimer2->start(8000);
+
+                    }
                 }
             }
         }
@@ -394,8 +407,8 @@ void Core::onlength(double v)
             //    {
             //        writeCoils(89, { 1,0,0,0,0,0 });
             //    });
-            //PressIndex = 0;
-            //PressIndex2 = 0;
+            PressIndex = 0;
+            PressIndex2 = 0;
 
 
             onLength = true;
@@ -428,10 +441,17 @@ void Core::onlength(double v)
 
 void Core::onMS300Data(int id, double v)
 {
-    if (id == 1 && Unwinding_Threshold != 0 && v> Unwinding_Threshold && !m_isWaitingForStop && !m_isBrakingPerformed)
+    if (id == 1 && Unwinding_Threshold != 0 && v> Unwinding_Threshold && !m_isWaitingForStop && !m_isBrakingPerformed )
     {
-        LowSpeed = true;
-        setMainSpeed(speed);
+        if (m_mode) {
+            LowSpeed = true;
+            setMainSpeed(speed);
+        }
+        else if (!m_mode && speed > 51)
+        {
+            LowSpeed = true;
+            setMainSpeed(51);
+        }
     }
     if (id ==2 && speed != v ) 
     {
@@ -445,7 +465,8 @@ void Core::onMS300Data(int id, double v)
             qDebug() << "Speed reached zero! Executing Coil Stop...";
 
             QVector<bool> stop(24, false);
-            writeCoils(65, stop);
+            //writeCoils(65, stop);
+            m_manager->IpcStop();
             isStop = true;
             //QTimer::singleShot(500, this,
             //    [this]()
@@ -598,6 +619,7 @@ void Core::updateProxyProperty(int index, quint16 value)
     
     if (!m_proxy) return;
     //m_proxy->blockSignals(true);
+    bool v = (value > 0.0) ? true : false;
     switch (index) {
         // INPUT 0 ~ 61
     case 0:  m_proxy->setUnwinderVfdFreqAlarm(value); 
@@ -801,17 +823,23 @@ void Core::updateProxyProperty(int index, quint16 value)
     case 94: m_proxy->setRightPressPlateBackward(value); 
         m_proxy->setRightPressPlateBackwardSwitch(value); break;
     case 95: m_proxy->setSmallCutterIn(value); 
-        m_proxy->setSmallCutterInSwitch(value); break;
+        m_proxy->setSmallCutterInSwitch(value);
+        m_proxy->setSmallRollCutter1(value); break;
     case 96: m_proxy->setLargeCutterIn(value); 
-        m_proxy->setLargeCutterInSwitch(value); break;
+        m_proxy->setLargeCutterInSwitch(value);
+        m_proxy->setSmallRollCutter2(value); break;
     case 97: m_proxy->setModeSelect(value);
-        m_proxy->setModeSelectSwitch(value); break;
+        m_proxy->setModeSelectSwitch(value);
+        m_proxy->setSmallRollCutter3(value); break;
     case 98: m_proxy->setRunIndicator(value); 
-        m_proxy->setRunIndicatorSwitch(value); break;
+        m_proxy->setRunIndicatorSwitch(value);
+        m_proxy->setSmallRollCutter4(value); break;
     case 99: m_proxy->setAlarmIndicator(value); 
-        m_proxy->setAlarmIndicatorSwitch(value); break;
+        m_proxy->setAlarmIndicatorSwitch(value); 
+        m_proxy->setSmallRollCutter5(value); break;
     case 100: m_proxy->setStopIndicator(value); 
-        m_proxy->setStopIndicatorSwitch(value); break;
+        m_proxy->setStopIndicatorSwitch(value);
+        m_proxy->setBigRollCutter(value); break;
     case 101: m_proxy->setBuzzer(value); 
         m_proxy->setBuzzerSwitch(value); break;
     case 102: m_proxy->setSmallRollModeSelect(value); 
@@ -820,8 +848,9 @@ void Core::updateProxyProperty(int index, quint16 value)
         m_proxy->setOutput8Switch(value); break;
     case 104: m_proxy->setOutput9(value); 
         m_proxy->setOutput9Switch(value); break;
-    case 105: m_proxy->setOutput10(value); 
-        m_proxy->setOutput10Switch(value); break;
+    case 105: m_proxy->setOutput10(value);
+        m_proxy->setOutput10Switch(value); 
+            m_mode = v;    break;
     case 106: m_proxy->setOutput11(value); 
         m_proxy->setWhiteLight(value); 
         m_proxy->setOutput11Switch(value); break;
@@ -912,28 +941,43 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         qDebug() << "DI Bit 1 changed" << state ;//Log 
         break;
     case 2:
-        m_proxy->setIpcAlarmReset(val);
-        writeSingleCoil(64, state);//動作  
+            m_proxy->setIpcAlarmReset(val);
+            m_manager->VfdAlarmReset(val);
         qDebug() << "DI Bit 2 changed" << state << ")";//Log 
         break;
-    case 3:
+    case 3://主傳正轉吋動 改為>>右側壓板按鈕
+        if (state)
+        {
+            PressPlate(0);
+        }
         m_proxy->setMainJogForward(val);
-        writeSingleCoil(67, state);//動作  
-        qDebug() << "DI Bit 3 changed" << state << ")";//Log 
+        //if (isStop) {
+        //    writeSingleCoil(67, state);//動作  
+        //}
+        //qDebug() << "DI Bit 3 changed" << state << ")";//Log 
         break;
-    case 4:
+    case 4://主傳正轉吋動 改為>>左側壓板按鈕
+        if (state) {
+            PressPlateBack(0);
+        }
         m_proxy->setMainJogReverse(val);
-        writeSingleCoil(68, state);//動作  
-        qDebug() << "DI Bit 4 changed" << state << ")";//Log 
+        //if (isStop) {
+        //    writeSingleCoil(68, state);//動作  
+        //}
+        //qDebug() << "DI Bit 4 changed" << state << ")";//Log 
         break;
     case 5:
         m_proxy->setSmallWinderJogForward(val);
-        writeSingleCoil(69, state);//動作  
+        if (isStop) {
+            writeSingleCoil(69, state);//動作  
+        }
         qDebug() << "DI Bit 5 changed" << state << ")";//Log 
         break;
     case 6:
         m_proxy->setSmallWinderJogReverse(val);
-        writeSingleCoil(70, state);//動作  
+        if (isStop) {
+            writeSingleCoil(70, state);//動作  
+        }
         qDebug() << "DI Bit 6 changed" << state << ")";//Log 
         break;
     case 7:
@@ -951,17 +995,19 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         break;
     case 8:
         m_proxy->setUnwinderJogStart(val);
-        if (state) // 按下時：根據目前選擇的方向啟動
-        {
-            if (m_UnwinderJogReverseSelect)
-                writeSingleCoil(66, state);
-            else
-                writeSingleCoil(65, state);
-        }
-        else // 放開時：不管之前是哪個方向，通通關掉！
-        {
-            writeSingleCoil(65, 0.0);
-            writeSingleCoil(66, 0.0);
+        if (isStop) {
+            if (state) // 按下時：
+            {
+                if (m_UnwinderJogReverseSelect)
+                    writeSingleCoil(66, state);
+                else
+                    writeSingleCoil(65, state);
+            }
+            else // 放開時
+            {
+                writeSingleCoil(65, 0.0);
+                writeSingleCoil(66, 0.0);
+            }
         }
         qDebug() << "DI Bit 8 changed" << state << ")";//Log 
 
@@ -1008,7 +1054,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
             qDebug() << "Winder Jog START (" << (m_WinderJogReverseSelect ? "Reverse" : "Forward") << ")";
         }
         else {
-            // 放開時：送出全 0 向量強制停止 
+            // 放開時
 
             writeCoils(69, StopWinderJog);
             qDebug() << "Winder Jog STOP";
@@ -1047,7 +1093,40 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         // 預留位置
         break;
     case 14:
-        // 預留位置
+
+        m_proxy->setWinderJogStart(val);
+
+        if (m_LeftSelvedgeWinderSelect && m_RightSelvedgeWinderSelect)
+        {
+            targetWinder = Winder2;
+        }
+        else if (!m_LeftSelvedgeWinderSelect && m_RightSelvedgeWinderSelect)
+        {
+            targetWinder = Winder3;
+        }
+        else if (m_LeftSelvedgeWinderSelect && !m_RightSelvedgeWinderSelect)
+        {
+            targetWinder = Winder4;
+        }
+        else
+        {
+            targetWinder = Winder1;
+        }
+        // 決定方向位址 (69 正轉 / 70 反轉)
+        targetAddr = m_WinderJogReverseSelect ? 70 : 69;
+
+        if (state) {
+            // 按下時：送出啟動訊號
+            writeCoils(targetAddr, targetWinder);
+            qDebug() << "Winder Jog START (" << (m_WinderJogReverseSelect ? "Reverse" : "Forward") << ")";
+        }
+        else {
+            // 放開時
+
+            writeCoils(69, StopWinderJog);
+            qDebug() << "Winder Jog STOP";
+        }
+
         break;
 
     default:

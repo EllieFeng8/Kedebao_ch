@@ -24,7 +24,7 @@ void Modbus485::initPort() {
         m_pollTimer = new QTimer(this);
         //connect(m_pollTimer, &QTimer::timeout, this, &Modbus485::onPollTimeout);
         //m_pollTimer->start(50);
-        //QTimer::singleShot(20, this, &Modbus485::onPollTimeout);
+        QTimer::singleShot(20, this, &Modbus485::onPollTimeout);
     }
     else {
         QString err = "connect COM3 fail: " + m_modbus->errorString();
@@ -33,37 +33,37 @@ void Modbus485::initPort() {
         // --- 關鍵修改：發出訊號 ---
         emit connectionFailed(err);
     }
-    m_modbus2 = new QModbusRtuSerialClient();
-    m_modbus2->setConnectionParameter(QModbusDevice::SerialPortNameParameter, "COM1");
-    m_modbus2->setConnectionParameter(QModbusDevice::SerialBaudRateParameter, QSerialPort::Baud19200);
-    m_modbus2->setConnectionParameter(QModbusDevice::SerialParityParameter, QSerialPort::NoParity);
-    m_modbus2->setConnectionParameter(QModbusDevice::SerialDataBitsParameter, QSerialPort::Data8);
-    m_modbus2->setConnectionParameter(QModbusDevice::SerialStopBitsParameter, QSerialPort::OneStop);
-    m_modbus2->setTimeout(100);
-    m_modbus2->setNumberOfRetries(1);
+    //m_modbus2 = new QModbusRtuSerialClient();
+    //m_modbus2->setConnectionParameter(QModbusDevice::SerialPortNameParameter, "COM1");
+    //m_modbus2->setConnectionParameter(QModbusDevice::SerialBaudRateParameter, QSerialPort::Baud19200);
+    //m_modbus2->setConnectionParameter(QModbusDevice::SerialParityParameter, QSerialPort::NoParity);
+    //m_modbus2->setConnectionParameter(QModbusDevice::SerialDataBitsParameter, QSerialPort::Data8);
+    //m_modbus2->setConnectionParameter(QModbusDevice::SerialStopBitsParameter, QSerialPort::OneStop);
+    //m_modbus2->setTimeout(100);
+    //m_modbus2->setNumberOfRetries(1);
 
-    // [優化] 監聽執行時期的錯誤
-    connect(m_modbus2, &QModbusDevice::errorOccurred, this, [this](QModbusDevice::Error error) {
-        if (error != QModbusDevice::NoError) {
-            emit connectionFailed(m_modbus2->errorString());
-        }
-        });
+    //// [優化] 監聽執行時期的錯誤
+    //connect(m_modbus2, &QModbusDevice::errorOccurred, this, [this](QModbusDevice::Error error) {
+    //    if (error != QModbusDevice::NoError) {
+    //        emit connectionFailed(m_modbus2->errorString());
+    //    }
+    //    });
 
-    if (m_modbus2->connectDevice()) {
-        qDebug() << "COM1 connect success";
-        //m_pollTimer2 = new QTimer(this);
-        //connect(m_pollTimer, &QTimer::timeout, this, &Modbus485::onPollTimeout);
-        //m_pollTimer->start(50);
-        QTimer::singleShot(20, this, &Modbus485::onPollTimeout);
+    //if (m_modbus2->connectDevice()) {
+    //    qDebug() << "COM1 connect success";
+    //    //m_pollTimer2 = new QTimer(this);
+    //    //connect(m_pollTimer, &QTimer::timeout, this, &Modbus485::onPollTimeout);
+    //    //m_pollTimer->start(50);
+    //    QTimer::singleShot(20, this, &Modbus485::onPollTimeout);
 
-    }
-    else {
-        QString err = "connect COM1 fail: " + m_modbus2->errorString();
-        qDebug() << err;
+    //}
+    //else {
+    //    QString err = "connect COM1 fail: " + m_modbus2->errorString();
+    //    qDebug() << err;
 
-        // --- 關鍵修改：發出訊號 ---
-        emit connectionFailed(err);
-    }
+    //    // --- 關鍵修改：發出訊號 ---
+    //    emit connectionFailed(err);
+    //}
 }
 
 void Modbus485::readPV(int slaveId) {
@@ -169,8 +169,7 @@ void Modbus485::onPollTimeout() {
     // 優先權 1：處理寫入
     if (!m_writeQueue.isEmpty()) {
         WriteTask task = m_writeQueue.dequeue();
-        if (task.id == 1)
-        {
+
             QModbusDataUnit writeUnit(QModbusDataUnit::HoldingRegisters, task.address, 1);
             writeUnit.setValue(0, task.value);
 
@@ -187,48 +186,21 @@ void Modbus485::onPollTimeout() {
                         qDebug() << "Write Success! ID:" << task.id;
                     }
                     reply->deleteLater();
-                    QTimer::singleShot(80, this, &Modbus485::onPollTimeout);
+                    QTimer::singleShot(30, this, &Modbus485::onPollTimeout);
                     });
             }
             else {
-                QTimer::singleShot(80, this, &Modbus485::onPollTimeout);
+                QTimer::singleShot(30, this, &Modbus485::onPollTimeout);
             }
-        }
-        else if(task.id ==2)
-        {
-            QModbusDataUnit writeUnit(QModbusDataUnit::HoldingRegisters, task.address, 1);
-            writeUnit.setValue(0, task.value);
-
-            auto* reply = m_modbus2->sendWriteRequest(writeUnit, task.id);
-            if (reply) {
-                connect(reply, &QModbusReply::finished, this, [this, reply, task]() {
-                    if (reply->error() != QModbusDevice::NoError) {
-                        qDebug() << "Write Fail! ID:" << task.id
-                            << "Addr:" << task.address
-                            << "Error:" << reply->errorString();
-                    }
-                    else {
-
-                        qDebug() << "Write Success! ID:" << task.id;
-                    }
-                    reply->deleteLater();
-                    QTimer::singleShot(80, this, &Modbus485::onPollTimeout);
-                    });
-            }
-            else {
-                QTimer::singleShot(80, this, &Modbus485::onPollTimeout);
-            }
-                return; 
-        }
     }
 
     // 優先權 2：處理輪詢讀取
     //if (m_slaveIds.isEmpty()) return;
     int id = m_slaveIds[m_currentIndex];
-    if (id == 1) {
+
         QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 758, 1);
 
-        auto* reply = m_modbus->sendReadRequest(readUnit, 1);
+        auto* reply = m_modbus->sendReadRequest(readUnit, id);
         if (reply) {
             connect(reply, &QModbusReply::finished, this, [this, reply, id]() {
                 if (reply->error() == QModbusDevice::NoError) {
@@ -246,51 +218,15 @@ void Modbus485::onPollTimeout() {
 
                 // 指標移向下一台
                 m_currentIndex = (m_currentIndex + 1) % m_slaveIds.size();
-                QTimer::singleShot(80, this, &Modbus485::onPollTimeout);
+                QTimer::singleShot(30, this, &Modbus485::onPollTimeout);
                 });
         }
         else {
             // 發送失敗也要跳下一個 ID，否則輪詢會卡死在同一台
             m_currentIndex = (m_currentIndex + 1) % m_slaveIds.size();
-            QTimer::singleShot(80, this, &Modbus485::onPollTimeout);
+            QTimer::singleShot(30, this, &Modbus485::onPollTimeout);
         }
-    }
-    else if(id ==2)
-    {
-        QModbusDataUnit readUnit(QModbusDataUnit::HoldingRegisters, 758, 1);
-        //QThread::msleep(200);
-        //qDebug() << "ID 2 task Read";
-        auto* reply = m_modbus2->sendReadRequest(readUnit, 2);
-        if (reply) {
-            connect(reply, &QModbusReply::finished, this, [this, reply, id]() {
-                if (reply->error() == QModbusDevice::NoError) {
-                    const QModbusDataUnit res = reply->result();
-                    if (id <= 3) {
-                        double tqo = res.value(0) / 40.95;
-                        double pv = res.value(0) / 10.0;
-                        emit dataUpdated(id, pv, tqo);
-                        qDebug() << "COM1 PV = "<<pv;
-                    }
-                }
-                else {
-                    qDebug() << "Com Error ID:" << id << reply->errorString();
-                }
-                reply->deleteLater();
-
-                // 指標移向下一台
-                m_currentIndex = (m_currentIndex + 1) % m_slaveIds.size();
-                QTimer::singleShot(80, this, &Modbus485::onPollTimeout);
-                });
-        }
-        else {
-            // 發送失敗也要跳下一個 ID，否則輪詢會卡死在同一台
-            m_currentIndex = (m_currentIndex + 1) % m_slaveIds.size();
-            QTimer::singleShot(80, this, &Modbus485::onPollTimeout);
-        }
-    }
 }
-
-
 
 void Modbus485::setTargetTension(int id, double kg) 
 {

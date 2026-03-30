@@ -16,7 +16,7 @@ void MS300::initPort() {
         qDebug() << "COM4 connet";
         m_pollTimer = new QTimer(this);
         connect(m_pollTimer, &QTimer::timeout, this, &MS300::onPollTimeout);
-        m_pollTimer->start(100); 
+        m_pollTimer->start(50); 
     }
     else
     {
