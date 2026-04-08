@@ -7,7 +7,7 @@ ProjectMainScreenUI {
 
     resetMouseArea.onClicked: {
         //console.log("resetMouseAreaonClicked")
-        //Kdb.modifyCurrentLength = 0
+        Kdb.modifyCurrentLength = 0
         // Kdb.currentLength = 0
         // speedSet.text = "0"
         // brakeDistance.text = "0"

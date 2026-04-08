@@ -181,7 +181,7 @@ public:
             loadProductionSettings();
             });
         connect(m_manager, &ModbusManager::ErrMsg, this, [this](QString msg) {
-            //m_proxy->raiseAbnormal(msg);
+            m_proxy->raiseAbnormal(msg);
             });
 
         DataValues.resize(112);
@@ -224,8 +224,14 @@ public:
         values[0] = v*m_p1;
         values[1] = v*m_p2;
         values[2] = v*m_p3;
-        values[3] = v*m_p4;
-
+        if (m_isWaitingForStop && v < 13) 
+        {
+            values[3] = 15;
+        }
+        else
+        {
+            values[3] = v * m_p4;
+        }
 
         m_manager->writeRegisters(values);
     }
@@ -344,6 +350,20 @@ public:
         QObject::connect(m_proxy, &KdbProxy::modifyAnalogOutWinderChanged, m_manager, &ModbusManager::writeRegister57);
         QObject::connect(m_proxy, &KdbProxy::modifyAnalogOutCutterChanged, m_manager, &ModbusManager::writeRegister58);
         QObject::connect(m_proxy, &KdbProxy::modifyAnalogOutSelvedgeWinderChanged, m_manager, &ModbusManager::writeRegister59);
+        QObject::connect(m_proxy, &KdbProxy::curlingAdjustChanged, this, [this](bool v) 
+            {
+                if (v) {
+                    m_manager->writeRegister57(4.6);
+                    QTimer::singleShot(1000, this,
+                        [this]()
+                        {
+                            writeSingleCoil(69, true);
+                        });
+                }
+                else{
+                    writeSingleCoil(69, false);
+                }
+            });
 
         QObject::connect(m_proxy, &KdbProxy::analogOutUnwinderMainDrivePcChanged, this, [this](double pc)
             {
@@ -628,12 +648,8 @@ private:
     int PressIndex2 = 0;
     int setTime = 500;
     QVector<bool> targetWinder;
-    QVector<bool> Winder1 = { 1,0,1 };
-    QVector<bool> Winder2 = { 1,0,1,0,0,0,0,1,0,1 };
-    QVector<bool> Winder3 = { 1,0,1,0,0,0,0,0,0,1 };
-    QVector<bool> Winder4 = { 1,0,1,0,0,0,0,1,0,0 };
-    
-    QVector<bool> StopWinderJog = { 0,0,0,0,0,0,0,0,0,0,0 };
+    QVector<bool> Winder1 = { 1 };
+
 
 
     void loadProductionSettings()
@@ -652,7 +668,7 @@ private:
         Unwinding_Threshold = settings.value("Production/Unwinder_threshold", 0.0).toDouble();
         stableTime = settings.value("Production/stable_Time", 0).toInt();
         stableTime2 = settings.value("Production/stable_Time2", 0).toInt();
-
+        m_p4 = settings.value("Production/p4", 60).toDouble();
         // 同步更新到 Proxy (UI 層)，確保介面顯示正確
         if (m_proxy) {
             m_proxy->setModifySpeed(setspeed);
@@ -666,7 +682,7 @@ private:
             m_proxy->setModifyUnwindingLimitThreshold(Unwinding_Threshold);
             m_proxy->setTensionTime(stableTime);
             m_proxy->setSecTensionTime(stableTime2);
-
+            m_proxy->setAnalogOutSelvedgeWinderPc(m_p4);
             
             m_proxy->setWhiteLight(1);
             m_proxy->setBigRollMode(0);
@@ -688,7 +704,7 @@ private:
         settings.setValue("Production/softstart_speed", m_slowStartSpeed);
         settings.setValue("Production/softstart_threshold", m_tensionTolerance);
         settings.setValue("Production/Unwinder_threshold", Unwinding_Threshold);
-
+        settings.setValue("Production/p4", m_p4);
         settings.sync(); 
     }
 };

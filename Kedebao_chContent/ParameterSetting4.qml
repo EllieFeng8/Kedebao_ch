@@ -1125,7 +1125,12 @@ Rectangle {
                     }
                 }
             }
-Text {
+
+        }
+
+
+        // 張力穩定時間
+        Text {
             id:text_8
             anchors.top: text_7.bottom
             anchors.topMargin: topMargin2
@@ -1199,6 +1204,8 @@ Text {
                     }
                 }
             }
+
+        }
         // 第二張力穩定時間
         Text {
             id:text_9
@@ -1276,9 +1283,6 @@ Text {
             }
 
         }
-}
-        }
-
     }
 
     //IPC-INPUT

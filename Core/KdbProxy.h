@@ -10,512 +10,535 @@
 class KdbProxy : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT
+        QML_ELEMENT
 
-    Q_PROPERTY(int bigRollMode READ getBigRollMode WRITE setBigRollMode NOTIFY bigRollModeChanged)
-    Q_PROPERTY(int restBtn READ getRestBtn WRITE setRestBtn NOTIFY restBtnChanged)
-    Q_PROPERTY(int metalDetector READ getMetalDetector NOTIFY metalDetectorChanged)
+        //默認大捲模式(1大捲模式,0小捲模式)
+        Q_PROPERTY(int bigRollMode READ getBigRollMode WRITE setBigRollMode NOTIFY bigRollModeChanged)
+        Q_PROPERTY(int restBtn READ getRestBtn WRITE setRestBtn NOTIFY restBtnChanged)
 
-    Q_PROPERTY(int gratingDetection READ getGratingDetection NOTIFY gratingDetectionChanged)
-    Q_PROPERTY(int gratingDetection2 READ getGratingDetection2 NOTIFY gratingDetection2Changed)
-    Q_PROPERTY(int gratingDetection3 READ getGratingDetection3 NOTIFY gratingDetection3Changed)
-    Q_PROPERTY(int oppositeSide READ getOppositeSide NOTIFY oppositeSideChanged)
+        Q_PROPERTY(int metalDetector READ getMetalDetector NOTIFY metalDetectorChanged)
+        //光柵檢測*3
+        Q_PROPERTY(int gratingDetection READ getGratingDetection NOTIFY gratingDetectionChanged)
+        Q_PROPERTY(int gratingDetection2 READ getGratingDetection2 NOTIFY gratingDetection2Changed)
+        Q_PROPERTY(int gratingDetection3 READ getGratingDetection3 NOTIFY gratingDetection3Changed)
 
-    Q_PROPERTY(int doorASignal READ getDoorASignal NOTIFY doorASignalChanged)
-    Q_PROPERTY(int doorBSignal READ getDoorBSignal NOTIFY doorBSignalChanged)
-    Q_PROPERTY(int doorCSignal READ getDoorCSignal NOTIFY doorCSignalChanged)
-    Q_PROPERTY(int doorDSignal READ getDoorDSignal NOTIFY doorDSignalChanged)
-    Q_PROPERTY(int doorESignal READ getDoorESignal NOTIFY doorESignalChanged)
-    Q_PROPERTY(int doorFSignal READ getDoorFSignal NOTIFY doorFSignalChanged)
-    Q_PROPERTY(int doorGSignal READ getDoorGSignal NOTIFY doorGSignalChanged)
-    Q_PROPERTY(int doorHSignal READ getDoorHSignal NOTIFY doorHSignalChanged)
-    Q_PROPERTY(int doorISignal READ getDoorISignal NOTIFY doorISignalChanged)
+        Q_PROPERTY(int oppositeSide READ getOppositeSide NOTIFY oppositeSideChanged)
 
-    Q_PROPERTY(int uvLight READ getUvLight WRITE setUvLight NOTIFY uvLightChanged)
-    Q_PROPERTY(int whiteLight READ getWhiteLight WRITE setWhiteLight NOTIFY whiteLightChanged)
-    Q_PROPERTY(int bottomLight READ getBottomLight WRITE setBottomLight NOTIFY bottomLightChanged)
+        Q_PROPERTY(int doorASignal READ getDoorASignal NOTIFY doorASignalChanged)
+        Q_PROPERTY(int doorBSignal READ getDoorBSignal NOTIFY doorBSignalChanged)
+        Q_PROPERTY(int doorCSignal READ getDoorCSignal NOTIFY doorCSignalChanged)
+        Q_PROPERTY(int doorDSignal READ getDoorDSignal NOTIFY doorDSignalChanged)
+        Q_PROPERTY(int doorESignal READ getDoorESignal NOTIFY doorESignalChanged)
+        Q_PROPERTY(int doorFSignal READ getDoorFSignal NOTIFY doorFSignalChanged)
+        Q_PROPERTY(int doorGSignal READ getDoorGSignal NOTIFY doorGSignalChanged)
+        Q_PROPERTY(int doorHSignal READ getDoorHSignal NOTIFY doorHSignalChanged)
+        Q_PROPERTY(int doorISignal READ getDoorISignal NOTIFY doorISignalChanged)
 
-    Q_PROPERTY(double currentLength READ getCurrentLength NOTIFY currentLengthChanged)
-    Q_PROPERTY(double speed READ getSpeed NOTIFY speedChanged)
-    Q_PROPERTY(double brakingDistance READ getBrakingDistance NOTIFY brakingDistanceChanged)
+        Q_PROPERTY(int uvLight READ getUvLight WRITE setUvLight NOTIFY uvLightChanged)
+        Q_PROPERTY(int whiteLight READ getWhiteLight WRITE setWhiteLight NOTIFY whiteLightChanged)
+        Q_PROPERTY(int bottomLight READ getBottomLight WRITE setBottomLight NOTIFY bottomLightChanged)
 
-    Q_PROPERTY(int modifyCurrentLength READ getModifyCurrentLength WRITE setModifyCurrentLength NOTIFY modifyCurrentLengthChanged)
-    Q_PROPERTY(int modifySpeed READ getModifySpeed WRITE setModifySpeed NOTIFY modifySpeedChanged)
-    Q_PROPERTY(double modifyBrakingDistance READ getModifyBrakingDistance WRITE setModifyBrakingDistance NOTIFY modifyBrakingDistanceChanged)
+        Q_PROPERTY(double currentLength READ getCurrentLength NOTIFY currentLengthChanged)
+        Q_PROPERTY(double speed READ getSpeed NOTIFY speedChanged)
+        Q_PROPERTY(double brakingDistance READ getBrakingDistance NOTIFY brakingDistanceChanged)
 
-    Q_PROPERTY(double modifyUnwindingTension READ getModifyUnwindingTension WRITE setModifyUnwindingTension NOTIFY modifyUnwindingTensionChanged)
-    Q_PROPERTY(double modifySmallWinderTensionOver READ getModifySmallWinderTensionOver WRITE setModifySmallWinderTensionOver NOTIFY modifySmallWinderTensionOverChanged)
-    Q_PROPERTY(double modifyLargeWinderTensionOver READ getModifyLargeWinderTensionOver WRITE setModifyLargeWinderTensionOver NOTIFY modifyLargeWinderTensionOverChanged)
+        Q_PROPERTY(int modifyCurrentLength READ getModifyCurrentLength WRITE setModifyCurrentLength NOTIFY modifyCurrentLengthChanged)
+        Q_PROPERTY(int modifySpeed READ getModifySpeed WRITE setModifySpeed NOTIFY modifySpeedChanged)
+        Q_PROPERTY(double modifyBrakingDistance READ getModifyBrakingDistance WRITE setModifyBrakingDistance NOTIFY modifyBrakingDistanceChanged)
 
+        Q_PROPERTY(double modifyUnwindingTension READ getModifyUnwindingTension WRITE setModifyUnwindingTension NOTIFY modifyUnwindingTensionChanged)
+        Q_PROPERTY(double modifySmallWinderTensionOver READ getModifySmallWinderTensionOver WRITE setModifySmallWinderTensionOver NOTIFY modifySmallWinderTensionOverChanged)
+        Q_PROPERTY(double modifyLargeWinderTensionOver READ getModifyLargeWinderTensionOver WRITE setModifyLargeWinderTensionOver NOTIFY modifyLargeWinderTensionOverChanged)
 
-    //壓板
-    Q_PROPERTY(int pressurePlate READ getPressurePlate WRITE setPressurePlate NOTIFY pressurePlateChanged)
-    //壓板
-    Q_PROPERTY(int pressurePlateBack READ getPressurePlateBack WRITE setPressurePlateBack NOTIFY pressurePlateBackChanged)
-    //壓輪
-    Q_PROPERTY(int pressureRoller READ getPressureRoller WRITE setPressureRoller NOTIFY pressureRollerChanged)
-    //壓輪
-    Q_PROPERTY(int pressureRollerDown READ getPressureRollerDown WRITE setPressureRollerDown NOTIFY pressureRollerDownChanged)
+        //壓板
+        Q_PROPERTY(int pressurePlate READ getPressurePlate WRITE setPressurePlate NOTIFY pressurePlateChanged)
+        //壓板
+        Q_PROPERTY(int pressurePlateBack READ getPressurePlateBack WRITE setPressurePlateBack NOTIFY pressurePlateBackChanged)
+        //壓輪
+        Q_PROPERTY(int pressureRoller READ getPressureRoller WRITE setPressureRoller NOTIFY pressureRollerChanged)
+        //壓輪
+        Q_PROPERTY(int pressureRollerDown READ getPressureRollerDown WRITE setPressureRollerDown NOTIFY pressureRollerDownChanged)
+
 
         // ===== INPUT-1 Alarm Signals =====
-    Q_PROPERTY(double unwinderVfdFreqAlarm READ getUnwinderVfdFreqAlarm NOTIFY unwinderVfdFreqAlarmChanged)
-    Q_PROPERTY(double mainDriveVfdFreqAlarm READ getMainDriveVfdFreqAlarm NOTIFY mainDriveVfdFreqAlarmChanged)
-    Q_PROPERTY(double smallWinderVfdFreqAlarm READ getSmallWinderVfdFreqAlarm NOTIFY smallWinderVfdFreqAlarmChanged)
-    Q_PROPERTY(double largeWinderVfdFreqAlarm READ getLargeWinderVfdFreqAlarm NOTIFY largeWinderVfdFreqAlarmChanged)
-    Q_PROPERTY(double smallCutterVfdFreqAlarm READ getSmallCutterVfdFreqAlarm NOTIFY smallCutterVfdFreqAlarmChanged)
-    Q_PROPERTY(double selvedgeFanVfdFreqAlarm READ getSelvedgeFanVfdFreqAlarm NOTIFY selvedgeFanVfdFreqAlarmChanged)
-
-    Q_PROPERTY(double leftFanOverloadAlarm READ getLeftFanOverloadAlarm NOTIFY leftFanOverloadAlarmChanged)
-    Q_PROPERTY(double rightFanOverloadAlarm READ getRightFanOverloadAlarm NOTIFY rightFanOverloadAlarmChanged)
-
-    Q_PROPERTY(double largeCutterVfdFreqAlarm READ getLargeCutterVfdFreqAlarm NOTIFY largeCutterVfdFreqAlarmChanged)
-    Q_PROPERTY(double leftSelvedgeWinderVfdAlarm READ getLeftSelvedgeWinderVfdAlarm NOTIFY leftSelvedgeWinderVfdAlarmChanged)
-    Q_PROPERTY(double rightSelvedgeWinderVfdAlarm READ getRightSelvedgeWinderVfdAlarm NOTIFY rightSelvedgeWinderVfdAlarmChanged)
-
-    Q_PROPERTY(double webAlignerVfdFreqAlarm READ getWebAlignerVfdFreqAlarm NOTIFY webAlignerVfdFreqAlarmChanged)
-
-    Q_PROPERTY(double unwinderPowerLoss READ getUnwinderPowerLoss NOTIFY unwinderPowerLossChanged)
-    Q_PROPERTY(double mainDrivePowerLoss READ getMainDrivePowerLoss NOTIFY mainDrivePowerLossChanged)
-    Q_PROPERTY(double smallWinderPowerLoss READ getSmallWinderPowerLoss NOTIFY smallWinderPowerLossChanged)
-    Q_PROPERTY(double largeWinderPowerLoss READ getLargeWinderPowerLoss NOTIFY largeWinderPowerLossChanged)
-
-    //信號燈
-    Q_PROPERTY(int unwinderVfdFreqAlarmLight READ getUnwinderVfdFreqAlarmLight NOTIFY unwinderVfdFreqAlarmLightChanged)
-    Q_PROPERTY(int mainDriveVfdFreqAlarmLight READ getMainDriveVfdFreqAlarmLight NOTIFY mainDriveVfdFreqAlarmLightChanged)
-    Q_PROPERTY(int smallWinderVfdFreqAlarmLight READ getSmallWinderVfdFreqAlarmLight NOTIFY smallWinderVfdFreqAlarmLightChanged)
-    Q_PROPERTY(int largeWinderVfdFreqAlarmLight READ getLargeWinderVfdFreqAlarmLight NOTIFY largeWinderVfdFreqAlarmLightChanged)
-    Q_PROPERTY(int smallCutterVfdFreqAlarmLight READ getSmallCutterVfdFreqAlarmLight NOTIFY smallCutterVfdFreqAlarmLightChanged)
-    Q_PROPERTY(int selvedgeFanVfdFreqAlarmLight READ getSelvedgeFanVfdFreqAlarmLight NOTIFY selvedgeFanVfdFreqAlarmLightChanged)
-
-    Q_PROPERTY(int leftFanOverloadAlarmLight READ getLeftFanOverloadAlarmLight NOTIFY leftFanOverloadAlarmLightChanged)
-    Q_PROPERTY(int rightFanOverloadAlarmLight READ getRightFanOverloadAlarmLight NOTIFY rightFanOverloadAlarmLightChanged)
-
-    Q_PROPERTY(int largeCutterVfdFreqAlarmLight READ getLargeCutterVfdFreqAlarmLight NOTIFY largeCutterVfdFreqAlarmLightChanged)
-    Q_PROPERTY(int leftSelvedgeWinderVfdAlarmLight READ getLeftSelvedgeWinderVfdAlarmLight NOTIFY leftSelvedgeWinderVfdAlarmLightChanged)
-    Q_PROPERTY(int rightSelvedgeWinderVfdAlarmLight READ getRightSelvedgeWinderVfdAlarmLight NOTIFY rightSelvedgeWinderVfdAlarmLightChanged)
-
-    Q_PROPERTY(int webAlignerVfdFreqAlarmLight READ getWebAlignerVfdFreqAlarmLight NOTIFY webAlignerVfdFreqAlarmLightChanged)
-
-    Q_PROPERTY(int unwinderPowerLossLight READ getUnwinderPowerLossLight NOTIFY unwinderPowerLossLightChanged)
-    Q_PROPERTY(int mainDrivePowerLossLight READ getMainDrivePowerLossLight NOTIFY mainDrivePowerLossLightChanged)
-    Q_PROPERTY(int smallWinderPowerLossLight READ getSmallWinderPowerLossLight NOTIFY smallWinderPowerLossLightChanged)
-    Q_PROPERTY(int largeWinderPowerLossLight READ getLargeWinderPowerLossLight NOTIFY largeWinderPowerLossLightChanged)
-
-
-
-    // ===== INPUT-2 Power Loss =====
-    Q_PROPERTY(double smallCutterPowerLoss READ getSmallCutterPowerLoss NOTIFY smallCutterPowerLossChanged)
-    Q_PROPERTY(double selvedgeFanPowerLoss READ getSelvedgeFanPowerLoss NOTIFY selvedgeFanPowerLossChanged)
-    Q_PROPERTY(double largeCutterPowerLoss READ getLargeCutterPowerLoss NOTIFY largeCutterPowerLossChanged)
-    Q_PROPERTY(double leftSelvedgeWinderPowerLoss READ getLeftSelvedgeWinderPowerLoss NOTIFY leftSelvedgeWinderPowerLossChanged)
-    Q_PROPERTY(double rightSelvedgeWinderPowerLoss READ getRightSelvedgeWinderPowerLoss NOTIFY rightSelvedgeWinderPowerLossChanged)
-    Q_PROPERTY(double webAlignerPowerLoss READ getWebAlignerPowerLoss NOTIFY webAlignerPowerLossChanged)
-    Q_PROPERTY(double unwinderDisconnect READ getUnwinderDisconnect NOTIFY unwinderDisconnectChanged)
-    Q_PROPERTY(double mainDriveDisconnect READ getMainDriveDisconnect NOTIFY mainDriveDisconnectChanged)
-    Q_PROPERTY(double smallWinderDisconnect READ getSmallWinderDisconnect NOTIFY smallWinderDisconnectChanged)
-    Q_PROPERTY(double largeWinderDisconnect READ getLargeWinderDisconnect NOTIFY largeWinderDisconnectChanged)
-    Q_PROPERTY(double smallCutterDisconnect READ getSmallCutterDisconnect NOTIFY smallCutterDisconnectChanged)
-    Q_PROPERTY(double leftFanDisconnect READ getLeftFanDisconnect NOTIFY leftFanDisconnectChanged)
-    Q_PROPERTY(double rightFanDisconnect READ getRightFanDisconnect NOTIFY rightFanDisconnectChanged)
-    Q_PROPERTY(double largeCutterDisconnect READ getLargeCutterDisconnect NOTIFY largeCutterDisconnectChanged)
-    Q_PROPERTY(double leftSelvedgeWinderDisconnect READ getLeftSelvedgeWinderDisconnect NOTIFY leftSelvedgeWinderDisconnectChanged)
-    Q_PROPERTY(double rightSelvedgeWinderDisconnect READ getRightSelvedgeWinderDisconnect NOTIFY rightSelvedgeWinderDisconnectChanged)
-
-    //信號燈
-    Q_PROPERTY(int smallCutterPowerLossLight READ getSmallCutterPowerLossLight NOTIFY smallCutterPowerLossLightChanged)
-    Q_PROPERTY(int selvedgeFanPowerLossLight READ getSelvedgeFanPowerLossLight NOTIFY selvedgeFanPowerLossLightChanged)
-    Q_PROPERTY(int largeCutterPowerLossLight READ getLargeCutterPowerLossLight NOTIFY largeCutterPowerLossLightChanged)
-    Q_PROPERTY(int leftSelvedgeWinderPowerLossLight READ getLeftSelvedgeWinderPowerLossLight NOTIFY leftSelvedgeWinderPowerLossLightChanged)
-    Q_PROPERTY(int rightSelvedgeWinderPowerLossLight READ getRightSelvedgeWinderPowerLossLight NOTIFY rightSelvedgeWinderPowerLossLightChanged)
-    Q_PROPERTY(int webAlignerPowerLossLight READ getWebAlignerPowerLossLight NOTIFY webAlignerPowerLossLightChanged)
-    Q_PROPERTY(int unwinderDisconnectLight READ getUnwinderDisconnectLight NOTIFY unwinderDisconnectLightChanged)
-    Q_PROPERTY(int mainDriveDisconnectLight READ getMainDriveDisconnectLight NOTIFY mainDriveDisconnectLightChanged)
-    Q_PROPERTY(int smallWinderDisconnectLight READ getSmallWinderDisconnectLight NOTIFY smallWinderDisconnectLightChanged)
-    Q_PROPERTY(int largeWinderDisconnectLight READ getLargeWinderDisconnectLight NOTIFY largeWinderDisconnectLightChanged)
-    Q_PROPERTY(int smallCutterDisconnectLight READ getSmallCutterDisconnectLight NOTIFY smallCutterDisconnectLightChanged)
-    Q_PROPERTY(int leftFanDisconnectLight READ getLeftFanDisconnectLight NOTIFY leftFanDisconnectLightChanged)
-    Q_PROPERTY(int rightFanDisconnectLight READ getRightFanDisconnectLight NOTIFY rightFanDisconnectLightChanged)
-    Q_PROPERTY(int largeCutterDisconnectLight READ getLargeCutterDisconnectLight NOTIFY largeCutterDisconnectLightChanged)
-    Q_PROPERTY(int leftSelvedgeWinderDisconnectLight READ getLeftSelvedgeWinderDisconnectLight NOTIFY leftSelvedgeWinderDisconnectLightChanged)
-    Q_PROPERTY(int rightSelvedgeWinderDisconnectLight READ getRightSelvedgeWinderDisconnectLight NOTIFY rightSelvedgeWinderDisconnectLightChanged)
-
-
-    // ===== INPUT-3 =====
-    Q_PROPERTY(double webAlignerDisconnect READ getWebAlignerDisconnect NOTIFY webAlignerDisconnectChanged)
-    Q_PROPERTY(double emergencyStop1 READ getEmergencyStop1 NOTIFY emergencyStop1Changed)
-    Q_PROPERTY(double emergencyStop2 READ getEmergencyStop2 NOTIFY emergencyStop2Changed)
-    Q_PROPERTY(double emergencyStop3 READ getEmergencyStop3 NOTIFY emergencyStop3Changed)
-    Q_PROPERTY(double emergencyStop4 READ getEmergencyStop4 NOTIFY emergencyStop4Changed)
-    Q_PROPERTY(double emergencyStop5 READ getEmergencyStop5 NOTIFY emergencyStop5Changed)
-    Q_PROPERTY(double emergencyStop6 READ getEmergencyStop6 NOTIFY emergencyStop6Changed)
-    Q_PROPERTY(double emergencyStop7 READ getEmergencyStop7 NOTIFY emergencyStop7Changed)
-
-    Q_PROPERTY(double mainDriveLeftDoor1Open READ getMainDriveLeftDoor1Open NOTIFY mainDriveLeftDoor1OpenChanged)
-    Q_PROPERTY(double mainDriveLeftDoor2Open READ getMainDriveLeftDoor2Open NOTIFY mainDriveLeftDoor2OpenChanged)
-    Q_PROPERTY(double mainDriveRightDoor3Open READ getMainDriveRightDoor3Open NOTIFY mainDriveRightDoor3OpenChanged)
-    Q_PROPERTY(double mainDriveRightDoor4Open READ getMainDriveRightDoor4Open NOTIFY mainDriveRightDoor4OpenChanged)
-    Q_PROPERTY(double largeWinderLeftDoor5Open READ getLargeWinderLeftDoor5Open NOTIFY largeWinderLeftDoor5OpenChanged)
-    Q_PROPERTY(double largeWinderLeftDoor6Open READ getLargeWinderLeftDoor6Open NOTIFY largeWinderLeftDoor6OpenChanged)
-    Q_PROPERTY(double largeWinderRightDoor7Open READ getLargeWinderRightDoor7Open NOTIFY largeWinderRightDoor7OpenChanged)
-    Q_PROPERTY(double largeWinderRightDoor8Open READ getLargeWinderRightDoor8Open NOTIFY largeWinderRightDoor8OpenChanged)
-
-    //信號燈
-    Q_PROPERTY(int webAlignerDisconnectLight READ getWebAlignerDisconnectLight NOTIFY webAlignerDisconnectLightChanged)
-    Q_PROPERTY(int emergencyStop1Light READ getEmergencyStop1Light NOTIFY emergencyStop1LightChanged)
-    Q_PROPERTY(int emergencyStop2Light READ getEmergencyStop2Light NOTIFY emergencyStop2LightChanged)
-    Q_PROPERTY(int emergencyStop3Light READ getEmergencyStop3Light NOTIFY emergencyStop3LightChanged)
-    Q_PROPERTY(int emergencyStop4Light READ getEmergencyStop4Light NOTIFY emergencyStop4LightChanged)
-    Q_PROPERTY(int emergencyStop5Light READ getEmergencyStop5Light NOTIFY emergencyStop5LightChanged)
-    Q_PROPERTY(int emergencyStop6Light READ getEmergencyStop6Light NOTIFY emergencyStop6LightChanged)
-    Q_PROPERTY(int emergencyStop7Light READ getEmergencyStop7Light NOTIFY emergencyStop7LightChanged)
-
-    Q_PROPERTY(int mainDriveLeftDoor1OpenLight READ getMainDriveLeftDoor1OpenLight NOTIFY mainDriveLeftDoor1OpenLightChanged)
-    Q_PROPERTY(int mainDriveLeftDoor2OpenLight READ getMainDriveLeftDoor2OpenLight NOTIFY mainDriveLeftDoor2OpenLightChanged)
-    Q_PROPERTY(int mainDriveRightDoor3OpenLight READ getMainDriveRightDoor3OpenLight NOTIFY mainDriveRightDoor3OpenLightChanged)
-    Q_PROPERTY(int mainDriveRightDoor4OpenLight READ getMainDriveRightDoor4OpenLight NOTIFY mainDriveRightDoor4OpenLightChanged)
-    Q_PROPERTY(int largeWinderLeftDoor5OpenLight READ getLargeWinderLeftDoor5OpenLight NOTIFY largeWinderLeftDoor5OpenLightChanged)
-    Q_PROPERTY(int largeWinderLeftDoor6OpenLight READ getLargeWinderLeftDoor6OpenLight NOTIFY largeWinderLeftDoor6OpenLightChanged)
-    Q_PROPERTY(int largeWinderRightDoor7OpenLight READ getLargeWinderRightDoor7OpenLight NOTIFY largeWinderRightDoor7OpenLightChanged)
-    Q_PROPERTY(int largeWinderRightDoor8OpenLight READ getLargeWinderRightDoor8OpenLight NOTIFY largeWinderRightDoor8OpenLightChanged)
-
-    // ===== INPUT-4 Fence Detect =====
-    Q_PROPERTY(double unwindingFenceDetect1 READ getUnwindingFenceDetect1 NOTIFY unwindingFenceDetect1Changed)
-    Q_PROPERTY(double unwindingFenceDetect2 READ getUnwindingFenceDetect2 NOTIFY unwindingFenceDetect2Changed)
-    Q_PROPERTY(double largeWinderFenceDetect3 READ getLargeWinderFenceDetect3 NOTIFY largeWinderFenceDetect3Changed)
-    Q_PROPERTY(double largeWinderFenceDetect4 READ getLargeWinderFenceDetect4 NOTIFY largeWinderFenceDetect4Changed)
-
-    //信號燈
-    Q_PROPERTY(int unwindingFenceDetect1Light READ getUnwindingFenceDetect1Light NOTIFY unwindingFenceDetect1LightChanged)
-    Q_PROPERTY(int unwindingFenceDetect2Light READ getUnwindingFenceDetect2Light NOTIFY unwindingFenceDetect2LightChanged)
-    Q_PROPERTY(int largeWinderFenceDetect3Light READ getLargeWinderFenceDetect3Light NOTIFY largeWinderFenceDetect3LightChanged)
-    Q_PROPERTY(int largeWinderFenceDetect4Light READ getLargeWinderFenceDetect4Light NOTIFY largeWinderFenceDetect4LightChanged)
-
+        Q_PROPERTY(double unwinderVfdFreqAlarm READ getUnwinderVfdFreqAlarm NOTIFY unwinderVfdFreqAlarmChanged)
+        Q_PROPERTY(double mainDriveVfdFreqAlarm READ getMainDriveVfdFreqAlarm NOTIFY mainDriveVfdFreqAlarmChanged)
+        Q_PROPERTY(double smallWinderVfdFreqAlarm READ getSmallWinderVfdFreqAlarm NOTIFY smallWinderVfdFreqAlarmChanged)
+        Q_PROPERTY(double largeWinderVfdFreqAlarm READ getLargeWinderVfdFreqAlarm NOTIFY largeWinderVfdFreqAlarmChanged)
+        Q_PROPERTY(double smallCutterVfdFreqAlarm READ getSmallCutterVfdFreqAlarm NOTIFY smallCutterVfdFreqAlarmChanged)
+        Q_PROPERTY(double selvedgeFanVfdFreqAlarm READ getSelvedgeFanVfdFreqAlarm NOTIFY selvedgeFanVfdFreqAlarmChanged)
+
+        Q_PROPERTY(double leftFanOverloadAlarm READ getLeftFanOverloadAlarm NOTIFY leftFanOverloadAlarmChanged)
+        Q_PROPERTY(double rightFanOverloadAlarm READ getRightFanOverloadAlarm NOTIFY rightFanOverloadAlarmChanged)
+
+        Q_PROPERTY(double largeCutterVfdFreqAlarm READ getLargeCutterVfdFreqAlarm NOTIFY largeCutterVfdFreqAlarmChanged)
+        Q_PROPERTY(double leftSelvedgeWinderVfdAlarm READ getLeftSelvedgeWinderVfdAlarm NOTIFY leftSelvedgeWinderVfdAlarmChanged)
+        Q_PROPERTY(double rightSelvedgeWinderVfdAlarm READ getRightSelvedgeWinderVfdAlarm NOTIFY rightSelvedgeWinderVfdAlarmChanged)
+
+        Q_PROPERTY(double webAlignerVfdFreqAlarm READ getWebAlignerVfdFreqAlarm NOTIFY webAlignerVfdFreqAlarmChanged)
+
+        Q_PROPERTY(double unwinderPowerLoss READ getUnwinderPowerLoss NOTIFY unwinderPowerLossChanged)
+        Q_PROPERTY(double mainDrivePowerLoss READ getMainDrivePowerLoss NOTIFY mainDrivePowerLossChanged)
+        Q_PROPERTY(double smallWinderPowerLoss READ getSmallWinderPowerLoss NOTIFY smallWinderPowerLossChanged)
+        Q_PROPERTY(double largeWinderPowerLoss READ getLargeWinderPowerLoss NOTIFY largeWinderPowerLossChanged)
+
+        //信號燈
+        Q_PROPERTY(int unwinderVfdFreqAlarmLight READ getUnwinderVfdFreqAlarmLight NOTIFY unwinderVfdFreqAlarmLightChanged)
+        Q_PROPERTY(int mainDriveVfdFreqAlarmLight READ getMainDriveVfdFreqAlarmLight NOTIFY mainDriveVfdFreqAlarmLightChanged)
+        Q_PROPERTY(int smallWinderVfdFreqAlarmLight READ getSmallWinderVfdFreqAlarmLight NOTIFY smallWinderVfdFreqAlarmLightChanged)
+        Q_PROPERTY(int largeWinderVfdFreqAlarmLight READ getLargeWinderVfdFreqAlarmLight NOTIFY largeWinderVfdFreqAlarmLightChanged)
+        Q_PROPERTY(int smallCutterVfdFreqAlarmLight READ getSmallCutterVfdFreqAlarmLight NOTIFY smallCutterVfdFreqAlarmLightChanged)
+        Q_PROPERTY(int selvedgeFanVfdFreqAlarmLight READ getSelvedgeFanVfdFreqAlarmLight NOTIFY selvedgeFanVfdFreqAlarmLightChanged)
+
+        Q_PROPERTY(int leftFanOverloadAlarmLight READ getLeftFanOverloadAlarmLight NOTIFY leftFanOverloadAlarmLightChanged)
+        Q_PROPERTY(int rightFanOverloadAlarmLight READ getRightFanOverloadAlarmLight NOTIFY rightFanOverloadAlarmLightChanged)
+
+        Q_PROPERTY(int largeCutterVfdFreqAlarmLight READ getLargeCutterVfdFreqAlarmLight NOTIFY largeCutterVfdFreqAlarmLightChanged)
+        Q_PROPERTY(int leftSelvedgeWinderVfdAlarmLight READ getLeftSelvedgeWinderVfdAlarmLight NOTIFY leftSelvedgeWinderVfdAlarmLightChanged)
+        Q_PROPERTY(int rightSelvedgeWinderVfdAlarmLight READ getRightSelvedgeWinderVfdAlarmLight NOTIFY rightSelvedgeWinderVfdAlarmLightChanged)
+
+        Q_PROPERTY(int webAlignerVfdFreqAlarmLight READ getWebAlignerVfdFreqAlarmLight NOTIFY webAlignerVfdFreqAlarmLightChanged)
+
+        Q_PROPERTY(int unwinderPowerLossLight READ getUnwinderPowerLossLight NOTIFY unwinderPowerLossLightChanged)
+        Q_PROPERTY(int mainDrivePowerLossLight READ getMainDrivePowerLossLight NOTIFY mainDrivePowerLossLightChanged)
+        Q_PROPERTY(int smallWinderPowerLossLight READ getSmallWinderPowerLossLight NOTIFY smallWinderPowerLossLightChanged)
+        Q_PROPERTY(int largeWinderPowerLossLight READ getLargeWinderPowerLossLight NOTIFY largeWinderPowerLossLightChanged)
+
+
+
+        // ===== INPUT-2 Power Loss =====
+        Q_PROPERTY(double smallCutterPowerLoss READ getSmallCutterPowerLoss NOTIFY smallCutterPowerLossChanged)
+        Q_PROPERTY(double selvedgeFanPowerLoss READ getSelvedgeFanPowerLoss NOTIFY selvedgeFanPowerLossChanged)
+        Q_PROPERTY(double largeCutterPowerLoss READ getLargeCutterPowerLoss NOTIFY largeCutterPowerLossChanged)
+        Q_PROPERTY(double leftSelvedgeWinderPowerLoss READ getLeftSelvedgeWinderPowerLoss NOTIFY leftSelvedgeWinderPowerLossChanged)
+        Q_PROPERTY(double rightSelvedgeWinderPowerLoss READ getRightSelvedgeWinderPowerLoss NOTIFY rightSelvedgeWinderPowerLossChanged)
+        Q_PROPERTY(double webAlignerPowerLoss READ getWebAlignerPowerLoss NOTIFY webAlignerPowerLossChanged)
+        Q_PROPERTY(double unwinderDisconnect READ getUnwinderDisconnect NOTIFY unwinderDisconnectChanged)
+        Q_PROPERTY(double mainDriveDisconnect READ getMainDriveDisconnect NOTIFY mainDriveDisconnectChanged)
+        Q_PROPERTY(double smallWinderDisconnect READ getSmallWinderDisconnect NOTIFY smallWinderDisconnectChanged)
+        Q_PROPERTY(double largeWinderDisconnect READ getLargeWinderDisconnect NOTIFY largeWinderDisconnectChanged)
+        Q_PROPERTY(double smallCutterDisconnect READ getSmallCutterDisconnect NOTIFY smallCutterDisconnectChanged)
+        Q_PROPERTY(double leftFanDisconnect READ getLeftFanDisconnect NOTIFY leftFanDisconnectChanged)
+        Q_PROPERTY(double rightFanDisconnect READ getRightFanDisconnect NOTIFY rightFanDisconnectChanged)
+        Q_PROPERTY(double largeCutterDisconnect READ getLargeCutterDisconnect NOTIFY largeCutterDisconnectChanged)
+        Q_PROPERTY(double leftSelvedgeWinderDisconnect READ getLeftSelvedgeWinderDisconnect NOTIFY leftSelvedgeWinderDisconnectChanged)
+        Q_PROPERTY(double rightSelvedgeWinderDisconnect READ getRightSelvedgeWinderDisconnect NOTIFY rightSelvedgeWinderDisconnectChanged)
+
+        //信號燈
+        Q_PROPERTY(int smallCutterPowerLossLight READ getSmallCutterPowerLossLight NOTIFY smallCutterPowerLossLightChanged)
+        Q_PROPERTY(int selvedgeFanPowerLossLight READ getSelvedgeFanPowerLossLight NOTIFY selvedgeFanPowerLossLightChanged)
+        Q_PROPERTY(int largeCutterPowerLossLight READ getLargeCutterPowerLossLight NOTIFY largeCutterPowerLossLightChanged)
+        Q_PROPERTY(int leftSelvedgeWinderPowerLossLight READ getLeftSelvedgeWinderPowerLossLight NOTIFY leftSelvedgeWinderPowerLossLightChanged)
+        Q_PROPERTY(int rightSelvedgeWinderPowerLossLight READ getRightSelvedgeWinderPowerLossLight NOTIFY rightSelvedgeWinderPowerLossLightChanged)
+        Q_PROPERTY(int webAlignerPowerLossLight READ getWebAlignerPowerLossLight NOTIFY webAlignerPowerLossLightChanged)
+        Q_PROPERTY(int unwinderDisconnectLight READ getUnwinderDisconnectLight NOTIFY unwinderDisconnectLightChanged)
+        Q_PROPERTY(int mainDriveDisconnectLight READ getMainDriveDisconnectLight NOTIFY mainDriveDisconnectLightChanged)
+        Q_PROPERTY(int smallWinderDisconnectLight READ getSmallWinderDisconnectLight NOTIFY smallWinderDisconnectLightChanged)
+        Q_PROPERTY(int largeWinderDisconnectLight READ getLargeWinderDisconnectLight NOTIFY largeWinderDisconnectLightChanged)
+        Q_PROPERTY(int smallCutterDisconnectLight READ getSmallCutterDisconnectLight NOTIFY smallCutterDisconnectLightChanged)
+        Q_PROPERTY(int leftFanDisconnectLight READ getLeftFanDisconnectLight NOTIFY leftFanDisconnectLightChanged)
+        Q_PROPERTY(int rightFanDisconnectLight READ getRightFanDisconnectLight NOTIFY rightFanDisconnectLightChanged)
+        Q_PROPERTY(int largeCutterDisconnectLight READ getLargeCutterDisconnectLight NOTIFY largeCutterDisconnectLightChanged)
+        Q_PROPERTY(int leftSelvedgeWinderDisconnectLight READ getLeftSelvedgeWinderDisconnectLight NOTIFY leftSelvedgeWinderDisconnectLightChanged)
+        Q_PROPERTY(int rightSelvedgeWinderDisconnectLight READ getRightSelvedgeWinderDisconnectLight NOTIFY rightSelvedgeWinderDisconnectLightChanged)
+
+
+        // ===== INPUT-3 =====
+        Q_PROPERTY(double webAlignerDisconnect READ getWebAlignerDisconnect NOTIFY webAlignerDisconnectChanged)
+        Q_PROPERTY(double emergencyStop1 READ getEmergencyStop1 NOTIFY emergencyStop1Changed)
+        Q_PROPERTY(double emergencyStop2 READ getEmergencyStop2 NOTIFY emergencyStop2Changed)
+        Q_PROPERTY(double emergencyStop3 READ getEmergencyStop3 NOTIFY emergencyStop3Changed)
+        Q_PROPERTY(double emergencyStop4 READ getEmergencyStop4 NOTIFY emergencyStop4Changed)
+        Q_PROPERTY(double emergencyStop5 READ getEmergencyStop5 NOTIFY emergencyStop5Changed)
+        Q_PROPERTY(double emergencyStop6 READ getEmergencyStop6 NOTIFY emergencyStop6Changed)
+        Q_PROPERTY(double emergencyStop7 READ getEmergencyStop7 NOTIFY emergencyStop7Changed)
+
+        Q_PROPERTY(double mainDriveLeftDoor1Open READ getMainDriveLeftDoor1Open NOTIFY mainDriveLeftDoor1OpenChanged)
+        Q_PROPERTY(double mainDriveLeftDoor2Open READ getMainDriveLeftDoor2Open NOTIFY mainDriveLeftDoor2OpenChanged)
+        Q_PROPERTY(double mainDriveRightDoor3Open READ getMainDriveRightDoor3Open NOTIFY mainDriveRightDoor3OpenChanged)
+        Q_PROPERTY(double mainDriveRightDoor4Open READ getMainDriveRightDoor4Open NOTIFY mainDriveRightDoor4OpenChanged)
+        Q_PROPERTY(double largeWinderLeftDoor5Open READ getLargeWinderLeftDoor5Open NOTIFY largeWinderLeftDoor5OpenChanged)
+        Q_PROPERTY(double largeWinderLeftDoor6Open READ getLargeWinderLeftDoor6Open NOTIFY largeWinderLeftDoor6OpenChanged)
+        Q_PROPERTY(double largeWinderRightDoor7Open READ getLargeWinderRightDoor7Open NOTIFY largeWinderRightDoor7OpenChanged)
+        Q_PROPERTY(double largeWinderRightDoor8Open READ getLargeWinderRightDoor8Open NOTIFY largeWinderRightDoor8OpenChanged)
+
+        //信號燈
+        Q_PROPERTY(int webAlignerDisconnectLight READ getWebAlignerDisconnectLight NOTIFY webAlignerDisconnectLightChanged)
+        Q_PROPERTY(int emergencyStop1Light READ getEmergencyStop1Light NOTIFY emergencyStop1LightChanged)
+        Q_PROPERTY(int emergencyStop2Light READ getEmergencyStop2Light NOTIFY emergencyStop2LightChanged)
+        Q_PROPERTY(int emergencyStop3Light READ getEmergencyStop3Light NOTIFY emergencyStop3LightChanged)
+        Q_PROPERTY(int emergencyStop4Light READ getEmergencyStop4Light NOTIFY emergencyStop4LightChanged)
+        Q_PROPERTY(int emergencyStop5Light READ getEmergencyStop5Light NOTIFY emergencyStop5LightChanged)
+        Q_PROPERTY(int emergencyStop6Light READ getEmergencyStop6Light NOTIFY emergencyStop6LightChanged)
+        Q_PROPERTY(int emergencyStop7Light READ getEmergencyStop7Light NOTIFY emergencyStop7LightChanged)
+
+        Q_PROPERTY(int mainDriveLeftDoor1OpenLight READ getMainDriveLeftDoor1OpenLight NOTIFY mainDriveLeftDoor1OpenLightChanged)
+        Q_PROPERTY(int mainDriveLeftDoor2OpenLight READ getMainDriveLeftDoor2OpenLight NOTIFY mainDriveLeftDoor2OpenLightChanged)
+        Q_PROPERTY(int mainDriveRightDoor3OpenLight READ getMainDriveRightDoor3OpenLight NOTIFY mainDriveRightDoor3OpenLightChanged)
+        Q_PROPERTY(int mainDriveRightDoor4OpenLight READ getMainDriveRightDoor4OpenLight NOTIFY mainDriveRightDoor4OpenLightChanged)
+        Q_PROPERTY(int largeWinderLeftDoor5OpenLight READ getLargeWinderLeftDoor5OpenLight NOTIFY largeWinderLeftDoor5OpenLightChanged)
+        Q_PROPERTY(int largeWinderLeftDoor6OpenLight READ getLargeWinderLeftDoor6OpenLight NOTIFY largeWinderLeftDoor6OpenLightChanged)
+        Q_PROPERTY(int largeWinderRightDoor7OpenLight READ getLargeWinderRightDoor7OpenLight NOTIFY largeWinderRightDoor7OpenLightChanged)
+        Q_PROPERTY(int largeWinderRightDoor8OpenLight READ getLargeWinderRightDoor8OpenLight NOTIFY largeWinderRightDoor8OpenLightChanged)
+
+        // ===== INPUT-4 Fence Detect =====
+        Q_PROPERTY(double unwindingFenceDetect1 READ getUnwindingFenceDetect1 NOTIFY unwindingFenceDetect1Changed)
+        Q_PROPERTY(double unwindingFenceDetect2 READ getUnwindingFenceDetect2 NOTIFY unwindingFenceDetect2Changed)
+        Q_PROPERTY(double largeWinderFenceDetect3 READ getLargeWinderFenceDetect3 NOTIFY largeWinderFenceDetect3Changed)
+        Q_PROPERTY(double largeWinderFenceDetect4 READ getLargeWinderFenceDetect4 NOTIFY largeWinderFenceDetect4Changed)
+
+        //信號燈
+        Q_PROPERTY(int unwindingFenceDetect1Light READ getUnwindingFenceDetect1Light NOTIFY unwindingFenceDetect1LightChanged)
+        Q_PROPERTY(int unwindingFenceDetect2Light READ getUnwindingFenceDetect2Light NOTIFY unwindingFenceDetect2LightChanged)
+        Q_PROPERTY(int largeWinderFenceDetect3Light READ getLargeWinderFenceDetect3Light NOTIFY largeWinderFenceDetect3LightChanged)
+        Q_PROPERTY(int largeWinderFenceDetect4Light READ getLargeWinderFenceDetect4Light NOTIFY largeWinderFenceDetect4LightChanged)
+
 
-    // ===== INPUT-4 Safety Light Curtain =====
-    Q_PROPERTY(double unwindingSafetyLightCurtainAlarm READ getUnwindingSafetyLightCurtainAlarm NOTIFY unwindingSafetyLightCurtainAlarmChanged)
-    Q_PROPERTY(double inspectionSafetyLightCurtainAlarm READ getInspectionSafetyLightCurtainAlarm NOTIFY inspectionSafetyLightCurtainAlarmChanged)
-    Q_PROPERTY(double largeWinderSafetyLightCurtainAlarm READ getLargeWinderSafetyLightCurtainAlarm NOTIFY largeWinderSafetyLightCurtainAlarmChanged)
-
-    //信號燈
-    Q_PROPERTY(int unwindingSafetyLightCurtainAlarmLight READ getUnwindingSafetyLightCurtainAlarmLight NOTIFY unwindingSafetyLightCurtainAlarmLightChanged)
-    Q_PROPERTY(int inspectionSafetyLightCurtainAlarmLight READ getInspectionSafetyLightCurtainAlarmLight NOTIFY inspectionSafetyLightCurtainAlarmLightChanged)
-    Q_PROPERTY(int largeWinderSafetyLightCurtainAlarmLight READ getLargeWinderSafetyLightCurtainAlarmLight NOTIFY largeWinderSafetyLightCurtainAlarmLightChanged)
+        // ===== INPUT-4 Safety Light Curtain =====
+        Q_PROPERTY(double unwindingSafetyLightCurtainAlarm READ getUnwindingSafetyLightCurtainAlarm NOTIFY unwindingSafetyLightCurtainAlarmChanged)
+        Q_PROPERTY(double inspectionSafetyLightCurtainAlarm READ getInspectionSafetyLightCurtainAlarm NOTIFY inspectionSafetyLightCurtainAlarmChanged)
+        Q_PROPERTY(double largeWinderSafetyLightCurtainAlarm READ getLargeWinderSafetyLightCurtainAlarm NOTIFY largeWinderSafetyLightCurtainAlarmChanged)
+
+        //信號燈
+        Q_PROPERTY(int unwindingSafetyLightCurtainAlarmLight READ getUnwindingSafetyLightCurtainAlarmLight NOTIFY unwindingSafetyLightCurtainAlarmLightChanged)
+        Q_PROPERTY(int inspectionSafetyLightCurtainAlarmLight READ getInspectionSafetyLightCurtainAlarmLight NOTIFY inspectionSafetyLightCurtainAlarmLightChanged)
+        Q_PROPERTY(int largeWinderSafetyLightCurtainAlarmLight READ getLargeWinderSafetyLightCurtainAlarmLight NOTIFY largeWinderSafetyLightCurtainAlarmLightChanged)
 
-    // ===== INPUT-4 Zero Speed Detect =====
-    Q_PROPERTY(double smallWinderZeroSpeedDetect READ getSmallWinderZeroSpeedDetect NOTIFY smallWinderZeroSpeedDetectChanged)
-    Q_PROPERTY(double largeWinderZeroSpeedDetect READ getLargeWinderZeroSpeedDetect NOTIFY largeWinderZeroSpeedDetectChanged)
+        // ===== INPUT-4 Zero Speed Detect =====
+        Q_PROPERTY(double smallWinderZeroSpeedDetect READ getSmallWinderZeroSpeedDetect NOTIFY smallWinderZeroSpeedDetectChanged)
+        Q_PROPERTY(double largeWinderZeroSpeedDetect READ getLargeWinderZeroSpeedDetect NOTIFY largeWinderZeroSpeedDetectChanged)
 
-    // ===== INPUT-4 信號燈 =====
-    Q_PROPERTY(int smallWinderZeroSpeedDetectLight READ getSmallWinderZeroSpeedDetectLight NOTIFY smallWinderZeroSpeedDetectLightChanged)
-    Q_PROPERTY(int largeWinderZeroSpeedDetectLight READ getLargeWinderZeroSpeedDetectLight NOTIFY largeWinderZeroSpeedDetectLightChanged)
+        // ===== INPUT-4 信號燈 =====
+        Q_PROPERTY(int smallWinderZeroSpeedDetectLight READ getSmallWinderZeroSpeedDetectLight NOTIFY smallWinderZeroSpeedDetectLightChanged)
+        Q_PROPERTY(int largeWinderZeroSpeedDetectLight READ getLargeWinderZeroSpeedDetectLight NOTIFY largeWinderZeroSpeedDetectLightChanged)
 
-    // ===== INPUT-4 Tension Over =====
-    Q_PROPERTY(double unwindingTensionOver READ getUnwindingTensionOver NOTIFY unwindingTensionOverChanged)
-    Q_PROPERTY(double smallWinderTensionOver READ getSmallWinderTensionOver NOTIFY smallWinderTensionOverChanged)
-    Q_PROPERTY(double largeWinderTensionOver READ getLargeWinderTensionOver NOTIFY largeWinderTensionOverChanged)
+        // ===== INPUT-4 Tension Over =====
+        Q_PROPERTY(double unwindingTensionOver READ getUnwindingTensionOver NOTIFY unwindingTensionOverChanged)
+        Q_PROPERTY(double smallWinderTensionOver READ getSmallWinderTensionOver NOTIFY smallWinderTensionOverChanged)
+        Q_PROPERTY(double largeWinderTensionOver READ getLargeWinderTensionOver NOTIFY largeWinderTensionOverChanged)
 
-    //信號燈
-    Q_PROPERTY(int unwindingTensionOverLight READ getUnwindingTensionOverLight NOTIFY unwindingTensionOverLightChanged)
-    Q_PROPERTY(int smallWinderTensionOverLight READ getSmallWinderTensionOverLight NOTIFY smallWinderTensionOverLightChanged)
-    Q_PROPERTY(int largeWinderTensionOverLight READ getLargeWinderTensionOverLight NOTIFY largeWinderTensionOverLightChanged)
+        //信號燈
+        Q_PROPERTY(int unwindingTensionOverLight READ getUnwindingTensionOverLight NOTIFY unwindingTensionOverLightChanged)
+        Q_PROPERTY(int smallWinderTensionOverLight READ getSmallWinderTensionOverLight NOTIFY smallWinderTensionOverLightChanged)
+        Q_PROPERTY(int largeWinderTensionOverLight READ getLargeWinderTensionOverLight NOTIFY largeWinderTensionOverLightChanged)
 
-    // ===== INPUT-4 Angle Alarm =====
-    Q_PROPERTY(double leftSelvedgeWinderAngleAlarm READ getLeftSelvedgeWinderAngleAlarm NOTIFY leftSelvedgeWinderAngleAlarmChanged)
-    Q_PROPERTY(double rightSelvedgeWinderAngleAlarm READ getRightSelvedgeWinderAngleAlarm NOTIFY rightSelvedgeWinderAngleAlarmChanged)
+        // ===== INPUT-4 Angle Alarm =====
+        Q_PROPERTY(double leftSelvedgeWinderAngleAlarm READ getLeftSelvedgeWinderAngleAlarm NOTIFY leftSelvedgeWinderAngleAlarmChanged)
+        Q_PROPERTY(double rightSelvedgeWinderAngleAlarm READ getRightSelvedgeWinderAngleAlarm NOTIFY rightSelvedgeWinderAngleAlarmChanged)
 
-    //信號燈
-    Q_PROPERTY(int leftSelvedgeWinderAngleAlarmLight READ getLeftSelvedgeWinderAngleAlarmLight NOTIFY leftSelvedgeWinderAngleAlarmLightChanged)
-    Q_PROPERTY(int rightSelvedgeWinderAngleAlarmLight READ getRightSelvedgeWinderAngleAlarmLight NOTIFY rightSelvedgeWinderAngleAlarmLightChanged)
+        //信號燈
+        Q_PROPERTY(int leftSelvedgeWinderAngleAlarmLight READ getLeftSelvedgeWinderAngleAlarmLight NOTIFY leftSelvedgeWinderAngleAlarmLightChanged)
+        Q_PROPERTY(int rightSelvedgeWinderAngleAlarmLight READ getRightSelvedgeWinderAngleAlarmLight NOTIFY rightSelvedgeWinderAngleAlarmLightChanged)
 
 
-    // ===== OUTPUT Control =====
-    Q_PROPERTY(double vfdAlarmReset READ getVfdAlarmReset WRITE setVfdAlarmReset NOTIFY vfdAlarmResetChanged)
-    Q_PROPERTY(double unwinderForward READ getUnwinderForward WRITE setUnwinderForward NOTIFY unwinderForwardChanged)
-    Q_PROPERTY(double unwinderReverse READ getUnwinderReverse WRITE setUnwinderReverse NOTIFY unwinderReverseChanged)
+        // ===== OUTPUT Control =====
+        Q_PROPERTY(double vfdAlarmReset READ getVfdAlarmReset WRITE setVfdAlarmReset NOTIFY vfdAlarmResetChanged)
+        Q_PROPERTY(double unwinderForward READ getUnwinderForward WRITE setUnwinderForward NOTIFY unwinderForwardChanged)
+        Q_PROPERTY(double unwinderReverse READ getUnwinderReverse WRITE setUnwinderReverse NOTIFY unwinderReverseChanged)
 
-    Q_PROPERTY(double mainDriveForward READ getMainDriveForward WRITE setMainDriveForward NOTIFY mainDriveForwardChanged)
-    Q_PROPERTY(double mainDriveReverse READ getMainDriveReverse WRITE setMainDriveReverse NOTIFY mainDriveReverseChanged)
+        Q_PROPERTY(double mainDriveForward READ getMainDriveForward WRITE setMainDriveForward NOTIFY mainDriveForwardChanged)
+        Q_PROPERTY(double mainDriveReverse READ getMainDriveReverse WRITE setMainDriveReverse NOTIFY mainDriveReverseChanged)
 
-    Q_PROPERTY(double smallWinderForward READ getSmallWinderForward WRITE setSmallWinderForward NOTIFY smallWinderForwardChanged)
-    Q_PROPERTY(double smallWinderReverse READ getSmallWinderReverse WRITE setSmallWinderReverse NOTIFY smallWinderReverseChanged)
+        Q_PROPERTY(double smallWinderForward READ getSmallWinderForward WRITE setSmallWinderForward NOTIFY smallWinderForwardChanged)
+        Q_PROPERTY(double smallWinderReverse READ getSmallWinderReverse WRITE setSmallWinderReverse NOTIFY smallWinderReverseChanged)
 
-    Q_PROPERTY(double largeWinderForward READ getLargeWinderForward WRITE setLargeWinderForward NOTIFY largeWinderForwardChanged)
-    Q_PROPERTY(double largeWinderReverse READ getLargeWinderReverse WRITE setLargeWinderReverse NOTIFY largeWinderReverseChanged)
+        Q_PROPERTY(double largeWinderForward READ getLargeWinderForward WRITE setLargeWinderForward NOTIFY largeWinderForwardChanged)
+        Q_PROPERTY(double largeWinderReverse READ getLargeWinderReverse WRITE setLargeWinderReverse NOTIFY largeWinderReverseChanged)
 
-    Q_PROPERTY(double smallCutterStart READ getSmallCutterStart WRITE setSmallCutterStart NOTIFY smallCutterStartChanged)
-    Q_PROPERTY(double selvedgeFanStart READ getSelvedgeFanStart WRITE setSelvedgeFanStart NOTIFY selvedgeFanStartChanged)
-    Q_PROPERTY(double largeCutterStart READ getLargeCutterStart WRITE setLargeCutterStart NOTIFY largeCutterStartChanged)
+        Q_PROPERTY(double smallCutterStart READ getSmallCutterStart WRITE setSmallCutterStart NOTIFY smallCutterStartChanged)
+        Q_PROPERTY(double selvedgeFanStart READ getSelvedgeFanStart WRITE setSelvedgeFanStart NOTIFY selvedgeFanStartChanged)
+        Q_PROPERTY(double largeCutterStart READ getLargeCutterStart WRITE setLargeCutterStart NOTIFY largeCutterStartChanged)
 
-    Q_PROPERTY(double leftSelvedgeWinderForward READ getLeftSelvedgeWinderForward WRITE setLeftSelvedgeWinderForward NOTIFY leftSelvedgeWinderForwardChanged)
-    Q_PROPERTY(double leftSelvedgeWinderReverse READ getLeftSelvedgeWinderReverse WRITE setLeftSelvedgeWinderReverse NOTIFY leftSelvedgeWinderReverseChanged)
+        Q_PROPERTY(double leftSelvedgeWinderForward READ getLeftSelvedgeWinderForward WRITE setLeftSelvedgeWinderForward NOTIFY leftSelvedgeWinderForwardChanged)
+        Q_PROPERTY(double leftSelvedgeWinderReverse READ getLeftSelvedgeWinderReverse WRITE setLeftSelvedgeWinderReverse NOTIFY leftSelvedgeWinderReverseChanged)
 
-    Q_PROPERTY(double rightSelvedgeWinderForward READ getRightSelvedgeWinderForward WRITE setRightSelvedgeWinderForward NOTIFY rightSelvedgeWinderForwardChanged)
-    Q_PROPERTY(double rightSelvedgeWinderReverse READ getRightSelvedgeWinderReverse WRITE setRightSelvedgeWinderReverse NOTIFY rightSelvedgeWinderReverseChanged)
+        Q_PROPERTY(double rightSelvedgeWinderForward READ getRightSelvedgeWinderForward WRITE setRightSelvedgeWinderForward NOTIFY rightSelvedgeWinderForwardChanged)
+        Q_PROPERTY(double rightSelvedgeWinderReverse READ getRightSelvedgeWinderReverse WRITE setRightSelvedgeWinderReverse NOTIFY rightSelvedgeWinderReverseChanged)
 
-    //OUTPUT1 switch
-    Q_PROPERTY(int vfdAlarmResetSwitch READ getVfdAlarmResetSwitch WRITE setVfdAlarmResetSwitch NOTIFY vfdAlarmResetSwitchChanged)
-    Q_PROPERTY(int unwinderForwardSwitch READ getUnwinderForwardSwitch WRITE setUnwinderForwardSwitch NOTIFY unwinderForwardSwitchChanged)
-    Q_PROPERTY(int unwinderReverseSwitch READ getUnwinderReverseSwitch WRITE setUnwinderReverseSwitch NOTIFY unwinderReverseSwitchChanged)
+        //OUTPUT1 switch
+        Q_PROPERTY(int vfdAlarmResetSwitch READ getVfdAlarmResetSwitch WRITE setVfdAlarmResetSwitch NOTIFY vfdAlarmResetSwitchChanged)
+        Q_PROPERTY(int unwinderForwardSwitch READ getUnwinderForwardSwitch WRITE setUnwinderForwardSwitch NOTIFY unwinderForwardSwitchChanged)
+        Q_PROPERTY(int unwinderReverseSwitch READ getUnwinderReverseSwitch WRITE setUnwinderReverseSwitch NOTIFY unwinderReverseSwitchChanged)
 
-    Q_PROPERTY(int mainDriveForwardSwitch READ getMainDriveForwardSwitch WRITE setMainDriveForwardSwitch NOTIFY mainDriveForwardSwitchChanged)
-    Q_PROPERTY(int mainDriveReverseSwitch READ getMainDriveReverseSwitch WRITE setMainDriveReverseSwitch NOTIFY mainDriveReverseSwitchChanged)
+        Q_PROPERTY(int mainDriveForwardSwitch READ getMainDriveForwardSwitch WRITE setMainDriveForwardSwitch NOTIFY mainDriveForwardSwitchChanged)
+        Q_PROPERTY(int mainDriveReverseSwitch READ getMainDriveReverseSwitch WRITE setMainDriveReverseSwitch NOTIFY mainDriveReverseSwitchChanged)
 
-    Q_PROPERTY(int smallWinderForwardSwitch READ getSmallWinderForwardSwitch WRITE setSmallWinderForwardSwitch NOTIFY smallWinderForwardSwitchChanged)
-    Q_PROPERTY(int smallWinderReverseSwitch READ getSmallWinderReverseSwitch WRITE setSmallWinderReverseSwitch NOTIFY smallWinderReverseSwitchChanged)
+        Q_PROPERTY(int smallWinderForwardSwitch READ getSmallWinderForwardSwitch WRITE setSmallWinderForwardSwitch NOTIFY smallWinderForwardSwitchChanged)
+        Q_PROPERTY(int smallWinderReverseSwitch READ getSmallWinderReverseSwitch WRITE setSmallWinderReverseSwitch NOTIFY smallWinderReverseSwitchChanged)
 
-    Q_PROPERTY(int largeWinderForwardSwitch READ getLargeWinderForwardSwitch WRITE setLargeWinderForwardSwitch NOTIFY largeWinderForwardSwitchChanged)
-    Q_PROPERTY(int largeWinderReverseSwitch READ getLargeWinderReverseSwitch WRITE setLargeWinderReverseSwitch NOTIFY largeWinderReverseSwitchChanged)
+        Q_PROPERTY(int largeWinderForwardSwitch READ getLargeWinderForwardSwitch WRITE setLargeWinderForwardSwitch NOTIFY largeWinderForwardSwitchChanged)
+        Q_PROPERTY(int largeWinderReverseSwitch READ getLargeWinderReverseSwitch WRITE setLargeWinderReverseSwitch NOTIFY largeWinderReverseSwitchChanged)
 
-    Q_PROPERTY(int smallCutterStartSwitch READ getSmallCutterStartSwitch WRITE setSmallCutterStartSwitch NOTIFY smallCutterStartSwitchChanged)
-    Q_PROPERTY(int selvedgeFanStartSwitch READ getSelvedgeFanStartSwitch WRITE setSelvedgeFanStartSwitch NOTIFY selvedgeFanStartSwitchChanged)
-    Q_PROPERTY(int largeCutterStartSwitch READ getLargeCutterStartSwitch WRITE setLargeCutterStartSwitch NOTIFY largeCutterStartSwitchChanged)
+        Q_PROPERTY(int smallCutterStartSwitch READ getSmallCutterStartSwitch WRITE setSmallCutterStartSwitch NOTIFY smallCutterStartSwitchChanged)
+        Q_PROPERTY(int selvedgeFanStartSwitch READ getSelvedgeFanStartSwitch WRITE setSelvedgeFanStartSwitch NOTIFY selvedgeFanStartSwitchChanged)
+        Q_PROPERTY(int largeCutterStartSwitch READ getLargeCutterStartSwitch WRITE setLargeCutterStartSwitch NOTIFY largeCutterStartSwitchChanged)
 
-    Q_PROPERTY(int leftSelvedgeWinderForwardSwitch READ getLeftSelvedgeWinderForwardSwitch WRITE setLeftSelvedgeWinderForwardSwitch NOTIFY leftSelvedgeWinderForwardSwitchChanged)
-    Q_PROPERTY(int leftSelvedgeWinderReverseSwitch READ getLeftSelvedgeWinderReverseSwitch WRITE setLeftSelvedgeWinderReverseSwitch NOTIFY leftSelvedgeWinderReverseSwitchChanged)
+        Q_PROPERTY(int leftSelvedgeWinderForwardSwitch READ getLeftSelvedgeWinderForwardSwitch WRITE setLeftSelvedgeWinderForwardSwitch NOTIFY leftSelvedgeWinderForwardSwitchChanged)
+        Q_PROPERTY(int leftSelvedgeWinderReverseSwitch READ getLeftSelvedgeWinderReverseSwitch WRITE setLeftSelvedgeWinderReverseSwitch NOTIFY leftSelvedgeWinderReverseSwitchChanged)
 
-    Q_PROPERTY(int rightSelvedgeWinderForwardSwitch READ getRightSelvedgeWinderForwardSwitch WRITE setRightSelvedgeWinderForwardSwitch NOTIFY rightSelvedgeWinderForwardSwitchChanged)
-    Q_PROPERTY(int rightSelvedgeWinderReverseSwitch READ getRightSelvedgeWinderReverseSwitch WRITE setRightSelvedgeWinderReverseSwitch NOTIFY rightSelvedgeWinderReverseSwitchChanged)
+        Q_PROPERTY(int rightSelvedgeWinderForwardSwitch READ getRightSelvedgeWinderForwardSwitch WRITE setRightSelvedgeWinderForwardSwitch NOTIFY rightSelvedgeWinderForwardSwitchChanged)
+        Q_PROPERTY(int rightSelvedgeWinderReverseSwitch READ getRightSelvedgeWinderReverseSwitch WRITE setRightSelvedgeWinderReverseSwitch NOTIFY rightSelvedgeWinderReverseSwitchChanged)
 
-    // ===== OUTPUT-2 Control =====
-    Q_PROPERTY(double webAlignerStart READ getWebAlignerStart WRITE setWebAlignerStart NOTIFY webAlignerStartChanged)
-    Q_PROPERTY(double unwindingTensionAuto READ getUnwindingTensionAuto WRITE setUnwindingTensionAuto NOTIFY unwindingTensionAutoChanged)
-    Q_PROPERTY(double unwindingDiameterReset READ getUnwindingDiameterReset WRITE setUnwindingDiameterReset NOTIFY unwindingDiameterResetChanged)
+        // ===== OUTPUT-2 Control =====
+        Q_PROPERTY(double webAlignerStart READ getWebAlignerStart WRITE setWebAlignerStart NOTIFY webAlignerStartChanged)
+        Q_PROPERTY(double unwindingTensionAuto READ getUnwindingTensionAuto WRITE setUnwindingTensionAuto NOTIFY unwindingTensionAutoChanged)
+        Q_PROPERTY(double unwindingDiameterReset READ getUnwindingDiameterReset WRITE setUnwindingDiameterReset NOTIFY unwindingDiameterResetChanged)
 
-    Q_PROPERTY(double smallWinderTensionAuto READ getSmallWinderTensionAuto WRITE setSmallWinderTensionAuto NOTIFY smallWinderTensionAutoChanged)
-    Q_PROPERTY(double smallWinderDiameterReset READ getSmallWinderDiameterReset WRITE setSmallWinderDiameterReset NOTIFY smallWinderDiameterResetChanged)
+        Q_PROPERTY(double smallWinderTensionAuto READ getSmallWinderTensionAuto WRITE setSmallWinderTensionAuto NOTIFY smallWinderTensionAutoChanged)
+        Q_PROPERTY(double smallWinderDiameterReset READ getSmallWinderDiameterReset WRITE setSmallWinderDiameterReset NOTIFY smallWinderDiameterResetChanged)
 
-    Q_PROPERTY(double largeWinderTensionAuto READ getLargeWinderTensionAuto WRITE setLargeWinderTensionAuto NOTIFY largeWinderTensionAutoChanged)
-    Q_PROPERTY(double largeWinderDiameterReset READ getLargeWinderDiameterReset WRITE setLargeWinderDiameterReset NOTIFY largeWinderDiameterResetChanged)
+        Q_PROPERTY(double largeWinderTensionAuto READ getLargeWinderTensionAuto WRITE setLargeWinderTensionAuto NOTIFY largeWinderTensionAutoChanged)
+        Q_PROPERTY(double largeWinderDiameterReset READ getLargeWinderDiameterReset WRITE setLargeWinderDiameterReset NOTIFY largeWinderDiameterResetChanged)
 
-    Q_PROPERTY(double leftSelvedgeWinderAuto READ getLeftSelvedgeWinderAuto WRITE setLeftSelvedgeWinderAuto NOTIFY leftSelvedgeWinderAutoChanged)
-    Q_PROPERTY(double rightSelvedgeWinderAuto READ getRightSelvedgeWinderAuto WRITE setRightSelvedgeWinderAuto NOTIFY rightSelvedgeWinderAutoChanged)
+        Q_PROPERTY(double leftSelvedgeWinderAuto READ getLeftSelvedgeWinderAuto WRITE setLeftSelvedgeWinderAuto NOTIFY leftSelvedgeWinderAutoChanged)
+        Q_PROPERTY(double rightSelvedgeWinderAuto READ getRightSelvedgeWinderAuto WRITE setRightSelvedgeWinderAuto NOTIFY rightSelvedgeWinderAutoChanged)
 
-    Q_PROPERTY(double nipRollUp READ getNipRollUp WRITE setNipRollUp NOTIFY nipRollUpChanged)
-    Q_PROPERTY(double nipRollDown READ getNipRollDown WRITE setNipRollDown NOTIFY nipRollDownChanged)
+        Q_PROPERTY(double nipRollUp READ getNipRollUp WRITE setNipRollUp NOTIFY nipRollUpChanged)
+        Q_PROPERTY(double nipRollDown READ getNipRollDown WRITE setNipRollDown NOTIFY nipRollDownChanged)
 
-    Q_PROPERTY(double leftPressPlateForward READ getLeftPressPlateForward WRITE setLeftPressPlateForward NOTIFY leftPressPlateForwardChanged)
-    Q_PROPERTY(double leftPressPlateBackward READ getLeftPressPlateBackward WRITE setLeftPressPlateBackward NOTIFY leftPressPlateBackwardChanged)
+        Q_PROPERTY(double leftPressPlateForward READ getLeftPressPlateForward WRITE setLeftPressPlateForward NOTIFY leftPressPlateForwardChanged)
+        Q_PROPERTY(double leftPressPlateBackward READ getLeftPressPlateBackward WRITE setLeftPressPlateBackward NOTIFY leftPressPlateBackwardChanged)
 
-    Q_PROPERTY(double rightPressPlateForward READ getRightPressPlateForward WRITE setRightPressPlateForward NOTIFY rightPressPlateForwardChanged)
-    Q_PROPERTY(double rightPressPlateBackward READ getRightPressPlateBackward WRITE setRightPressPlateBackward NOTIFY rightPressPlateBackwardChanged)
+        Q_PROPERTY(double rightPressPlateForward READ getRightPressPlateForward WRITE setRightPressPlateForward NOTIFY rightPressPlateForwardChanged)
+        Q_PROPERTY(double rightPressPlateBackward READ getRightPressPlateBackward WRITE setRightPressPlateBackward NOTIFY rightPressPlateBackwardChanged)
 
-    Q_PROPERTY(double smallCutterIn READ getSmallCutterIn WRITE setSmallCutterIn NOTIFY smallCutterInChanged)
+        Q_PROPERTY(double smallCutterIn READ getSmallCutterIn WRITE setSmallCutterIn NOTIFY smallCutterInChanged)
 
-    // ===== OUTPUT-2 Switch =====
-    Q_PROPERTY(int webAlignerStartSwitch READ getWebAlignerStartSwitch WRITE setWebAlignerStartSwitch NOTIFY webAlignerStartSwitchChanged)
-    Q_PROPERTY(int unwindingTensionAutoSwitch READ getUnwindingTensionAutoSwitch WRITE setUnwindingTensionAutoSwitch NOTIFY unwindingTensionAutoSwitchChanged)
-    Q_PROPERTY(int unwindingDiameterResetSwitch READ getUnwindingDiameterResetSwitch WRITE setUnwindingDiameterResetSwitch NOTIFY unwindingDiameterResetSwitchChanged)
+        // ===== OUTPUT-2 Switch =====
+        Q_PROPERTY(int webAlignerStartSwitch READ getWebAlignerStartSwitch WRITE setWebAlignerStartSwitch NOTIFY webAlignerStartSwitchChanged)
+        Q_PROPERTY(int unwindingTensionAutoSwitch READ getUnwindingTensionAutoSwitch WRITE setUnwindingTensionAutoSwitch NOTIFY unwindingTensionAutoSwitchChanged)
+        Q_PROPERTY(int unwindingDiameterResetSwitch READ getUnwindingDiameterResetSwitch WRITE setUnwindingDiameterResetSwitch NOTIFY unwindingDiameterResetSwitchChanged)
 
-    Q_PROPERTY(int smallWinderTensionAutoSwitch READ getSmallWinderTensionAutoSwitch WRITE setSmallWinderTensionAutoSwitch NOTIFY smallWinderTensionAutoSwitchChanged)
-    Q_PROPERTY(int smallWinderDiameterResetSwitch READ getSmallWinderDiameterResetSwitch WRITE setSmallWinderDiameterResetSwitch NOTIFY smallWinderDiameterResetSwitchChanged)
+        Q_PROPERTY(int smallWinderTensionAutoSwitch READ getSmallWinderTensionAutoSwitch WRITE setSmallWinderTensionAutoSwitch NOTIFY smallWinderTensionAutoSwitchChanged)
+        Q_PROPERTY(int smallWinderDiameterResetSwitch READ getSmallWinderDiameterResetSwitch WRITE setSmallWinderDiameterResetSwitch NOTIFY smallWinderDiameterResetSwitchChanged)
 
-    Q_PROPERTY(int largeWinderTensionAutoSwitch READ getLargeWinderTensionAutoSwitch WRITE setLargeWinderTensionAutoSwitch NOTIFY largeWinderTensionAutoSwitchChanged)
-    Q_PROPERTY(int largeWinderDiameterResetSwitch READ getLargeWinderDiameterResetSwitch WRITE setLargeWinderDiameterResetSwitch NOTIFY largeWinderDiameterResetSwitchChanged)
+        Q_PROPERTY(int largeWinderTensionAutoSwitch READ getLargeWinderTensionAutoSwitch WRITE setLargeWinderTensionAutoSwitch NOTIFY largeWinderTensionAutoSwitchChanged)
+        Q_PROPERTY(int largeWinderDiameterResetSwitch READ getLargeWinderDiameterResetSwitch WRITE setLargeWinderDiameterResetSwitch NOTIFY largeWinderDiameterResetSwitchChanged)
 
-    Q_PROPERTY(int leftSelvedgeWinderAutoSwitch READ getLeftSelvedgeWinderAutoSwitch WRITE setLeftSelvedgeWinderAutoSwitch NOTIFY leftSelvedgeWinderAutoSwitchChanged)
-    Q_PROPERTY(int rightSelvedgeWinderAutoSwitch READ getRightSelvedgeWinderAutoSwitch WRITE setRightSelvedgeWinderAutoSwitch NOTIFY rightSelvedgeWinderAutoSwitchChanged)
+        Q_PROPERTY(int leftSelvedgeWinderAutoSwitch READ getLeftSelvedgeWinderAutoSwitch WRITE setLeftSelvedgeWinderAutoSwitch NOTIFY leftSelvedgeWinderAutoSwitchChanged)
+        Q_PROPERTY(int rightSelvedgeWinderAutoSwitch READ getRightSelvedgeWinderAutoSwitch WRITE setRightSelvedgeWinderAutoSwitch NOTIFY rightSelvedgeWinderAutoSwitchChanged)
 
-    Q_PROPERTY(int nipRollUpSwitch READ getNipRollUpSwitch WRITE setNipRollUpSwitch NOTIFY nipRollUpSwitchChanged)
-    Q_PROPERTY(int nipRollDownSwitch READ getNipRollDownSwitch WRITE setNipRollDownSwitch NOTIFY nipRollDownSwitchChanged)
+        Q_PROPERTY(int nipRollUpSwitch READ getNipRollUpSwitch WRITE setNipRollUpSwitch NOTIFY nipRollUpSwitchChanged)
+        Q_PROPERTY(int nipRollDownSwitch READ getNipRollDownSwitch WRITE setNipRollDownSwitch NOTIFY nipRollDownSwitchChanged)
 
-    Q_PROPERTY(int leftPressPlateForwardSwitch READ getLeftPressPlateForwardSwitch WRITE setLeftPressPlateForwardSwitch NOTIFY leftPressPlateForwardSwitchChanged)
-    Q_PROPERTY(int leftPressPlateBackwardSwitch READ getLeftPressPlateBackwardSwitch WRITE setLeftPressPlateBackwardSwitch NOTIFY leftPressPlateBackwardSwitchChanged)
+        Q_PROPERTY(int leftPressPlateForwardSwitch READ getLeftPressPlateForwardSwitch WRITE setLeftPressPlateForwardSwitch NOTIFY leftPressPlateForwardSwitchChanged)
+        Q_PROPERTY(int leftPressPlateBackwardSwitch READ getLeftPressPlateBackwardSwitch WRITE setLeftPressPlateBackwardSwitch NOTIFY leftPressPlateBackwardSwitchChanged)
 
-    Q_PROPERTY(int rightPressPlateForwardSwitch READ getRightPressPlateForwardSwitch WRITE setRightPressPlateForwardSwitch NOTIFY rightPressPlateForwardSwitchChanged)
-    Q_PROPERTY(int rightPressPlateBackwardSwitch READ getRightPressPlateBackwardSwitch WRITE setRightPressPlateBackwardSwitch NOTIFY rightPressPlateBackwardSwitchChanged)
+        Q_PROPERTY(int rightPressPlateForwardSwitch READ getRightPressPlateForwardSwitch WRITE setRightPressPlateForwardSwitch NOTIFY rightPressPlateForwardSwitchChanged)
+        Q_PROPERTY(int rightPressPlateBackwardSwitch READ getRightPressPlateBackwardSwitch WRITE setRightPressPlateBackwardSwitch NOTIFY rightPressPlateBackwardSwitchChanged)
 
-    Q_PROPERTY(int smallCutterInSwitch READ getSmallCutterInSwitch WRITE setSmallCutterInSwitch NOTIFY smallCutterInSwitchChanged)
+        Q_PROPERTY(int smallCutterInSwitch READ getSmallCutterInSwitch WRITE setSmallCutterInSwitch NOTIFY smallCutterInSwitchChanged)
 
-    // ===== OUTPUT-3 Control =====
-    Q_PROPERTY(double largeCutterIn READ getLargeCutterIn WRITE setLargeCutterIn NOTIFY largeCutterInChanged)
-    Q_PROPERTY(double modeSelect READ getModeSelect WRITE setModeSelect NOTIFY modeSelectChanged)
+        // ===== OUTPUT-3 Control =====
+        Q_PROPERTY(double largeCutterIn READ getLargeCutterIn WRITE setLargeCutterIn NOTIFY largeCutterInChanged)
+        Q_PROPERTY(double modeSelect READ getModeSelect WRITE setModeSelect NOTIFY modeSelectChanged)
 
-    Q_PROPERTY(double runIndicator READ getRunIndicator WRITE setRunIndicator NOTIFY runIndicatorChanged)
-    Q_PROPERTY(double alarmIndicator READ getAlarmIndicator WRITE setAlarmIndicator NOTIFY alarmIndicatorChanged)
-    Q_PROPERTY(double stopIndicator READ getStopIndicator WRITE setStopIndicator NOTIFY stopIndicatorChanged)
+        Q_PROPERTY(double runIndicator READ getRunIndicator WRITE setRunIndicator NOTIFY runIndicatorChanged)
+        Q_PROPERTY(double alarmIndicator READ getAlarmIndicator WRITE setAlarmIndicator NOTIFY alarmIndicatorChanged)
+        Q_PROPERTY(double stopIndicator READ getStopIndicator WRITE setStopIndicator NOTIFY stopIndicatorChanged)
 
-    Q_PROPERTY(double buzzer READ getBuzzer WRITE setBuzzer NOTIFY buzzerChanged)
-    Q_PROPERTY(double smallRollModeSelect READ getSmallRollModeSelect WRITE setSmallRollModeSelect NOTIFY smallRollModeSelectChanged)
+        Q_PROPERTY(double buzzer READ getBuzzer WRITE setBuzzer NOTIFY buzzerChanged)
+        Q_PROPERTY(double smallRollModeSelect READ getSmallRollModeSelect WRITE setSmallRollModeSelect NOTIFY smallRollModeSelectChanged)
 
-    // ===== OUTPUT-3 Switch =====
-    Q_PROPERTY(int largeCutterInSwitch READ getLargeCutterInSwitch WRITE setLargeCutterInSwitch NOTIFY largeCutterInSwitchChanged)
-    Q_PROPERTY(int modeSelectSwitch READ getModeSelectSwitch WRITE setModeSelectSwitch NOTIFY modeSelectSwitchChanged)
-
-    Q_PROPERTY(int runIndicatorSwitch READ getRunIndicatorSwitch WRITE setRunIndicatorSwitch NOTIFY runIndicatorSwitchChanged)
-    Q_PROPERTY(int alarmIndicatorSwitch READ getAlarmIndicatorSwitch WRITE setAlarmIndicatorSwitch NOTIFY alarmIndicatorSwitchChanged)
-    Q_PROPERTY(int stopIndicatorSwitch READ getStopIndicatorSwitch WRITE setStopIndicatorSwitch NOTIFY stopIndicatorSwitchChanged)
-
-    Q_PROPERTY(int buzzerSwitch READ getBuzzerSwitch WRITE setBuzzerSwitch NOTIFY buzzerSwitchChanged)
-    Q_PROPERTY(int smallRollModeSelectSwitch READ getSmallRollModeSelectSwitch WRITE setSmallRollModeSelectSwitch NOTIFY smallRollModeSelectSwitchChanged)
-
-    //8
-    Q_PROPERTY(double output8 READ getOutput8 WRITE setOutput8 NOTIFY output8Changed)
-    Q_PROPERTY(double output8Switch READ getOutput8 WRITE setOutput8 NOTIFY output8Changed)
-
-    //9
-    Q_PROPERTY(double output9 READ getOutput9 WRITE setOutput9 NOTIFY output9Changed)
-    Q_PROPERTY(double output9Switch READ getOutput9 WRITE setOutput9 NOTIFY output9Changed)
-
-    //10
-    Q_PROPERTY(double output10 READ getOutput10 WRITE setOutput10 NOTIFY output10Changed)
-    Q_PROPERTY(double output10Switch READ getOutput10 WRITE setOutput10 NOTIFY output10Changed)
-
-    //11
-    Q_PROPERTY(double output11 READ getOutput11 WRITE setOutput11 NOTIFY output11Changed)
-    Q_PROPERTY(double output11Switch READ getOutput11 WRITE setOutput11 NOTIFY output11Changed)
-
-    //12
-    Q_PROPERTY(double output12 READ getOutput12 WRITE setOutput12 NOTIFY output12Changed)
-    Q_PROPERTY(double output12Switch READ getOutput12 WRITE setOutput12 NOTIFY output12Changed)
-
-    //13
-    Q_PROPERTY(double output13 READ getOutput13 WRITE setOutput13 NOTIFY output13Changed)
-    Q_PROPERTY(double output13Switch READ getOutput13 WRITE setOutput13 NOTIFY output13Changed)
-
+        //8
+        Q_PROPERTY(double output8 READ getOutput8 WRITE setOutput8 NOTIFY output8Changed)
+        //9
+        Q_PROPERTY(double output9 READ getOutput9 WRITE setOutput9 NOTIFY output9Changed)
+        //10
+        Q_PROPERTY(double output10 READ getOutput10 WRITE setOutput10 NOTIFY output10Changed)
+        //11
+        Q_PROPERTY(double output11 READ getOutput11 WRITE setOutput11 NOTIFY output11Changed)
+        //12
+        Q_PROPERTY(double output12 READ getOutput12 WRITE setOutput12 NOTIFY output12Changed)
+        //13
+        Q_PROPERTY(double output13 READ getOutput13 WRITE setOutput13 NOTIFY output13Changed)
         //14
-    Q_PROPERTY(double output14 READ getOutput14 WRITE setOutput14 NOTIFY output14Changed)
-    Q_PROPERTY(double output14Switch READ getOutput14 WRITE setOutput14 NOTIFY output14Changed)
-
+        Q_PROPERTY(double output14 READ getOutput14 WRITE setOutput14 NOTIFY output14Changed)
         //15
-    Q_PROPERTY(double output15 READ getOutput15 WRITE setOutput15 NOTIFY output15Changed)
-    Q_PROPERTY(double output15Switch READ getOutput15 WRITE setOutput15 NOTIFY output15Changed)
+        Q_PROPERTY(double output15 READ getOutput15 WRITE setOutput15 NOTIFY output15Changed)
         //16
-    Q_PROPERTY(double output16 READ getOutput16 WRITE setOutput16 NOTIFY output16Changed)
-    Q_PROPERTY(double output16Switch READ getOutput16 WRITE setOutput16 NOTIFY output16Changed)
-
+        Q_PROPERTY(double output16 READ getOutput16 WRITE setOutput16 NOTIFY output16Changed)
         //17
-    Q_PROPERTY(double output17 READ getOutput17 WRITE setOutput17 NOTIFY output17Changed)
-    Q_PROPERTY(double output17Switch READ getOutput17 WRITE setOutput17 NOTIFY output17Changed)
+        Q_PROPERTY(double output17 READ getOutput17 WRITE setOutput17 NOTIFY output17Changed)
+
+        // ===== OUTPUT-3 Switch =====
+        Q_PROPERTY(int largeCutterInSwitch READ getLargeCutterInSwitch WRITE setLargeCutterInSwitch NOTIFY largeCutterInSwitchChanged)
+        Q_PROPERTY(int modeSelectSwitch READ getModeSelectSwitch WRITE setModeSelectSwitch NOTIFY modeSelectSwitchChanged)
+
+        Q_PROPERTY(int runIndicatorSwitch READ getRunIndicatorSwitch WRITE setRunIndicatorSwitch NOTIFY runIndicatorSwitchChanged)
+        Q_PROPERTY(int alarmIndicatorSwitch READ getAlarmIndicatorSwitch WRITE setAlarmIndicatorSwitch NOTIFY alarmIndicatorSwitchChanged)
+        Q_PROPERTY(int stopIndicatorSwitch READ getStopIndicatorSwitch WRITE setStopIndicatorSwitch NOTIFY stopIndicatorSwitchChanged)
+
+        Q_PROPERTY(int buzzerSwitch READ getBuzzerSwitch WRITE setBuzzerSwitch NOTIFY buzzerSwitchChanged)
+        Q_PROPERTY(int smallRollModeSelectSwitch READ getSmallRollModeSelectSwitch WRITE setSmallRollModeSelectSwitch NOTIFY smallRollModeSelectSwitchChanged)
+
+        //8
+        Q_PROPERTY(int output8Switch READ getOutput8Switch WRITE setOutput8Switch NOTIFY output8SwitchChanged)
+        //9
+        Q_PROPERTY(int output9Switch READ getOutput9Switch WRITE setOutput9Switch NOTIFY output9SwitchChanged)
+        //10
+        Q_PROPERTY(int output10Switch READ getOutput10Switch WRITE setOutput10Switch NOTIFY output10SwitchChanged)
+        //11
+        Q_PROPERTY(int output11Switch READ getOutput11Switch WRITE setOutput11Switch NOTIFY output11SwitchChanged)
+        //12
+        Q_PROPERTY(int output12Switch READ getOutput12Switch WRITE setOutput12Switch NOTIFY output12SwitchChanged)
+        //13
+        Q_PROPERTY(int output13Switch READ getOutput13Switch WRITE setOutput13Switch NOTIFY output13SwitchChanged)
+        //14
+        Q_PROPERTY(int output14Switch READ getOutput14Switch WRITE setOutput14Switch NOTIFY output14SwitchChanged)
+        //15
+        Q_PROPERTY(int output15Switch READ getOutput15Switch WRITE setOutput15Switch NOTIFY output15SwitchChanged)
+        //16
+        Q_PROPERTY(int output16Switch READ getOutput16Switch WRITE setOutput16Switch NOTIFY output16SwitchChanged)
+        //17
+        Q_PROPERTY(int output17Switch READ getOutput17Switch WRITE setOutput17Switch NOTIFY output17SwitchChanged)
 
         // ===== ANALOG OUTPUT =====
-    Q_PROPERTY(double analogOutUnwinderMainDrive READ getAnalogOutUnwinderMainDrive WRITE setAnalogOutUnwinderMainDrive NOTIFY analogOutUnwinderMainDriveChanged)
-    Q_PROPERTY(double analogOutWinder READ getAnalogOutWinder WRITE setAnalogOutWinder NOTIFY analogOutWinderChanged)
-    Q_PROPERTY(double analogOutCutter READ getAnalogOutCutter WRITE setAnalogOutCutter NOTIFY analogOutCutterChanged)
-    Q_PROPERTY(double analogOutSelvedgeWinder READ getAnalogOutSelvedgeWinder WRITE setAnalogOutSelvedgeWinder NOTIFY analogOutSelvedgeWinderChanged)
+        Q_PROPERTY(double analogOutUnwinderMainDrive READ getAnalogOutUnwinderMainDrive WRITE setAnalogOutUnwinderMainDrive NOTIFY analogOutUnwinderMainDriveChanged)
+        Q_PROPERTY(double analogOutWinder READ getAnalogOutWinder WRITE setAnalogOutWinder NOTIFY analogOutWinderChanged)
+        Q_PROPERTY(double analogOutCutter READ getAnalogOutCutter WRITE setAnalogOutCutter NOTIFY analogOutCutterChanged)
+        Q_PROPERTY(double analogOutSelvedgeWinder READ getAnalogOutSelvedgeWinder WRITE setAnalogOutSelvedgeWinder NOTIFY analogOutSelvedgeWinderChanged)
     Q_PROPERTY(double modifyUnwindingLimitThreshold READ getModifyUnwindingLimitThreshold WRITE setModifyUnwindingLimitThreshold NOTIFY modifyUnwindingLimitThresholdChanged)
+        Q_PROPERTY(double unwindingLimitThreshold READ getUnwindingLimitThreshold WRITE setUnwindingLimitThreshold NOTIFY unwindingLimitThresholdChanged)
 
-    Q_PROPERTY(double modifyAnalogOutUnwinderMainDrive READ getModifyAnalogOutUnwinderMainDrive WRITE setModifyAnalogOutUnwinderMainDrive NOTIFY modifyAnalogOutUnwinderMainDriveChanged)
-    Q_PROPERTY(double modifyAnalogOutWinder READ getModifyAnalogOutWinder WRITE setModifyAnalogOutWinder NOTIFY modifyAnalogOutWinderChanged)
-    Q_PROPERTY(double modifyAnalogOutCutter READ getModifyAnalogOutCutter WRITE setModifyAnalogOutCutter NOTIFY modifyAnalogOutCutterChanged)
-    Q_PROPERTY(double modifyAnalogOutSelvedgeWinder READ getModifyAnalogOutSelvedgeWinder WRITE setModifyAnalogOutSelvedgeWinder NOTIFY modifyAnalogOutSelvedgeWinderChanged)
-
-     //%
-    Q_PROPERTY(double analogOutUnwinderMainDrivePc READ getAnalogOutUnwinderMainDrivePc WRITE setAnalogOutUnwinderMainDrivePc NOTIFY analogOutUnwinderMainDrivePcChanged)
-    Q_PROPERTY(double analogOutWinderPc READ getAnalogOutWinderPc WRITE setAnalogOutWinderPc NOTIFY analogOutWinderPcChanged)
-    Q_PROPERTY(double analogOutCutterPc READ getAnalogOutCutterPc WRITE setAnalogOutCutterPc NOTIFY analogOutCutterPcChanged)
-    Q_PROPERTY(double analogOutSelvedgeWinderPc READ getAnalogOutSelvedgeWinderPc WRITE setAnalogOutSelvedgeWinderPc NOTIFY analogOutSelvedgeWinderPcChanged)
-
-    // ===== ANALOG OUTPUT Switch=====
-    Q_PROPERTY(int analogOutUnwinderMainDriveSwitch READ getAnalogOutUnwinderMainDriveSwitch WRITE setAnalogOutUnwinderMainDriveSwitch NOTIFY analogOutUnwinderMainDriveSwitchChanged)
-    Q_PROPERTY(int analogOutWinderSwitch READ getAnalogOutWinderSwitch WRITE setAnalogOutWinderSwitch NOTIFY analogOutWinderSwitchChanged)
-    Q_PROPERTY(int analogOutCutterSwitch READ getAnalogOutCutterSwitch WRITE setAnalogOutCutterSwitch NOTIFY analogOutCutterSwitchChanged)
-    Q_PROPERTY(int analogOutSelvedgeWinderSwitch READ getAnalogOutSelvedgeWinderSwitch WRITE setAnalogOutSelvedgeWinderSwitch NOTIFY analogOutSelvedgeWinderSwitchChanged)
-
-    Q_PROPERTY(int modifyAnalogOutUnwinderMainDriveSwitch READ getModifyAnalogOutUnwinderMainDriveSwitch WRITE setModifyAnalogOutUnwinderMainDriveSwitch NOTIFY modifyAnalogOutUnwinderMainDriveSwitchChanged)
-    Q_PROPERTY(int modifyAnalogOutWinderSwitch READ getModifyAnalogOutWinderSwitch WRITE setModifyAnalogOutWinderSwitch NOTIFY modifyAnalogOutWinderSwitchChanged)
-    Q_PROPERTY(int modifyAnalogOutCutterSwitch READ getModifyAnalogOutCutterSwitch WRITE setModifyAnalogOutCutterSwitch NOTIFY modifyAnalogOutCutterSwitchChanged)
-    Q_PROPERTY(int modifyAnalogOutSelvedgeWinderSwitch READ getModifyAnalogOutSelvedgeWinderSwitch WRITE setModifyAnalogOutSelvedgeWinderSwitch NOTIFY modifyAnalogOutSelvedgeWinderSwitchChanged)
+        //%
+        Q_PROPERTY(double analogOutUnwinderMainDrivePc READ getAnalogOutUnwinderMainDrivePc WRITE setAnalogOutUnwinderMainDrivePc NOTIFY analogOutUnwinderMainDrivePcChanged)
+        Q_PROPERTY(double analogOutWinderPc READ getAnalogOutWinderPc WRITE setAnalogOutWinderPc NOTIFY analogOutWinderPcChanged)
+        Q_PROPERTY(double analogOutCutterPc READ getAnalogOutCutterPc WRITE setAnalogOutCutterPc NOTIFY analogOutCutterPcChanged)
+        Q_PROPERTY(double analogOutSelvedgeWinderPc READ getAnalogOutSelvedgeWinderPc WRITE setAnalogOutSelvedgeWinderPc NOTIFY analogOutSelvedgeWinderPcChanged)
+        //放捲頻率限制閥值
+        Q_PROPERTY(double unwindingLimitThreshold READ getUnwindingLimitThresholdPc WRITE setUnwindingLimitThresholdPc NOTIFY unwindingLimitThresholdPcChanged)
 
 
-    //緩啟動Threshold
-    Q_PROPERTY(double softStartThreshold READ getSoftStartThreshold WRITE setSoftStartThreshold NOTIFY softStartThresholdChanged)
-    //緩啟動速度
-    Q_PROPERTY(double softStartSpeed READ getSoftStartSpeed WRITE setSoftStartSpeed NOTIFY softStartSpeedChanged)
-    Q_PROPERTY(double tensionTime READ getTensionTime WRITE setTensionTime NOTIFY tensionTimeChanged)
-    Q_PROPERTY(double secTensionTime READ getSecTensionTime WRITE setSecTensionTime NOTIFY secTensionTimeChanged)
-    // ===== IPC INPUT =====
-    Q_PROPERTY(double ipcStart READ getIpcStart NOTIFY ipcStartChanged)
-    Q_PROPERTY(double ipcStop READ getIpcStop NOTIFY ipcStopChanged)
-    Q_PROPERTY(double ipcAlarmReset READ getIpcAlarmReset NOTIFY ipcAlarmResetChanged)
+        Q_PROPERTY(double modifyAnalogOutUnwinderMainDrive READ getModifyAnalogOutUnwinderMainDrive WRITE setModifyAnalogOutUnwinderMainDrive NOTIFY modifyAnalogOutUnwinderMainDriveChanged)
+        Q_PROPERTY(double modifyAnalogOutWinder READ getModifyAnalogOutWinder WRITE setModifyAnalogOutWinder NOTIFY modifyAnalogOutWinderChanged)
+        Q_PROPERTY(double modifyAnalogOutCutter READ getModifyAnalogOutCutter WRITE setModifyAnalogOutCutter NOTIFY modifyAnalogOutCutterChanged)
+        Q_PROPERTY(double modifyAnalogOutSelvedgeWinder READ getModifyAnalogOutSelvedgeWinder WRITE setModifyAnalogOutSelvedgeWinder NOTIFY modifyAnalogOutSelvedgeWinderChanged)
+        //放捲頻率限制閥值
+        Q_PROPERTY(double modifyUnwindingLimitThreshold READ getModifyUnwindingLimitThreshold WRITE setModifyUnwindingLimitThreshold NOTIFY modifyUnwindingLimitThresholdChanged)
+        //緩啟動Threshold
+        Q_PROPERTY(double softStartThreshold READ getSoftStartThreshold WRITE setSoftStartThreshold NOTIFY softStartThresholdChanged)
+        //緩啟動速度
+        Q_PROPERTY(double softStartSpeed READ getSoftStartSpeed WRITE setSoftStartSpeed NOTIFY softStartSpeedChanged)
 
-    Q_PROPERTY(double mainJogForward READ getMainJogForward NOTIFY mainJogForwardChanged)
-    Q_PROPERTY(double mainJogReverse READ getMainJogReverse NOTIFY mainJogReverseChanged)
+        //張力穩定時間
+        Q_PROPERTY(double tensionTime READ getTensionTime WRITE setTensionTime NOTIFY tensionTimeChanged)
+        //第二段張力穩定時間
+        Q_PROPERTY(double secTensionTime READ getSecTensionTime WRITE setSecTensionTime NOTIFY secTensionTimeChanged)
 
-    Q_PROPERTY(double smallWinderJogForward READ getSmallWinderJogForward NOTIFY smallWinderJogForwardChanged)
-    Q_PROPERTY(double smallWinderJogReverse READ getSmallWinderJogReverse NOTIFY smallWinderJogReverseChanged)
+        // ===== ANALOG OUTPUT Switch=====
+        Q_PROPERTY(int analogOutUnwinderMainDriveSwitch READ getAnalogOutUnwinderMainDriveSwitch WRITE setAnalogOutUnwinderMainDriveSwitch NOTIFY analogOutUnwinderMainDriveSwitchChanged)
+        Q_PROPERTY(int analogOutWinderSwitch READ getAnalogOutWinderSwitch WRITE setAnalogOutWinderSwitch NOTIFY analogOutWinderSwitchChanged)
+        Q_PROPERTY(int analogOutCutterSwitch READ getAnalogOutCutterSwitch WRITE setAnalogOutCutterSwitch NOTIFY analogOutCutterSwitchChanged)
+        Q_PROPERTY(int analogOutSelvedgeWinderSwitch READ getAnalogOutSelvedgeWinderSwitch WRITE setAnalogOutSelvedgeWinderSwitch NOTIFY analogOutSelvedgeWinderSwitchChanged)
+        //放捲頻率限制閥值
+        Q_PROPERTY(int unwindingLimitThresholdSwitch READ getUnwindingLimitThresholdSwitch WRITE setUnwindingLimitThresholdSwitch NOTIFY unwindingLimitThresholdSwitchChanged)
 
-    Q_PROPERTY(double unwinderJogReverseSelect READ getUnwinderJogReverseSelect NOTIFY unwinderJogReverseSelectChanged)
-    Q_PROPERTY(double unwinderJogStart READ getUnwinderJogStart NOTIFY unwinderJogStartChanged)
-
-    Q_PROPERTY(double winderJogReverseSelect READ getWinderJogReverseSelect NOTIFY winderJogReverseSelectChanged)
-    Q_PROPERTY(double winderJogStart READ getWinderJogStart NOTIFY winderJogStartChanged)
-
-    Q_PROPERTY(double leftSelvedgeWinderSelect READ getLeftSelvedgeWinderSelect NOTIFY leftSelvedgeWinderSelectChanged)
-    Q_PROPERTY(double rightSelvedgeWinderSelect READ getRightSelvedgeWinderSelect NOTIFY rightSelvedgeWinderSelectChanged)
-
-    // ===== IPC INPUT Light=====
-    Q_PROPERTY(int ipcStartLight READ getIpcStartLight NOTIFY ipcStartLightChanged)
-    Q_PROPERTY(int ipcStopLight READ getIpcStopLight NOTIFY ipcStopLightChanged)
-    Q_PROPERTY(int ipcAlarmResetLight READ getIpcAlarmResetLight NOTIFY ipcAlarmResetLightChanged)
-
-    Q_PROPERTY(int mainJogForwardLight READ getMainJogForwardLight NOTIFY mainJogForwardLightChanged)
-    Q_PROPERTY(int mainJogReverseLight READ getMainJogReverseLight NOTIFY mainJogReverseLightChanged)
-
-    Q_PROPERTY(int smallWinderJogForwardLight READ getSmallWinderJogForwardLight NOTIFY smallWinderJogForwardLightChanged)
-    Q_PROPERTY(int smallWinderJogReverseLight READ getSmallWinderJogReverseLight NOTIFY smallWinderJogReverseLightChanged)
-
-    Q_PROPERTY(int unwinderJogReverseSelectLight READ getUnwinderJogReverseSelectLight NOTIFY unwinderJogReverseSelectLightChanged)
-    Q_PROPERTY(int unwinderJogStartLight READ getUnwinderJogStartLight NOTIFY unwinderJogStartLightChanged)
-
-    Q_PROPERTY(int winderJogReverseSelectLight READ getWinderJogReverseSelectLight NOTIFY winderJogReverseSelectLightChanged)
-    Q_PROPERTY(int winderJogStartLight READ getWinderJogStartLight NOTIFY winderJogStartLightChanged)
-
-    Q_PROPERTY(int leftSelvedgeWinderSelectLight READ getLeftSelvedgeWinderSelectLight NOTIFY leftSelvedgeWinderSelectLightChanged)
-    Q_PROPERTY(int rightSelvedgeWinderSelectLight READ getRightSelvedgeWinderSelectLight NOTIFY rightSelvedgeWinderSelectLightChanged)
+        Q_PROPERTY(int modifyAnalogOutUnwinderMainDriveSwitch READ getModifyAnalogOutUnwinderMainDriveSwitch WRITE setModifyAnalogOutUnwinderMainDriveSwitch NOTIFY modifyAnalogOutUnwinderMainDriveSwitchChanged)
+        Q_PROPERTY(int modifyAnalogOutWinderSwitch READ getModifyAnalogOutWinderSwitch WRITE setModifyAnalogOutWinderSwitch NOTIFY modifyAnalogOutWinderSwitchChanged)
+        Q_PROPERTY(int modifyAnalogOutCutterSwitch READ getModifyAnalogOutCutterSwitch WRITE setModifyAnalogOutCutterSwitch NOTIFY modifyAnalogOutCutterSwitchChanged)
+        Q_PROPERTY(int modifyAnalogOutSelvedgeWinderSwitch READ getModifyAnalogOutSelvedgeWinderSwitch WRITE setModifyAnalogOutSelvedgeWinderSwitch NOTIFY modifyAnalogOutSelvedgeWinderSwitchChanged)
+        //放捲頻率限制閥值
+        Q_PROPERTY(int modifyUnwindingLimitThresholdSwitch READ getModifyUnwindingLimitThresholdSwitch WRITE setModifyUnwindingLimitThresholdSwitch NOTIFY modifyUnwindingLimitThresholdSwitchChanged)
 
 
+        // ===== IPC INPUT =====
+        Q_PROPERTY(double ipcStart READ getIpcStart NOTIFY ipcStartChanged)
+        Q_PROPERTY(double ipcStop READ getIpcStop NOTIFY ipcStopChanged)
+        Q_PROPERTY(double ipcAlarmReset READ getIpcAlarmReset NOTIFY ipcAlarmResetChanged)
 
-    // ===== 控制介面 =====
-    Q_PROPERTY(double smallRollMotor READ getSmallRollMotor WRITE setSmallRollMotor NOTIFY smallRollMotorChanged)
-    Q_PROPERTY(double mainDriveMotor READ getMainDriveMotor WRITE setMainDriveMotor NOTIFY mainDriveMotorChanged)
-    Q_PROPERTY(double largeRollMotor READ getLargeRollMotor WRITE setLargeRollMotor NOTIFY largeRollMotorChanged)
-    Q_PROPERTY(double wasteRollMotorB READ getWasteRollMotorB WRITE setWasteRollMotorB NOTIFY wasteRollMotorBChanged)
-    Q_PROPERTY(double unwindingMotor READ getUnwindingMotor WRITE setUnwindingMotor NOTIFY unwindingMotorChanged)
-    Q_PROPERTY(double edgeAlignMotor READ getEdgeAlignMotor WRITE setEdgeAlignMotor NOTIFY edgeAlignMotorChanged)
-    Q_PROPERTY(double cutterWheelMotor READ getCutterWheelMotor WRITE setCutterWheelMotor NOTIFY cutterWheelMotorChanged)
-    Q_PROPERTY(double wasteRollMotorA READ getWasteRollMotorA WRITE setWasteRollMotorA NOTIFY wasteRollMotorAChanged)
+        Q_PROPERTY(double mainJogForward READ getMainJogForward NOTIFY mainJogForwardChanged)
+        Q_PROPERTY(double mainJogReverse READ getMainJogReverse NOTIFY mainJogReverseChanged)
 
-    Q_PROPERTY(double unwindingTension READ getUnwindingTension WRITE setUnwindingTension NOTIFY unwindingTensionChanged)
-    Q_PROPERTY(double smallRollTension READ getSmallRollTension WRITE setSmallRollTension NOTIFY smallRollTensionChanged)
-    Q_PROPERTY(double largeRollTension READ getLargeRollTension WRITE setLargeRollTension NOTIFY largeRollTensionChanged)
+        Q_PROPERTY(double smallWinderJogForward READ getSmallWinderJogForward NOTIFY smallWinderJogForwardChanged)
+        Q_PROPERTY(double smallWinderJogReverse READ getSmallWinderJogReverse NOTIFY smallWinderJogReverseChanged)
 
-    // ===== 控制介面 switch=====
-    Q_PROPERTY(int smallRollMotorSwitch READ getSmallRollMotorSwitch WRITE setSmallRollMotorSwitch NOTIFY smallRollMotorSwitchChanged)
-    Q_PROPERTY(int mainDriveMotorSwitch READ getMainDriveMotorSwitch WRITE setMainDriveMotorSwitch NOTIFY mainDriveMotorSwitchChanged)
-    Q_PROPERTY(int largeRollMotorSwitch READ getLargeRollMotorSwitch WRITE setLargeRollMotorSwitch NOTIFY largeRollMotorSwitchChanged)
-    Q_PROPERTY(int wasteRollMotorBSwitch READ getWasteRollMotorBSwitch WRITE setWasteRollMotorBSwitch NOTIFY wasteRollMotorBSwitchChanged)
-    Q_PROPERTY(int unwindingMotorSwitch READ getUnwindingMotorSwitch WRITE setUnwindingMotorSwitch NOTIFY unwindingMotorSwitchChanged)
-    Q_PROPERTY(int edgeAlignMotorSwitch READ getEdgeAlignMotorSwitch WRITE setEdgeAlignMotorSwitch NOTIFY edgeAlignMotorSwitchChanged)
-    Q_PROPERTY(int cutterWheelMotorSwitch READ getCutterWheelMotorSwitch WRITE setCutterWheelMotorSwitch NOTIFY cutterWheelMotorSwitchChanged)
-    Q_PROPERTY(int wasteRollMotorASwitch READ getWasteRollMotorASwitch WRITE setWasteRollMotorASwitch NOTIFY wasteRollMotorASwitchChanged)
+        Q_PROPERTY(double unwinderJogReverseSelect READ getUnwinderJogReverseSelect NOTIFY unwinderJogReverseSelectChanged)
+        Q_PROPERTY(double unwinderJogStart READ getUnwinderJogStart NOTIFY unwinderJogStartChanged)
 
-    Q_PROPERTY(int unwindingTensionSwitch READ getUnwindingTensionSwitch WRITE setUnwindingTensionSwitch NOTIFY unwindingTensionSwitchChanged)
-    Q_PROPERTY(int smallRollTensionSwitch READ getSmallRollTensionSwitch WRITE setSmallRollTensionSwitch NOTIFY smallRollTensionSwitchChanged)
-    Q_PROPERTY(int largeRollTensionSwitch READ getLargeRollTensionSwitch WRITE setLargeRollTensionSwitch NOTIFY largeRollTensionSwitchChanged)
+        Q_PROPERTY(double winderJogReverseSelect READ getWinderJogReverseSelect NOTIFY winderJogReverseSelectChanged)
+        Q_PROPERTY(double winderJogStart READ getWinderJogStart NOTIFY winderJogStartChanged)
 
-    // ===== cutter=====
-    Q_PROPERTY(int smallRollCutter1 READ getSmallRollCutter1 WRITE setSmallRollCutter1 NOTIFY smallRollCutter1Changed)
-    Q_PROPERTY(int smallRollCutter2 READ getSmallRollCutter2 WRITE setSmallRollCutter2 NOTIFY smallRollCutter2Changed)
-    Q_PROPERTY(int smallRollCutter3 READ getSmallRollCutter3 WRITE setSmallRollCutter3 NOTIFY smallRollCutter3Changed)
-    Q_PROPERTY(int smallRollCutter4 READ getSmallRollCutter4 WRITE setSmallRollCutter4 NOTIFY smallRollCutter4Changed)
-    Q_PROPERTY(int smallRollCutter5 READ getSmallRollCutter5 WRITE setSmallRollCutter5 NOTIFY smallRollCutter5Changed)
-    Q_PROPERTY(int bigRollCutter READ getBigRollCutter WRITE setBigRollCutter NOTIFY bigRollCutterChanged)
+        Q_PROPERTY(double leftSelvedgeWinderSelect READ getLeftSelvedgeWinderSelect NOTIFY leftSelvedgeWinderSelectChanged)
+        Q_PROPERTY(double rightSelvedgeWinderSelect READ getRightSelvedgeWinderSelect NOTIFY rightSelvedgeWinderSelectChanged)
 
-    // ===== Single Action Mode=====
-    Q_PROPERTY(int singleActionMode READ getSingleActionMode WRITE setSingleActionMode NOTIFY singleActionModeChanged)
+        // ===== IPC INPUT Light=====
+        Q_PROPERTY(int ipcStartLight READ getIpcStartLight NOTIFY ipcStartLightChanged)
+        Q_PROPERTY(int ipcStopLight READ getIpcStopLight NOTIFY ipcStopLightChanged)
+        Q_PROPERTY(int ipcAlarmResetLight READ getIpcAlarmResetLight NOTIFY ipcAlarmResetLightChanged)
+
+        Q_PROPERTY(int mainJogForwardLight READ getMainJogForwardLight NOTIFY mainJogForwardLightChanged)
+        Q_PROPERTY(int mainJogReverseLight READ getMainJogReverseLight NOTIFY mainJogReverseLightChanged)
+
+        Q_PROPERTY(int smallWinderJogForwardLight READ getSmallWinderJogForwardLight NOTIFY smallWinderJogForwardLightChanged)
+        Q_PROPERTY(int smallWinderJogReverseLight READ getSmallWinderJogReverseLight NOTIFY smallWinderJogReverseLightChanged)
+
+        Q_PROPERTY(int unwinderJogReverseSelectLight READ getUnwinderJogReverseSelectLight NOTIFY unwinderJogReverseSelectLightChanged)
+        Q_PROPERTY(int unwinderJogStartLight READ getUnwinderJogStartLight NOTIFY unwinderJogStartLightChanged)
+
+        Q_PROPERTY(int winderJogReverseSelectLight READ getWinderJogReverseSelectLight NOTIFY winderJogReverseSelectLightChanged)
+        Q_PROPERTY(int winderJogStartLight READ getWinderJogStartLight NOTIFY winderJogStartLightChanged)
+
+        Q_PROPERTY(int leftSelvedgeWinderSelectLight READ getLeftSelvedgeWinderSelectLight NOTIFY leftSelvedgeWinderSelectLightChanged)
+        Q_PROPERTY(int rightSelvedgeWinderSelectLight READ getRightSelvedgeWinderSelectLight NOTIFY rightSelvedgeWinderSelectLightChanged)
+
+
+
+        // ===== 控制介面 =====
+        Q_PROPERTY(double smallRollMotor READ getSmallRollMotor WRITE setSmallRollMotor NOTIFY smallRollMotorChanged)
+        Q_PROPERTY(double mainDriveMotor READ getMainDriveMotor WRITE setMainDriveMotor NOTIFY mainDriveMotorChanged)
+        Q_PROPERTY(double largeRollMotor READ getLargeRollMotor WRITE setLargeRollMotor NOTIFY largeRollMotorChanged)
+        Q_PROPERTY(double wasteRollMotorB READ getWasteRollMotorB WRITE setWasteRollMotorB NOTIFY wasteRollMotorBChanged)
+        Q_PROPERTY(double unwindingMotor READ getUnwindingMotor WRITE setUnwindingMotor NOTIFY unwindingMotorChanged)
+        Q_PROPERTY(double edgeAlignMotor READ getEdgeAlignMotor WRITE setEdgeAlignMotor NOTIFY edgeAlignMotorChanged)
+        Q_PROPERTY(double cutterWheelMotor READ getCutterWheelMotor WRITE setCutterWheelMotor NOTIFY cutterWheelMotorChanged)
+        Q_PROPERTY(double wasteRollMotorA READ getWasteRollMotorA WRITE setWasteRollMotorA NOTIFY wasteRollMotorAChanged)
+
+        //卷曲鬆緊調整
+        Q_PROPERTY(bool curlingAdjust READ getCurlingAdjust WRITE setCurlingAdjust NOTIFY curlingAdjustChanged)
+
+        Q_PROPERTY(double unwindingTension READ getUnwindingTension WRITE setUnwindingTension NOTIFY unwindingTensionChanged)
+        Q_PROPERTY(double smallRollTension READ getSmallRollTension WRITE setSmallRollTension NOTIFY smallRollTensionChanged)
+        Q_PROPERTY(double largeRollTension READ getLargeRollTension WRITE setLargeRollTension NOTIFY largeRollTensionChanged)
+
+        // ===== 控制介面 switch=====
+        Q_PROPERTY(int smallRollMotorSwitch READ getSmallRollMotorSwitch WRITE setSmallRollMotorSwitch NOTIFY smallRollMotorSwitchChanged)
+        Q_PROPERTY(int mainDriveMotorSwitch READ getMainDriveMotorSwitch WRITE setMainDriveMotorSwitch NOTIFY mainDriveMotorSwitchChanged)
+        Q_PROPERTY(int largeRollMotorSwitch READ getLargeRollMotorSwitch WRITE setLargeRollMotorSwitch NOTIFY largeRollMotorSwitchChanged)
+        Q_PROPERTY(int wasteRollMotorBSwitch READ getWasteRollMotorBSwitch WRITE setWasteRollMotorBSwitch NOTIFY wasteRollMotorBSwitchChanged)
+        Q_PROPERTY(int unwindingMotorSwitch READ getUnwindingMotorSwitch WRITE setUnwindingMotorSwitch NOTIFY unwindingMotorSwitchChanged)
+        Q_PROPERTY(int edgeAlignMotorSwitch READ getEdgeAlignMotorSwitch WRITE setEdgeAlignMotorSwitch NOTIFY edgeAlignMotorSwitchChanged)
+        Q_PROPERTY(int cutterWheelMotorSwitch READ getCutterWheelMotorSwitch WRITE setCutterWheelMotorSwitch NOTIFY cutterWheelMotorSwitchChanged)
+        Q_PROPERTY(int wasteRollMotorASwitch READ getWasteRollMotorASwitch WRITE setWasteRollMotorASwitch NOTIFY wasteRollMotorASwitchChanged)
+
+        Q_PROPERTY(int unwindingTensionSwitch READ getUnwindingTensionSwitch WRITE setUnwindingTensionSwitch NOTIFY unwindingTensionSwitchChanged)
+        Q_PROPERTY(int smallRollTensionSwitch READ getSmallRollTensionSwitch WRITE setSmallRollTensionSwitch NOTIFY smallRollTensionSwitchChanged)
+        Q_PROPERTY(int largeRollTensionSwitch READ getLargeRollTensionSwitch WRITE setLargeRollTensionSwitch NOTIFY largeRollTensionSwitchChanged)
+
+        // ===== cutter=====
+        Q_PROPERTY(int smallRollCutter1 READ getSmallRollCutter1 WRITE setSmallRollCutter1 NOTIFY smallRollCutter1Changed)
+        Q_PROPERTY(int smallRollCutter2 READ getSmallRollCutter2 WRITE setSmallRollCutter2 NOTIFY smallRollCutter2Changed)
+        Q_PROPERTY(int smallRollCutter3 READ getSmallRollCutter3 WRITE setSmallRollCutter3 NOTIFY smallRollCutter3Changed)
+        Q_PROPERTY(int smallRollCutter4 READ getSmallRollCutter4 WRITE setSmallRollCutter4 NOTIFY smallRollCutter4Changed)
+        Q_PROPERTY(int smallRollCutter5 READ getSmallRollCutter5 WRITE setSmallRollCutter5 NOTIFY smallRollCutter5Changed)
+        Q_PROPERTY(int bigRollCutter READ getBigRollCutter WRITE setBigRollCutter NOTIFY bigRollCutterChanged)
+
+        // ===== Single Action Mode=====
+        Q_PROPERTY(int singleActionMode READ getSingleActionMode WRITE setSingleActionMode NOTIFY singleActionModeChanged)
 
 
 public:
     explicit KdbProxy(QObject* parent = nullptr) : QObject(parent) {}
-
+    //默認大捲模式(m_bigRollMode = 1大捲模式,0小捲模式)
     Q_INVOKABLE int getBigRollMode() const { return m_bigRollMode; }
     void setBigRollMode(int value) { m_bigRollMode = value; emit bigRollModeChanged(m_bigRollMode); }
 
     Q_INVOKABLE int getRestBtn() const { return m_restBtn; }
     void setRestBtn(int value) { m_restBtn = value; emit restBtnChanged(m_restBtn); }
 
-     Q_INVOKABLE int getMetalDetector() const { return m_metalDetector; }
-     Q_INVOKABLE int getGratingDetection() const { return m_gratingDetection; }
+
+    Q_INVOKABLE int getMetalDetector() const { return m_metalDetector; }
+    Q_INVOKABLE int getGratingDetection() const { return m_gratingDetection; }
      void setGratingDetection(int value)
      {
          if (m_gratingDetection != value)
@@ -534,79 +557,79 @@ public:
              m_gratingDetection3 = value;
          emit gratingDetection3Changed(m_gratingDetection3);
      }
-     Q_INVOKABLE int getGratingDetection2() const { return m_gratingDetection2; }
-     Q_INVOKABLE int getGratingDetection3() const { return m_gratingDetection3; }
-     Q_INVOKABLE int getOppositeSide() const { return m_OppositeSideSignal; }
+    Q_INVOKABLE int getGratingDetection2() const { return m_gratingDetection2; }
+    Q_INVOKABLE int getGratingDetection3() const { return m_gratingDetection3; }
+    Q_INVOKABLE int getOppositeSide() const { return m_OppositeSideSignal; }
      void setOppositeSide(int value)
      {
          if (m_OppositeSideSignal != value)
              m_OppositeSideSignal = value;
          emit oppositeSideChanged(m_OppositeSideSignal);
      }
-     Q_INVOKABLE int getDoorASignal() const { return m_doorASignal; }
+    Q_INVOKABLE int getDoorASignal() const { return m_doorASignal; }
      void setDoorASignal(int value)
      {
          if (m_doorASignal != value)
              m_doorASignal = value;
          emit doorASignalChanged(m_doorASignal);
      }
-     Q_INVOKABLE int getDoorBSignal() const { return m_doorBSignal; }
+    Q_INVOKABLE int getDoorBSignal() const { return m_doorBSignal; }
      void setDoorBSignal(int value)
      {
          if (m_doorBSignal != value)
              m_doorBSignal = value;
          emit doorBSignalChanged(m_doorBSignal);
      }
-     Q_INVOKABLE int getDoorCSignal() const { return m_doorCSignal; }
+    Q_INVOKABLE int getDoorCSignal() const { return m_doorCSignal; }
      void setDoorCSignal(int value)
      {
          if (m_doorCSignal != value)
              m_doorCSignal = value;
          emit doorCSignalChanged(m_doorCSignal);
      }
-     Q_INVOKABLE int getDoorDSignal() const { return m_doorDSignal; }
+    Q_INVOKABLE int getDoorDSignal() const { return m_doorDSignal; }
      void setDoorDSignal(int value)
      {
          if (m_doorDSignal != value)
              m_doorDSignal = value;
          emit doorDSignalChanged(m_doorDSignal);
      }
-     Q_INVOKABLE int getDoorESignal() const { return m_doorESignal; }
+    Q_INVOKABLE int getDoorESignal() const { return m_doorESignal; }
      void setDoorESignal(int value)
      {
          if (m_doorESignal != value)
              m_doorESignal = value;
          emit doorESignalChanged(m_doorESignal);
      }
-     Q_INVOKABLE int getDoorFSignal() const { return m_doorFSignal; }
+    Q_INVOKABLE int getDoorFSignal() const { return m_doorFSignal; }
      void setDoorFSignal(int value)
      {
          if (m_doorFSignal != value)
              m_doorFSignal = value;
          emit doorFSignalChanged(m_doorFSignal);
      }
-     Q_INVOKABLE int getDoorGSignal() const { return m_doorGSignal; }
+    Q_INVOKABLE int getDoorGSignal() const { return m_doorGSignal; }
      void setDoorGSignal(int value)
      {
          if (m_doorGSignal != value)
              m_doorGSignal = value;
          emit doorGSignalChanged(m_doorGSignal);
      }
-     Q_INVOKABLE int getDoorHSignal() const { return m_doorHSignal; }
+    Q_INVOKABLE int getDoorHSignal() const { return m_doorHSignal; }
      void setDoorHSignal(int value)
      {
          if (m_doorHSignal != value)
              m_doorHSignal = value;
          emit doorHSignalChanged(m_doorHSignal);
      }
-     Q_INVOKABLE int getDoorISignal() const { return m_doorISignal; }
+    Q_INVOKABLE int getDoorISignal() const { return m_doorISignal; }
      void setDoorISignal(int value)
      {
          if (m_doorISignal != value)
              m_doorISignal = value;
          emit doorISignalChanged(m_doorISignal);
      }
-     Q_INVOKABLE int getUvLight() const { return m_uvLight; }
+    Q_INVOKABLE int getUvLight() const { return m_uvLight; }
     void setUvLight(int value)
     {
         if (m_uvLight != value)
@@ -627,28 +650,28 @@ public:
             m_bottomLight = value;
         emit bottomLightChanged(m_bottomLight);
     }
-     Q_INVOKABLE double getCurrentLength() const { return m_currentLength; }
-     Q_INVOKABLE double getSpeed() const { return m_speed; }
+    Q_INVOKABLE double getCurrentLength() const { return m_currentLength; }
+    Q_INVOKABLE double getSpeed() const { return m_speed; }
      Q_INVOKABLE double getBrakingDistance() const { return m_brakingDistance;}
      void setSpeed(int value) { m_speed = value; emit speedChanged(m_speed); };
      void setCurrentLength(double v) { m_currentLength = v; emit currentLengthChanged(m_currentLength); }
-     Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
-     Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
-     Q_INVOKABLE double getModifyBrakingDistance() const {
-         double value = m_modifybrakingDistance;
-         return std::round(value * 100.0) / 100.0;
-     }
+    Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
+    Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
+    Q_INVOKABLE double getModifyBrakingDistance() const {
+        double value = m_modifybrakingDistance;
+        return std::round(value * 100.0) / 100.0;
+    }
      void setModifyCurrentLength(int value){m_modifycurrentLength = value; emit modifyCurrentLengthChanged(m_modifycurrentLength);};
-     void setModifySpeed(int value){m_modifyspeed = value; emit modifySpeedChanged(m_modifyspeed);};
-     void setModifyBrakingDistance(double value){m_modifybrakingDistance = value; emit modifyBrakingDistanceChanged(m_modifybrakingDistance);};
+    void setModifySpeed(int value) { m_modifyspeed = value; emit modifySpeedChanged(m_modifyspeed); };
+    void setModifyBrakingDistance(double value) { m_modifybrakingDistance = value; emit modifyBrakingDistanceChanged(m_modifybrakingDistance); };
 
     Q_INVOKABLE double getModifyUnwindingTension() const { return m_modifyUnwindingTension; }
     Q_INVOKABLE double getModifySmallWinderTensionOver() const { return m_modifySmallWinderTensionOver; }
-    Q_INVOKABLE double getModifyLargeWinderTensionOver() const { return m_modifyLargeWinderTensionOver;}
-    void setModifyUnwindingTension(double value){m_modifyUnwindingTension = value; emit modifyUnwindingTensionChanged(m_modifyUnwindingTension);};
-    void setModifySmallWinderTensionOver(double value){m_modifySmallWinderTensionOver = value; emit modifySmallWinderTensionOverChanged(m_modifySmallWinderTensionOver);};
-    void setModifyLargeWinderTensionOver(double value){m_modifyLargeWinderTensionOver = value; emit modifyLargeWinderTensionOverChanged(m_modifyLargeWinderTensionOver);};
-   
+    Q_INVOKABLE double getModifyLargeWinderTensionOver() const { return m_modifyLargeWinderTensionOver; }
+    void setModifyUnwindingTension(double value) { m_modifyUnwindingTension = value; emit modifyUnwindingTensionChanged(m_modifyUnwindingTension); };
+    void setModifySmallWinderTensionOver(double value) { m_modifySmallWinderTensionOver = value; emit modifySmallWinderTensionOverChanged(m_modifySmallWinderTensionOver); };
+    void setModifyLargeWinderTensionOver(double value) { m_modifyLargeWinderTensionOver = value; emit modifyLargeWinderTensionOverChanged(m_modifyLargeWinderTensionOver); };
+
     Q_INVOKABLE int getPressurePlate() const { return m_pressurePlate; }
     Q_INVOKABLE int getPressureRoller() const { return m_pressureRoller; }
     void setPressurePlate(int value) { m_pressurePlate = value; emit pressurePlateChanged(m_pressurePlate); };
@@ -659,8 +682,8 @@ public:
     void setPressurePlateBack(int value) { m_pressurePlateBack = value; emit pressurePlateBackChanged(m_pressurePlateBack); };
     void setPressureRollerDown(int value) { m_pressureRollerDown = value; emit pressureRollerDownChanged(m_pressureRollerDown); };
 
-     //=====INPUT-1 READ functions =====
-     //=====INPUT-1 READ functions =====
+    //=====INPUT-1 READ functions =====
+    //=====INPUT-1 READ functions =====
     Q_INVOKABLE double getUnwinderVfdFreqAlarm() const { return m_unwinderVfdFreqAlarm; }
     void setUnwinderVfdFreqAlarm(double value)
     {
@@ -1580,8 +1603,8 @@ public:
     Q_INVOKABLE double getSmallWinderTensionOver() const { return m_smallWinderTensionOver; }
     void setSmallWinderTensionOver(double value)
     {
-        //if (m_smallWinderTensionOver == value)
-            //return;
+        if (m_smallWinderTensionOver == value)
+            return;
         m_smallWinderTensionOver = value;
         emit smallWinderTensionOverChanged(m_smallWinderTensionOver);
     }
@@ -1685,8 +1708,8 @@ public:
     {
         if (m_unwinderForwardSwitch != value)
             m_unwinderForwardSwitch = value;
-        
-            emit unwinderForwardSwitchChanged(m_unwinderForwardSwitch);
+
+        emit unwinderForwardSwitchChanged(m_unwinderForwardSwitch);
     }
 
     Q_INVOKABLE double getUnwinderReverse() const { return m_unwinderReverse; }
@@ -2214,18 +2237,18 @@ public:
     // =====OUTPUT3 Cutter / Mode =====
     Q_INVOKABLE double getLargeCutterIn() const { return m_largeCutterIn; }
     void setLargeCutterIn(double value)
-     {
-         if (m_largeCutterIn != value)
+    {
+        if (m_largeCutterIn != value)
             m_largeCutterIn = value;
-         emit largeCutterInChanged(m_largeCutterIn);
-     }
+        emit largeCutterInChanged(m_largeCutterIn);
+    }
     // =====OUTPUT3 Cutter / Mode Switch=====
     Q_INVOKABLE int getLargeCutterInSwitch() const { return m_largeCutterInSwitch; }
     void setLargeCutterInSwitch(int value)
     {
-         if (m_largeCutterInSwitch != value)
+        if (m_largeCutterInSwitch != value)
             m_largeCutterInSwitch = value;
-         emit largeCutterInSwitchChanged(m_largeCutterInSwitch);
+        emit largeCutterInSwitchChanged(m_largeCutterInSwitch);
     }
 
     Q_INVOKABLE double getModeSelect() const { return m_modeSelect; }
@@ -2257,7 +2280,7 @@ public:
     void setRunIndicatorSwitch(int value)
     {
         if (m_runIndicatorSwitch != value)
-                m_runIndicatorSwitch = value;
+            m_runIndicatorSwitch = value;
         emit runIndicatorSwitchChanged(m_runIndicatorSwitch);
     }
 
@@ -2279,19 +2302,19 @@ public:
 
     Q_INVOKABLE double getStopIndicator() const { return m_stopIndicator; }
     void setStopIndicator(double value)
-     {
-         if (m_stopIndicator != value)
+    {
+        if (m_stopIndicator != value)
             m_stopIndicator = value;
-         emit stopIndicatorChanged(m_stopIndicator);
-     }
+        emit stopIndicatorChanged(m_stopIndicator);
+    }
     //switch
     Q_INVOKABLE int getStopIndicatorSwitch() const { return m_stopIndicatorSwitch; }
     void setStopIndicatorSwitch(int value)
-     {
-         if (m_stopIndicatorSwitch != value)
-             m_stopIndicatorSwitch = value;
-         emit stopIndicatorChanged(m_stopIndicatorSwitch);
-     }
+    {
+        if (m_stopIndicatorSwitch != value)
+            m_stopIndicatorSwitch = value;
+        emit stopIndicatorChanged(m_stopIndicatorSwitch);
+    }
 
     // =====OUTPUT3 Buzzer / Mode Select =====
     Q_INVOKABLE double getBuzzer() const { return m_buzzer; }
@@ -2487,20 +2510,22 @@ public:
         emit output17SwitchChanged(output17Switch);
     }
 
-     
+
     // ===== ANALOG OUTPUT READ =====
-    Q_INVOKABLE double getAnalogOutUnwinderMainDrive() const{ return m_analogOutUnwinderMainDrive;}
+    Q_INVOKABLE double getAnalogOutUnwinderMainDrive() const { return m_analogOutUnwinderMainDrive; }
     void setAnalogOutUnwinderMainDrive(double value)
     {
         if (m_analogOutUnwinderMainDrive != value)
             m_analogOutUnwinderMainDrive = value;
         emit analogOutUnwinderMainDriveChanged(m_analogOutUnwinderMainDrive);
     }
+
     //%
     Q_INVOKABLE double getAnalogOutUnwinderMainDrivePc() const { return m_analogOutUnwinderMainDrivePc; }
     void setAnalogOutUnwinderMainDrivePc(double value) { m_analogOutUnwinderMainDrivePc = value; emit analogOutUnwinderMainDrivePcChanged(m_analogOutUnwinderMainDrivePc); }
+
     // ===== ANALOG OUTPUT READ switch=====
-    Q_INVOKABLE int getAnalogOutUnwinderMainDriveSwitch() const{ return m_analogOutUnwinderMainDriveSwitch;}
+    Q_INVOKABLE int getAnalogOutUnwinderMainDriveSwitch() const { return m_analogOutUnwinderMainDriveSwitch; }
     void setAnalogOutUnwinderMainDriveSwitch(int value)
     {
         if (m_analogOutUnwinderMainDriveSwitch != value)
@@ -2508,18 +2533,20 @@ public:
         emit analogOutUnwinderMainDriveSwitchChanged(m_analogOutUnwinderMainDriveSwitch);
     }
 
-    Q_INVOKABLE double getAnalogOutWinder() const{ return m_analogOutWinder;}
+    Q_INVOKABLE double getAnalogOutWinder() const { return m_analogOutWinder; }
     void setAnalogOutWinder(double value)
     {
         if (m_analogOutWinder != value)
             m_analogOutWinder = value;
         emit analogOutWinderChanged(m_analogOutWinder);
     }
+
     //%
     Q_INVOKABLE double getAnalogOutWinderPc() const { return m_analogOutWinderPc; }
     void setAnalogOutWinderPc(double value) { m_analogOutWinderPc = value; emit analogOutWinderPcChanged(m_analogOutWinderPc); }
 
-    Q_INVOKABLE int getAnalogOutWinderSwitch() const{ return m_analogOutWinderSwitch;}
+
+    Q_INVOKABLE int getAnalogOutWinderSwitch() const { return m_analogOutWinderSwitch; }
     void setAnalogOutWinderSwitch(int value)
     {
         if (m_analogOutWinderSwitch != value)
@@ -2527,7 +2554,7 @@ public:
         emit analogOutWinderSwitchChanged(m_analogOutWinderSwitch);
     }
 
-    Q_INVOKABLE double getAnalogOutCutter() const { return m_analogOutCutter;}
+    Q_INVOKABLE double getAnalogOutCutter() const { return m_analogOutCutter; }
     void setAnalogOutCutter(double value)
     {
         if (m_analogOutCutter != value)
@@ -2539,7 +2566,7 @@ public:
     void setAnalogOutCutterPc(double value) { m_analogOutCutterPc = value; emit analogOutCutterPcChanged(m_analogOutCutterPc); }
 
     //switch
-    Q_INVOKABLE int getAnalogOutCutterSwitch() const { return m_analogOutCutterSwitch;}
+    Q_INVOKABLE int getAnalogOutCutterSwitch() const { return m_analogOutCutterSwitch; }
     void setAnalogOutCutterSwitch(int value)
     {
         if (m_analogOutCutterSwitch != value)
@@ -2547,24 +2574,45 @@ public:
         emit analogOutCutterSwitchChanged(m_analogOutCutterSwitch);
     }
 
-    Q_INVOKABLE double getAnalogOutSelvedgeWinder() const{ return m_analogOutSelvedgeWinder;}
+    Q_INVOKABLE double getAnalogOutSelvedgeWinder() const { return m_analogOutSelvedgeWinder; }
     void setAnalogOutSelvedgeWinder(double value)
     {
         if (m_analogOutSelvedgeWinder != value)
             m_analogOutSelvedgeWinder = value;
         emit analogOutSelvedgeWinderChanged(m_analogOutSelvedgeWinder);
     }
+
+    Q_INVOKABLE double getUnwindingLimitThreshold() const { return m_unwindingLimitThreshold; }
+    void setUnwindingLimitThreshold(double value)
+    {
+        if (m_unwindingLimitThreshold != value)
+            m_unwindingLimitThreshold = value;
+        emit unwindingLimitThresholdChanged(m_unwindingLimitThreshold);
+    }
+
     //%
     Q_INVOKABLE double getAnalogOutSelvedgeWinderPc() const { return m_analogOutSelvedgeWinderPc; }
     void setAnalogOutSelvedgeWinderPc(double value) { m_analogOutSelvedgeWinderPc = value; emit analogOutSelvedgeWinderPcChanged(m_analogOutSelvedgeWinderPc); }
 
+    //%
+    Q_INVOKABLE double getUnwindingLimitThresholdPc() const { return m_unwindingLimitThresholdPc; }
+    void setUnwindingLimitThresholdPc(double value) { m_unwindingLimitThresholdPc = value; emit unwindingLimitThresholdPcChanged(m_analogOutSelvedgeWinderPc); }
+
     //switch
-    Q_INVOKABLE int getAnalogOutSelvedgeWinderSwitch() const{ return m_analogOutSelvedgeWinderSwitch;}
+    Q_INVOKABLE int getAnalogOutSelvedgeWinderSwitch() const { return m_analogOutSelvedgeWinderSwitch; }
     void setAnalogOutSelvedgeWinderSwitch(int value)
     {
         if (m_analogOutSelvedgeWinderSwitch != value)
             m_analogOutSelvedgeWinderSwitch = value;
         emit analogOutSelvedgeWinderSwitchChanged(m_analogOutSelvedgeWinderSwitch);
+    }
+    //switch
+    Q_INVOKABLE int getUnwindingLimitThresholdSwitch() const { return m_unwindingLimitThresholdSwitch; }
+    void setUnwindingLimitThresholdSwitch(int value)
+    {
+        if (m_unwindingLimitThresholdSwitch != value)
+            m_unwindingLimitThresholdSwitch = value;
+        emit unwindingLimitThresholdSwitchChanged(m_unwindingLimitThresholdSwitch);
     }
 
     Q_INVOKABLE double getModifyAnalogOutUnwinderMainDrive() const { return m_modifyAnalogOutUnwinderMainDrive; }
@@ -2614,6 +2662,41 @@ public:
             m_modifyAnalogOutCutterSwitch = value;
         emit modifyAnalogOutCutterSwitchChanged(m_modifyAnalogOutCutterSwitch);
     }
+
+    Q_INVOKABLE double getModifyAnalogOutSelvedgeWinder() const { return m_modifyAnalogOutSelvedgeWinder; }
+    void setModifyAnalogOutSelvedgeWinder(double value)
+    {
+        if (m_modifyAnalogOutSelvedgeWinder != value)
+            m_modifyAnalogOutSelvedgeWinder = value;
+        emit modifyAnalogOutSelvedgeWinderChanged(m_modifyAnalogOutSelvedgeWinder);
+        qDebug() << "get setModifyAnalogOutSelvedgeWinder" << m_modifyAnalogOutSelvedgeWinder;
+    }
+
+    Q_INVOKABLE double getModifyUnwindingLimitThreshold() const { return m_modifyUnwindingLimitThreshold; }
+    void setModifyUnwindingLimitThreshold(double value)
+    {
+        if (m_modifyUnwindingLimitThreshold != value)
+            m_modifyUnwindingLimitThreshold = value;
+        emit modifyUnwindingLimitThresholdChanged(m_modifyUnwindingLimitThreshold);
+        qDebug() << "get setModifyUnwindingLimitThreshold" << m_modifyUnwindingLimitThreshold;
+    }
+    //緩啟動Threshold
+    Q_INVOKABLE double getSoftStartThreshold() const { return m_softStartThreshold; }
+    void setSoftStartThreshold(double value)
+    {
+        m_softStartThreshold = value;
+        emit softStartThresholdChanged(m_softStartThreshold);
+        qDebug() << "get softStartThresholdChanged" << m_softStartThreshold;
+    }
+    //緩啟動速度
+    Q_INVOKABLE double getSoftStartSpeed() const { return m_softStartSpeed; }
+    void setSoftStartSpeed(double value)
+    {
+        m_softStartSpeed = value;
+        emit softStartSpeedChanged(m_softStartSpeed);
+        qDebug() << "get softStartSpeedChanged" << m_softStartSpeed;
+    }
+
     //張力穩定時間
     Q_INVOKABLE double getTensionTime() const { return m_tensionTime; }
     void setTensionTime(double value)
@@ -2630,55 +2713,22 @@ public:
         emit secTensionTimeChanged(m_secTensionTime);
         qDebug() << "get secTensionTimeChanged" << m_secTensionTime;
     }
-    Q_INVOKABLE double getModifyAnalogOutSelvedgeWinder() const { return m_modifyAnalogOutSelvedgeWinder;}
-    void setModifyAnalogOutSelvedgeWinder(double value)
-    {
-        if (m_modifyAnalogOutSelvedgeWinder != value)
-            m_modifyAnalogOutSelvedgeWinder = value;
-        emit modifyAnalogOutSelvedgeWinderChanged(m_modifyAnalogOutSelvedgeWinder);
-        qDebug()<<"get setModifyAnalogOutSelvedgeWinder"<<m_modifyAnalogOutSelvedgeWinder;
-    }
-    Q_INVOKABLE int getModifyUnwindingLimitThreshold() const { return m_modifyUnwindingLimitThreshold; }
-    void setModifyUnwindingLimitThreshold(double value)
-    {
-        if (m_modifyUnwindingLimitThreshold != value)
-            m_modifyUnwindingLimitThreshold = value;
-        emit modifyUnwindingLimitThresholdChanged(m_modifyUnwindingLimitThreshold);
-        qDebug() << "get setModifyUnwindingLimitThreshold" << m_modifyUnwindingLimitThreshold;
-    }
+
     //switch
-    Q_INVOKABLE int getModifyAnalogOutSelvedgeWinderSwitch() const { return m_modifyAnalogOutSelvedgeWinderSwitch;}
+    Q_INVOKABLE int getModifyAnalogOutSelvedgeWinderSwitch() const { return m_modifyAnalogOutSelvedgeWinderSwitch; }
     void setModifyAnalogOutSelvedgeWinderSwitch(int value)
     {
         if (m_modifyAnalogOutSelvedgeWinderSwitch != value)
             m_modifyAnalogOutSelvedgeWinderSwitch = value;
         emit modifyAnalogOutSelvedgeWinderSwitchChanged(m_modifyAnalogOutSelvedgeWinderSwitch);
     }
-
     //switch
     Q_INVOKABLE int getModifyUnwindingLimitThresholdSwitch() const { return m_modifyUnwindingLimitThresholdSwitch; }
     void setModifyUnwindingLimitThresholdSwitch(int value)
     {
         if (m_modifyUnwindingLimitThresholdSwitch != value)
             m_modifyUnwindingLimitThresholdSwitch = value;
-        emit modifyUnwindingLimitThresholdSwitchChanged(m_modifyUnwindingLimitThreshold);
-    }
-
-    //緩啟動Threshold
-    Q_INVOKABLE double getSoftStartThreshold() const { return m_softStartThreshold; }
-    void setSoftStartThreshold(double value)
-    {
-        m_softStartThreshold = value;
-        emit softStartThresholdChanged(m_softStartThreshold);
-        qDebug() << "get softStartThresholdChanged" << m_softStartThreshold;
-    }
-    //緩啟動速度
-    Q_INVOKABLE double getSoftStartSpeed() const { return m_softStartSpeed; }
-    void setSoftStartSpeed(double value)
-    {
-        m_softStartSpeed = value;
-        emit softStartSpeedChanged(m_softStartSpeed);
-        qDebug() << "get softStartSpeedChanged" << m_softStartSpeed;
+        emit modifyAnalogOutSelvedgeWinderSwitchChanged(m_modifyUnwindingLimitThresholdSwitch);
     }
 
     // ===== IPC INPUT WRITE =====
@@ -2774,7 +2824,7 @@ public:
             m_rightSelvedgeWinderSelect = value;
         emit rightSelvedgeWinderSelectChanged(m_rightSelvedgeWinderSelect);
     }
-     // ===== IPC INPUT WRITE Light=====
+    // ===== IPC INPUT WRITE Light=====
     Q_INVOKABLE int getIpcStartLight() const { return m_ipcStartLight; }
     Q_INVOKABLE int getIpcStopLight() const { return m_ipcStopLight; }
     Q_INVOKABLE int getIpcAlarmResetLight() const { return m_ipcAlarmResetLight; }
@@ -2810,7 +2860,7 @@ public:
             m_smallRollMotorSwitch = value;
         emit smallRollMotorSwitchChanged(m_smallRollMotorSwitch);
     }
-    
+
 
     Q_INVOKABLE double getMainDriveMotor() const { return m_mainDriveMotor; }
     void setMainDriveMotor(double value)
@@ -2923,6 +2973,14 @@ public:
         emit wasteRollMotorASwitchChanged(m_wasteRollMotorASwitch);
     }
 
+    Q_INVOKABLE bool getCurlingAdjust() const { return m_curlingAdjust; }
+    void setCurlingAdjust(bool value)
+    {
+        m_curlingAdjust = value;
+        emit curlingAdjustChanged(m_curlingAdjust);
+    }
+
+
     // =====控制介面 Tension Control =====
     Q_INVOKABLE double getUnwindingTension() const { return m_unwindingTension; }
     void setUnwindingTension(double value)
@@ -3026,17 +3084,19 @@ public:
         emit singleActionModeChanged(m_singleActionMode);
     }
 
-    Q_INVOKABLE void raiseAbnormal(QString msg) {
+    //異常提醒
+    Q_INVOKABLE void raiseAbnormal(const QString& msg) {
         emit abnormalRaised(msg);
     }
 
-    signals:
-    void bigRollModeChanged(int value);
-    void smallRollModeChanged(int value);
-    void restBtnChanged(int value);
+signals:
+
     //異常提醒
     void abnormalRaised(QString msg);
 
+    void bigRollModeChanged(int value);
+    void smallRollModeChanged(int value);
+    void restBtnChanged(int value);
 
     void metalDetectorChanged(int value);
     void gratingDetectionChanged(int value);
@@ -3070,10 +3130,7 @@ public:
     void modifySmallWinderTensionOverChanged(double value);
     void modifyLargeWinderTensionOverChanged(double value);
 
-    void pressurePlateChanged(int value);
-    void pressureRollerChanged(int value);
-    void pressurePlateBackChanged(int value);
-    void pressureRollerDownChanged(int value);
+
     // INPUT-1
     void unwinderVfdFreqAlarmChanged(double value);
     void mainDriveVfdFreqAlarmChanged(double value);
@@ -3103,7 +3160,7 @@ public:
     void largeWinderVfdFreqAlarmLightChanged(int value);
     void smallCutterVfdFreqAlarmLightChanged(int value);
     void selvedgeFanVfdFreqAlarmLightChanged(int value);
-    
+
     void leftFanOverloadAlarmLightChanged(int value);
     void rightFanOverloadAlarmLightChanged(int value);
 
@@ -3354,6 +3411,7 @@ public:
     void output15Changed(double value);
     void output16Changed(double value);
     void output17Changed(double value);
+
     //===== OUTPUT-3 switch=====
     void largeCutterInSwitchChanged(int value);
     void modeSelectSwitchChanged(int value);
@@ -3375,39 +3433,48 @@ public:
     void output15SwitchChanged(int value);
     void output16SwitchChanged(int value);
     void output17SwitchChanged(int value);
+
+
     //===== ANALOG OUTPUT =====
     void analogOutUnwinderMainDriveChanged(double value);
     void analogOutWinderChanged(double value);
     void analogOutCutterChanged(double value);
     void analogOutSelvedgeWinderChanged(double value);
+    void unwindingLimitThresholdChanged(double value);
+
+
+    //%
+    void analogOutUnwinderMainDrivePcChanged(double value);
+    void analogOutWinderPcChanged(double value);
+    void analogOutCutterPcChanged(double value);
+    void analogOutSelvedgeWinderPcChanged(double value);
+    void unwindingLimitThresholdPcChanged(double value);
 
     void modifyAnalogOutUnwinderMainDriveChanged(double value);
     void modifyAnalogOutWinderChanged(double value);
     void modifyAnalogOutCutterChanged(double value);
     void modifyAnalogOutSelvedgeWinderChanged(double value);
     void modifyUnwindingLimitThresholdChanged(double value);
-    void modifyUnwindingLimitThresholdSwitchChanged(int value);
     //緩啟動Threshold
     void softStartThresholdChanged(double value);
     //緩啟動速度
     void softStartSpeedChanged(double value);
+    //張力穩定時間
     void tensionTimeChanged(double value);
+    //第二段張力穩定時間
     void secTensionTimeChanged(double value);
-    //%
-    void analogOutUnwinderMainDrivePcChanged(double value);
-    void analogOutWinderPcChanged(double value);
-    void analogOutCutterPcChanged(double value);
-    void analogOutSelvedgeWinderPcChanged(double value);
     //===== ANALOG OUTPUT switch=====
     void analogOutUnwinderMainDriveSwitchChanged(int value);
     void analogOutWinderSwitchChanged(int value);
     void analogOutCutterSwitchChanged(int value);
     void analogOutSelvedgeWinderSwitchChanged(int value);
+    void unwindingLimitThresholdSwitchChanged(int value);
 
     void modifyAnalogOutUnwinderMainDriveSwitchChanged(int value);
     void modifyAnalogOutWinderSwitchChanged(int value);
     void modifyAnalogOutCutterSwitchChanged(int value);
     void modifyAnalogOutSelvedgeWinderSwitchChanged(int value);
+    void modifyUnwindingLimitThresholdSwitchChanged(int value);
 
     //===== IPC-INPUT =====
     void ipcStartChanged(double value);
@@ -3458,9 +3525,17 @@ public:
     void cutterWheelMotorChanged(double value);
     void wasteRollMotorAChanged(double value);
 
+    //卷曲鬆緊調整
+    void curlingAdjustChanged(bool value);
+
     void unwindingTensionChanged(double value);
     void smallRollTensionChanged(double value);
     void largeRollTensionChanged(double value);
+
+    void pressurePlateChanged(int value);
+    void pressureRollerChanged(int value);
+    void pressurePlateBackChanged(int value);
+    void pressureRollerDownChanged(int value);
     // =====控制介面 Motor switch=====
     void smallRollMotorSwitchChanged(int value);
     void mainDriveMotorSwitchChanged(int value);
@@ -3474,6 +3549,8 @@ public:
     void unwindingTensionSwitchChanged(int value);
     void smallRollTensionSwitchChanged(int value);
     void largeRollTensionSwitchChanged(int value);
+
+
 
     // ===== cutter=====
     void smallRollCutter1Changed(int value);
@@ -3522,14 +3599,6 @@ public:
     double m_modifySmallWinderTensionOver = 0.0;
     double m_modifyLargeWinderTensionOver = 0.0;
 
-    //壓板
-    int m_pressurePlate = 0;
-    //壓輪
-    int m_pressureRoller = 0;
-    //壓板
-    int m_pressurePlateBack = 0;
-    //壓輪
-    int m_pressureRollerDown = 0;
     // ===== cutter=====
     int m_smallRollCutter1 = 0;
     int m_smallRollCutter2 = 0;
@@ -3811,6 +3880,7 @@ public:
     double m_output15 = 0.0;
     double m_output16 = 0.0;
     double m_output17 = 0.0;
+
     //===OUTPUT3 switch=====
     int m_largeCutterInSwitch = 0;
     int m_modeSelectSwitch = 0;
@@ -3832,32 +3902,51 @@ public:
     int output15Switch = 0;
     int output16Switch = 0;
     int output17Switch = 0;
+
     // ===== ANALOG OUTPUT =====
     double m_analogOutUnwinderMainDrive = 0.0;
     double m_analogOutWinder = 0.0;
     double m_analogOutCutter = 0.0;
     double m_analogOutSelvedgeWinder = 0.0;
-
-    double m_modifyAnalogOutUnwinderMainDrive = 0.0;
-    double m_modifyAnalogOutWinder = 0.0;
-    double m_modifyAnalogOutCutter = 0.0;
-    double m_modifyAnalogOutSelvedgeWinder = 0.0;
-    // ===== ANALOG OUTPUT switch=====
-    int m_analogOutUnwinderMainDriveSwitch = 0;
-    int m_analogOutWinderSwitch = 0;
-    int m_analogOutCutterSwitch = 0;
-    int m_analogOutSelvedgeWinderSwitch = 0;
+    //放捲頻率限制閥值
+    double m_unwindingLimitThreshold = 1.0;
 
     //%
     double m_analogOutUnwinderMainDrivePc = 100.0;
     double m_analogOutWinderPc = 100.0;
     double m_analogOutCutterPc = 100.0;
     double m_analogOutSelvedgeWinderPc = 100.0;
+    //放捲頻率限制閥值%
+    double m_unwindingLimitThresholdPc = 2.2;
+
+    double m_modifyAnalogOutUnwinderMainDrive = 0.0;
+    double m_modifyAnalogOutWinder = 0.0;
+    double m_modifyAnalogOutCutter = 0.0;
+    double m_modifyAnalogOutSelvedgeWinder = 0.0;
+    //放捲頻率限制閥值
+    double m_modifyUnwindingLimitThreshold = 3.3;
+    //緩啟動Threshold
+    double m_softStartThreshold = 2.1;
+    //緩啟動速度
+    double m_softStartSpeed = 1.1;
+    //張力穩定時間
+    double m_tensionTime = 2.1;
+    //第二段張力穩定時間
+    double m_secTensionTime = 3.1;
+    // ===== ANALOG OUTPUT switch=====
+    int m_analogOutUnwinderMainDriveSwitch = 0;
+    int m_analogOutWinderSwitch = 0;
+    int m_analogOutCutterSwitch = 0;
+    int m_analogOutSelvedgeWinderSwitch = 0;
+    //放捲頻率限制閥值
+    int m_unwindingLimitThresholdSwitch = 1;
 
     int m_modifyAnalogOutUnwinderMainDriveSwitch = 0;
     int m_modifyAnalogOutWinderSwitch = 0;
     int m_modifyAnalogOutCutterSwitch = 0;
     int m_modifyAnalogOutSelvedgeWinderSwitch = 0;
+    //放捲頻率限制閥值
+    int m_modifyUnwindingLimitThresholdSwitch = 1;
 
 
     // ===== IPC INPUT =====
@@ -3909,9 +3998,20 @@ public:
     double m_cutterWheelMotor = 0.0;
     double m_wasteRollMotorA = 0.0;
 
+    //卷曲鬆緊調整
+    bool m_curlingAdjust = 0;
+
     double m_unwindingTension = 0.0;
     double m_smallRollTension = 0.0;
     double m_largeRollTension = 0.0;
+    //壓板
+    int m_pressurePlate = 0;
+    //壓輪
+    int m_pressureRoller = 0;
+    //壓板
+    int m_pressurePlateBack = 0;
+    //壓輪
+    int m_pressureRollerDown = 0;
     // ===== 控制介面 switch=====
     int m_smallRollMotorSwitch = 0;
     int m_mainDriveMotorSwitch = 0;
@@ -3928,14 +4028,8 @@ public:
 
     // ===== Single Action Mode=====
     int m_singleActionMode = 0;
-    int m_modifyUnwindingLimitThreshold = 0;
-    int m_modifyUnwindingLimitThresholdSwitch = 1;
-    //緩啟動Threshold
-    double m_softStartThreshold = 2.1;
-    //緩啟動速度
-    double m_softStartSpeed = 1.1;
-    double m_tensionTime = 1000;
-    double m_secTensionTime = 600;
+
+    QString m_msg = "test";
 };
 
 

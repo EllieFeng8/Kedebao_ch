@@ -19,16 +19,21 @@ ModeSwitchUI {
     parameterMouseArea.onClicked: {
         // parameterSetting.visible = true
         setParameterInterface(1);
+
     }
 
     controlMouseArea.onClicked: {
         operateScreen.visible = true
     }
 
+    errorLogMouseArea.onClicked: {
+        errorLog.visible = true
+    }
 
     ParameterSetting{
         id: parameterSetting
         visible: false
+
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
     }
@@ -61,9 +66,18 @@ ModeSwitchUI {
         anchors.verticalCenter: parent.verticalCenter
     }
 
+    ErrorLog {
+        id:errorLog
+        visible: false
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+    }
+
     function setParameterInterface(pageNum){
         if(pageNum ==1){
+
             parameterSetting.visible = true
+
             parameterSetting2.visible = false
             parameterSetting3.visible = false
             parameterSetting4.visible = false

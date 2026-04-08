@@ -136,416 +136,533 @@ private:
     QTimer* rampTimer;
     bool big_Alarm = false;
     bool small_Alarm = false;
+    bool isStart = false;
+    QVector<quint16> m_lastV; // 儲存上一次的異常狀態
+    //bool hasAlarmFunc(const QVector<quint16> v)
+    //{
+    //    bool hasAlarm = false;
+    //    small_Alarm = false;
+    //    big_Alarm = false;
+    //    if (v[0] == 1) { 
+    //        emit ErrMsg(QString::fromLocal8Bit("放捲變頻異常"));
+    //        //qDebug() << "alarm 0";
+    //        big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true; }
+    //    if (v[1] == 1) { 
+    //        emit ErrMsg(QString::fromLocal8Bit("主傳變頻異常"));
+    //        //qDebug() << "alarm 1";
+    //        big_Alarm = true;
+    //        small_Alarm = true; 
+    //        hasAlarm = true;}
+    //    if (v[2] == 1) {
+    //        emit ErrMsg(QString::fromLocal8Bit("小收卷變頻異常"));
+    //        //qDebug() << "alarm 2";
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;}
+    //    if (v[3] == 1) { 
+    //        emit ErrMsg(QString::fromLocal8Bit("大收卷變頻異常"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;}
+    //    //qDebug() << "alarm 3";
+    //    if (v[4] == 1) {
+
+    //        //qDebug() << "alarm 4";
+    //        emit ErrMsg(QString::fromLocal8Bit("小卷切刀輪變頻異常"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;}
+    //    if (v[5] == 1) { 
+    //        //qDebug() << "alarm 5";
+    //        emit ErrMsg(QString::fromLocal8Bit("耳料抽風變頻異常"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[6] == 1) { 
+    //        //qDebug() << "alarm 6";
+    //        emit ErrMsg(QString::fromLocal8Bit("左側抽風過載"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[7] == 1) {
+    //        //qDebug() << "alarm 7";
+    //        emit ErrMsg(QString::fromLocal8Bit("右側抽風過載"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[8] == 1) { 
+    //        //qDebug() << "alarm 8";
+    //        emit ErrMsg(QString::fromLocal8Bit("大捲切刀輪變頻異常"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[9] == 1) { 
+    //        //qDebug() << "alarm 9";
+    //        emit ErrMsg(QString::fromLocal8Bit("右側耳料變頻異常"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[10] == 1) { 
+    //        //qDebug() << "alarm 10";
+    //        emit ErrMsg(QString::fromLocal8Bit("左側耳料變頻異常"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[11] == 1) { 
+    //        //qDebug() << "alarm 11";
+    //        emit ErrMsg(QString::fromLocal8Bit("對邊機變頻異常"));
+    //        big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[12] == 1) {
+    //        //qDebug() << "alarm 12";
+    //        emit ErrMsg(QString::fromLocal8Bit("放捲軸電源檢出"));
+    //        big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[13] == 1) { 
+    //        //qDebug() << "alarm 13";
+    //        emit ErrMsg(QString::fromLocal8Bit("主傳電源檢出"));
+    //        big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[14] == 1) { 
+    //        //qDebug() << "alarm 14";
+    //        emit ErrMsg(QString::fromLocal8Bit("小收卷電源檢出"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[15] == 1) { 
+    //        //qDebug() << "alarm 15";
+    //        emit ErrMsg(QString::fromLocal8Bit("大收卷電源檢出"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[16] == 1) { 
+    //        //qDebug() << "alarm 16";
+    //        emit ErrMsg(QString::fromLocal8Bit("小捲切刀輪電源檢出"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[17] == 1) { 
+    //        //qDebug() << "alarm 17";
+    //        emit ErrMsg(QString::fromLocal8Bit("耳料抽風電源檢出"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[18] == 1) { 
+    //        //qDebug() << "alarm 18";
+    //        emit ErrMsg(QString::fromLocal8Bit("大捲切刀輪電源檢出"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[19] == 1) { 
+    //        //qDebug() << "alarm 19";
+    //        emit ErrMsg(QString::fromLocal8Bit("左耳料收卷電源檢出"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[20] == 1) { 
+    //        //qDebug() << "alarm 20";
+    //        emit ErrMsg(QString::fromLocal8Bit("右耳料收卷電源檢出"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[21] == 1) { 
+    //        //qDebug() << "alarm 21";
+    //        emit ErrMsg(QString::fromLocal8Bit("對邊機電源檢出"));
+    //        big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[22] == 1) { 
+    //        //qDebug() << "alarm 22";
+    //        emit ErrMsg(QString::fromLocal8Bit("放捲軸切斷開關檢出"));
+    //        //big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[23] == 1) { 
+    //        //qDebug() << "alarm 23";
+    //        emit ErrMsg(QString::fromLocal8Bit("主傳切斷開關檢出"));
+    //        big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[24] == 1) { 
+    //        //qDebug() << "alarm 24";
+    //        emit ErrMsg(QString::fromLocal8Bit("小收卷切斷開關檢出"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[25] == 1) { 
+    //        //qDebug() << "alarm 25";
+    //        emit ErrMsg(QString::fromLocal8Bit("大收卷切斷開關檢出"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[26] == 1) 
+    //    {
+    //        //qDebug() << "alarm 26";
+    //        emit ErrMsg(QString::fromLocal8Bit("小卷切刀輪切斷開關檢出"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[27] == 1) {
+    //        //qDebug() << "alarm 27";
+    //        emit ErrMsg(QString::fromLocal8Bit("左側抽風切斷開關檢出"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[28] == 1) { 
+    //        //qDebug() << "alarm 28";
+    //        emit ErrMsg(QString::fromLocal8Bit("右側抽風切斷開關檢出"));
+    //        //big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[29] == 1) {
+    //        //qDebug() << "alarm 29";
+    //        emit ErrMsg(QString::fromLocal8Bit("大卷切刀輪切斷開關檢出"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[30] == 1) {
+    //        //qDebug() << "alarm 30";
+    //        emit ErrMsg(QString::fromLocal8Bit("左側耳料收卷切斷開關檢出"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[31] == 1) { 
+    //        //qDebug() << "alarm 31";
+    //        emit ErrMsg(QString::fromLocal8Bit("右側耳料收卷切斷開關檢出"));
+    //        big_Alarm = true;
+    //        //small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[32] == 1) {
+    //        //qDebug() << "alarm 32";
+    //        emit ErrMsg(QString::fromLocal8Bit("對邊機切斷開關檢出"));
+    //        big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[33] == 0) { 
+    //        emit ErrMsg(QString::fromLocal8Bit("STOP-1"));
+    //        big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    //if (v[34] == 0) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("STOP-2"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[35] == 0) {
+    //    //    emit ErrMsg(QString::fromLocal8Bit("STOP-3"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[36] == 0) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("STOP-4"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    if (v[37] == 0) { 
+    //        emit ErrMsg(QString::fromLocal8Bit("STOP-5"));
+    //        big_Alarm = true;
+    //        small_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    //if (v[38] == 0) {
+    //    //    emit ErrMsg(QString::fromLocal8Bit("STOP-6"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[39] == 0) {
+    //    //    emit ErrMsg(QString::fromLocal8Bit("STOP-7"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[40] == 1) {
+    //    //    emit ErrMsg(QString::fromLocal8Bit("門1"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[41] == 1) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("門2"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[42] == 1) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("門3"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[43] == 1) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("門4"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[44] == 1) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("門5"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[45] == 1) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("門6"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[46] == 1) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("門7"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[47] == 1) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("門8"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[48] == 0) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("放捲圍籬-1"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[49] == 0) {
+    //    //    emit ErrMsg(QString::fromLocal8Bit("放捲圍籬-2"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[50] == 0) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("大捲圍籬-3"));
+    //    //    big_Alarm = true;
+    //    //    //small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[51] == 0) {
+    //    //    emit ErrMsg(QString::fromLocal8Bit("大捲圍籬-4"));
+    //    //    big_Alarm = true;
+    //    //    //small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[52] == 0) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("放捲光柵"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[53] == 0) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("小卷光柵"));
+    //    //    //big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[54] == 0) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("大捲光柵"));
+    //    //    big_Alarm = true;
+    //    //    //small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    if (v[55] == 1) { 
+    //        emit ErrMsg(QString::fromLocal8Bit("小收卷零速檢出"));
+    //        //big_Alarm = true;
+    //        //small_Alarm = true;
+    //        //hasAlarm = true;
+    //    }
+    //    if (v[56] == 1) {
+    //        emit ErrMsg(QString::fromLocal8Bit("大收卷零速檢出"));
+    //        //big_Alarm = true;
+    //        //small_Alarm = true;
+    //        //hasAlarm = true;
+    //    }
+    //    //if (v[57] == 1) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("放捲張力過大"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[58] == 1) { 
+    //    //    emit ErrMsg(QString::fromLocal8Bit("小捲張力過大"));
+    //    //    //big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    //if (v[59] == 1) {
+    //    //    emit ErrMsg(QString::fromLocal8Bit("大捲張力過大"));
+    //    //    big_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    if (v[60] == 1) {
+    //        emit ErrMsg(QString::fromLocal8Bit("左耳料角度異常"));
+    //        big_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    if (v[61] == 1) { 
+    //        emit ErrMsg(QString::fromLocal8Bit("右耳料角度異常"));
+    //        big_Alarm = true;
+    //        hasAlarm = true;
+    //    }
+    //    //if (v[62] == 1) {
+    //    //    emit ErrMsg(QString::fromLocal8Bit("62"));
+    //    //    big_Alarm = true;
+    //    //    small_Alarm = true;
+    //    //    hasAlarm = true;
+    //    //}
+    //    return hasAlarm;
+    //}
     bool hasAlarmFunc(const QVector<quint16> v)
     {
+        // 確保 m_lastV 長度與 v 一致，第一次執行時初始化為全 0
+        if (m_lastV.size() != v.size()) {
+            m_lastV.resize(v.size());
+            m_lastV.fill(0);
+        }
+
         bool hasAlarm = false;
         small_Alarm = false;
         big_Alarm = false;
-        if (v[0] == 1) { 
-            emit ErrMsg(QString::fromLocal8Bit("放捲變頻異常"));
-            //qDebug() << "alarm 0";
-            big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true; }
-        if (v[1] == 1) { 
-            emit ErrMsg(QString::fromLocal8Bit("主傳變頻異常"));
-            //qDebug() << "alarm 1";
-            big_Alarm = true;
-            small_Alarm = true; 
-            hasAlarm = true;}
-        if (v[2] == 1) {
-            emit ErrMsg(QString::fromLocal8Bit("小收卷變頻異常"));
-            //qDebug() << "alarm 2";
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;}
-        if (v[3] == 1) { 
-            emit ErrMsg(QString::fromLocal8Bit("大收卷變頻異常"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;}
-        //qDebug() << "alarm 3";
-        if (v[4] == 1) {
 
-            //qDebug() << "alarm 4";
-            emit ErrMsg(QString::fromLocal8Bit("小卷切刀輪變頻異常"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;}
-        if (v[5] == 1) { 
-            //qDebug() << "alarm 5";
-            emit ErrMsg(QString::fromLocal8Bit("耳料抽風變頻異常"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
+        // 定義異常清單：{索引, 錯誤訊息, 是否觸發 bigAlarm, 是否觸發 smallAlarm, 觸發數值(通常是1)}
+        struct AlarmDef {
+            int index;
+            QString msg;
+            bool _big;
+            bool _small;
+            int triggerVal;
+        };
+
+        static const QList<AlarmDef> alarmDefs = {
+            // --- 原本已有的項目 ---
+            {0,QString::fromLocal8Bit("放捲變頻異常"), true,  true,  1},
+            {1,QString::fromLocal8Bit("主傳變頻異常"), true,  true,  1},
+            {2,QString::fromLocal8Bit("小收卷變頻異常"), false, true,  1},
+            {3,QString::fromLocal8Bit("大收卷變頻異常"), true,  false, 1},
+            {4,QString::fromLocal8Bit("小卷切刀輪變頻異常"), false, true, 1},
+            {5,QString::fromLocal8Bit("耳料抽風變頻異常"), false, true, 1},
+            {6,QString::fromLocal8Bit("左側抽風過載"), false, true, 1},
+            {7,QString::fromLocal8Bit("右側抽風過載"), false, true, 1},
+            {8,QString::fromLocal8Bit("大捲切刀輪變頻異常"), true,  false, 1},
+            {9,QString::fromLocal8Bit("右側耳料變頻異常"), true,  false, 1},
+            {10,QString::fromLocal8Bit("左側耳料變頻異常"), true,  false, 1},
+            {11,QString::fromLocal8Bit("對邊機變頻異常"), true,  true,  1},
+            {12,QString::fromLocal8Bit("放捲軸電源檢出"), true,  true,  1},
+            {13,QString::fromLocal8Bit("主傳電源檢出"), true,  true,  1},
+            {14,QString::fromLocal8Bit("小收卷電源檢出"), false, true,  1},
+            {15,QString::fromLocal8Bit("大收卷電源檢出"), true,  false, 1},
+            {16,QString::fromLocal8Bit("小捲切刀輪電源檢出"), false, true, 1},
+            {17,QString::fromLocal8Bit("耳料抽風電源檢出"), false, true, 1},
+            {18,QString::fromLocal8Bit("大捲切刀輪電源檢出"), true,  false, 1},
+            {19,QString::fromLocal8Bit("左耳料收卷電源檢出"), true,  false, 1},
+            {20,QString::fromLocal8Bit("右耳料收卷電源檢出"), true,  false, 1},
+            {21,QString::fromLocal8Bit("對邊機電源檢出"), true,  true,  1},
+            {22,QString::fromLocal8Bit("放捲軸切斷開關檢出"), false, false, 1},
+            {23,QString::fromLocal8Bit("主傳切斷開關檢出"), true,  true,  1},
+            {24,QString::fromLocal8Bit("小收卷切斷開關檢出"), false, true,  1},
+            {25,QString::fromLocal8Bit("大收卷切斷開關檢出"), true,  false, 1},
+            {26,QString::fromLocal8Bit("小卷切刀輪切斷開關檢出"), false, true, 1},
+            {27,QString::fromLocal8Bit("左側抽風切斷開關檢出"), false, true, 1},
+            {28,QString::fromLocal8Bit("右側抽風切斷開關檢出"), false, true, 1},
+            {29,QString::fromLocal8Bit("大卷切刀輪切斷開關檢出"), true,  false, 1},
+            {30,QString::fromLocal8Bit("左側耳料收卷切斷開關檢出"), true,  false, 1},
+            {31,QString::fromLocal8Bit("右側耳料收卷切斷開關檢出"), true,  false, 1},
+            {32,QString::fromLocal8Bit("對邊機切斷開關檢出"), true,  true,  1},
+
+            // --- 從註解中還原的項目 ---
+            {33,QString::fromLocal8Bit("STOP-1"), true,  true,  0},
+            {34,QString::fromLocal8Bit("STOP-2"), true,  true,  0},
+            {35,QString::fromLocal8Bit("STOP-3"), true,  true,  0},
+            {36,QString::fromLocal8Bit("STOP-4"), true,  true,  0},
+            {37,QString::fromLocal8Bit("STOP-5"), true,  true,  0},
+            {38,QString::fromLocal8Bit("STOP-6"), true,  true,  0},
+            {39,QString::fromLocal8Bit("STOP-7"), true,  true,  0},
+
+            {40,QString::fromLocal8Bit("門1"), true,  true,  0},
+            {41,QString::fromLocal8Bit("門2"), true,  true,  0},
+            {42,QString::fromLocal8Bit("門3"), true,  true,  0},
+            {43,QString::fromLocal8Bit("門4"), true,  true,  0},
+            {44,QString::fromLocal8Bit("門5"), true,  true,  0},
+            {45,QString::fromLocal8Bit("門6"), true,  true,  0},
+            {46,QString::fromLocal8Bit("門7"), true,  true,  0},
+            {47,QString::fromLocal8Bit("門8"), true,  true,  0},
+
+            {48,QString::fromLocal8Bit("放捲圍籬-1"), true,  true,  0},
+            {49,QString::fromLocal8Bit("放捲圍籬-2"), true,  true,  0},
+            {50,QString::fromLocal8Bit("大捲圍籬-3"), true,  false, 0},
+            {51,QString::fromLocal8Bit("大捲圍籬-4"), true,  false, 0},
+            {52,QString::fromLocal8Bit("放捲光柵"), true,  true,  0},
+            {53,QString::fromLocal8Bit("小卷光柵"), false, true,  0},
+            {54,QString::fromLocal8Bit("大捲光柵"), true,  false, 0},
+
+            //{55,QString::fromLocal8Bit("小收卷零速檢出"), false, false, 1},
+            //{56,QString::fromLocal8Bit("大收卷零速檢出"), false, false, 1},
+
+            {57,QString::fromLocal8Bit("放捲張力過大"), true,  true,  1},
+            {58,QString::fromLocal8Bit("小捲張力過大"), false, true,  1},
+            {59,QString::fromLocal8Bit("大捲張力過大"), true,  false, 1},
+
+            //{60,QString::fromLocal8Bit("左耳料角度異常"), true,  false, 1},
+            //{61,QString::fromLocal8Bit("右耳料角度異常"), true,  false, 1},
+            //{62, "報警62", true,  true,  1}
+        };
+
+        for (const auto& alarm : alarmDefs) {
+            if (v.size() <= alarm.index) continue;
+
+            bool isTriggered = (v[alarm.index] == alarm.triggerVal);
+
+            if (isTriggered) {
+                hasAlarm = true;
+                if (alarm._big) big_Alarm = true;
+                if (alarm._small) small_Alarm = true;
+
+                // --- 關鍵判斷：只有在上一次不是這個狀態時，才發送訊號 ---
+                if (m_lastV[alarm.index] != v[alarm.index]) {
+                    emit ErrMsg(alarm.msg);
+                }
+            }
         }
-        if (v[6] == 1) { 
-            //qDebug() << "alarm 6";
-            emit ErrMsg(QString::fromLocal8Bit("左側抽風過載"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[7] == 1) {
-            //qDebug() << "alarm 7";
-            emit ErrMsg(QString::fromLocal8Bit("右側抽風過載"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[8] == 1) { 
-            //qDebug() << "alarm 8";
-            emit ErrMsg(QString::fromLocal8Bit("大捲切刀輪變頻異常"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[9] == 1) { 
-            //qDebug() << "alarm 9";
-            emit ErrMsg(QString::fromLocal8Bit("右側耳料變頻異常"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[10] == 1) { 
-            //qDebug() << "alarm 10";
-            emit ErrMsg(QString::fromLocal8Bit("左側耳料變頻異常"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[11] == 1) { 
-            //qDebug() << "alarm 11";
-            emit ErrMsg(QString::fromLocal8Bit("對邊機變頻異常"));
-            big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[12] == 1) {
-            //qDebug() << "alarm 12";
-            emit ErrMsg(QString::fromLocal8Bit("放捲軸電源檢出"));
-            big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[13] == 1) { 
-            //qDebug() << "alarm 13";
-            emit ErrMsg(QString::fromLocal8Bit("主傳電源檢出"));
-            big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[14] == 1) { 
-            //qDebug() << "alarm 14";
-            emit ErrMsg(QString::fromLocal8Bit("小收卷電源檢出"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[15] == 1) { 
-            //qDebug() << "alarm 15";
-            emit ErrMsg(QString::fromLocal8Bit("大收卷電源檢出"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[16] == 1) { 
-            //qDebug() << "alarm 16";
-            emit ErrMsg(QString::fromLocal8Bit("小捲切刀輪電源檢出"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[17] == 1) { 
-            //qDebug() << "alarm 17";
-            emit ErrMsg(QString::fromLocal8Bit("耳料抽風電源檢出"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[18] == 1) { 
-            //qDebug() << "alarm 18";
-            emit ErrMsg(QString::fromLocal8Bit("大捲切刀輪電源檢出"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[19] == 1) { 
-            //qDebug() << "alarm 19";
-            emit ErrMsg(QString::fromLocal8Bit("左耳料收卷電源檢出"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[20] == 1) { 
-            //qDebug() << "alarm 20";
-            emit ErrMsg(QString::fromLocal8Bit("右耳料收卷電源檢出"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[21] == 1) { 
-            //qDebug() << "alarm 21";
-            emit ErrMsg(QString::fromLocal8Bit("對邊機電源檢出"));
-            big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[22] == 1) { 
-            //qDebug() << "alarm 22";
-            emit ErrMsg(QString::fromLocal8Bit("放捲軸切斷開關檢出"));
-            //big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[23] == 1) { 
-            //qDebug() << "alarm 23";
-            emit ErrMsg(QString::fromLocal8Bit("主傳切斷開關檢出"));
-            big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[24] == 1) { 
-            //qDebug() << "alarm 24";
-            emit ErrMsg(QString::fromLocal8Bit("小收卷切斷開關檢出"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[25] == 1) { 
-            //qDebug() << "alarm 25";
-            emit ErrMsg(QString::fromLocal8Bit("大收卷切斷開關檢出"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[26] == 1) 
-        {
-            //qDebug() << "alarm 26";
-            emit ErrMsg(QString::fromLocal8Bit("小卷切刀輪切斷開關檢出"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[27] == 1) {
-            //qDebug() << "alarm 27";
-            emit ErrMsg(QString::fromLocal8Bit("左側抽風切斷開關檢出"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[28] == 1) { 
-            //qDebug() << "alarm 28";
-            emit ErrMsg(QString::fromLocal8Bit("右側抽風切斷開關檢出"));
-            //big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[29] == 1) {
-            //qDebug() << "alarm 29";
-            emit ErrMsg(QString::fromLocal8Bit("大卷切刀輪切斷開關檢出"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[30] == 1) {
-            //qDebug() << "alarm 30";
-            emit ErrMsg(QString::fromLocal8Bit("左側耳料收卷切斷開關檢出"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[31] == 1) { 
-            //qDebug() << "alarm 31";
-            emit ErrMsg(QString::fromLocal8Bit("右側耳料收卷切斷開關檢出"));
-            big_Alarm = true;
-            //small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[32] == 1) {
-            //qDebug() << "alarm 32";
-            emit ErrMsg(QString::fromLocal8Bit("對邊機切斷開關檢出"));
-            big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[33] == 0) { 
-            emit ErrMsg(QString::fromLocal8Bit("STOP-1"));
-            big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        //if (v[34] == 0) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("STOP-2"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[35] == 0) {
-        //    emit ErrMsg(QString::fromLocal8Bit("STOP-3"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[36] == 0) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("STOP-4"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        if (v[37] == 0) { 
-            emit ErrMsg(QString::fromLocal8Bit("STOP-5"));
-            big_Alarm = true;
-            small_Alarm = true;
-            hasAlarm = true;
-        }
-        //if (v[38] == 0) {
-        //    emit ErrMsg(QString::fromLocal8Bit("STOP-6"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[39] == 0) {
-        //    emit ErrMsg(QString::fromLocal8Bit("STOP-7"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[40] == 1) {
-        //    emit ErrMsg(QString::fromLocal8Bit("門1"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[41] == 1) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("門2"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[42] == 1) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("門3"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[43] == 1) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("門4"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[44] == 1) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("門5"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[45] == 1) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("門6"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[46] == 1) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("門7"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[47] == 1) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("門8"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[48] == 0) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("放捲圍籬-1"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[49] == 0) {
-        //    emit ErrMsg(QString::fromLocal8Bit("放捲圍籬-2"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[50] == 0) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("大捲圍籬-3"));
-        //    big_Alarm = true;
-        //    //small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[51] == 0) {
-        //    emit ErrMsg(QString::fromLocal8Bit("大捲圍籬-4"));
-        //    big_Alarm = true;
-        //    //small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[52] == 0) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("放捲光柵"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[53] == 0) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("小卷光柵"));
-        //    //big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[54] == 0) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("大捲光柵"));
-        //    big_Alarm = true;
-        //    //small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        if (v[55] == 1) { 
-            emit ErrMsg(QString::fromLocal8Bit("小收卷零速檢出"));
-            //big_Alarm = true;
-            //small_Alarm = true;
-            //hasAlarm = true;
-        }
-        if (v[56] == 1) {
-            emit ErrMsg(QString::fromLocal8Bit("大收卷零速檢出"));
-            //big_Alarm = true;
-            //small_Alarm = true;
-            //hasAlarm = true;
-        }
-        //if (v[57] == 1) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("放捲張力過大"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[58] == 1) { 
-        //    emit ErrMsg(QString::fromLocal8Bit("小捲張力過大"));
-        //    //big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        //if (v[59] == 1) {
-        //    emit ErrMsg(QString::fromLocal8Bit("大捲張力過大"));
-        //    big_Alarm = true;
-        //    hasAlarm = true;
-        //}
-        if (v[60] == 1) {
-            emit ErrMsg(QString::fromLocal8Bit("左耳料角度異常"));
-            big_Alarm = true;
-            hasAlarm = true;
-        }
-        if (v[61] == 1) { 
-            emit ErrMsg(QString::fromLocal8Bit("右耳料角度異常"));
-            big_Alarm = true;
-            hasAlarm = true;
-        }
-        //if (v[62] == 1) {
-        //    emit ErrMsg(QString::fromLocal8Bit("62"));
-        //    big_Alarm = true;
-        //    small_Alarm = true;
-        //    hasAlarm = true;
-        //}
+
+        m_lastV = v; // 更新舊狀態，供下次比對
         return hasAlarm;
     }
     bool isRunning(const QVector<quint16> v)

@@ -452,6 +452,11 @@ void Core::onMS300Data(int id, double v)
             LowSpeed = true;
             setMainSpeed(51);
         }
+        else if(v > 100)
+        {
+            LowSpeed = true;
+            setMainSpeed(25);
+        }
     }
     if (id ==2 && speed != v ) 
     {
@@ -464,7 +469,7 @@ void Core::onMS300Data(int id, double v)
         if (id == 2 && v <= 0.05) {
             qDebug() << "Speed reached zero! Executing Coil Stop...";
 
-            QVector<bool> stop(24, false);
+            //QVector<bool> stop(24, false);
             //writeCoils(65, stop);
             m_manager->IpcStop();
             isStop = true;
@@ -996,8 +1001,10 @@ void Core::handleDIOSignal(int bitIndex, bool state)
     case 8:
         m_proxy->setUnwinderJogStart(val);
         if (isStop) {
+            
             if (state) // 按下時：
             {
+                m_manager->writeRegister56(0.7);
                 if (m_UnwinderJogReverseSelect)
                     writeSingleCoil(66, state);
                 else
@@ -1027,68 +1034,50 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         break;
     case 10:
 
-        m_proxy->setWinderJogStart(val);
+        //m_proxy->setWinderJogStart(val);
 
-        if (m_LeftSelvedgeWinderSelect && m_RightSelvedgeWinderSelect)
-        {
-            targetWinder = Winder2;
-        }
-        else if (!m_LeftSelvedgeWinderSelect && m_RightSelvedgeWinderSelect) 
-        {
-            targetWinder = Winder3;
-        }
-        else if (m_LeftSelvedgeWinderSelect && !m_RightSelvedgeWinderSelect)
-        {
-            targetWinder = Winder4;
-        }
-        else 
-        {
-            targetWinder = Winder1;
-        }
-        // 決定方向位址 (69 正轉 / 70 反轉)
-        targetAddr = m_WinderJogReverseSelect ? 70 : 69;
+        //if (m_LeftSelvedgeWinderSelect && m_RightSelvedgeWinderSelect)
+        //{
+        //    targetWinder = Winder2;
+        //}
+        //else if (!m_LeftSelvedgeWinderSelect && m_RightSelvedgeWinderSelect) 
+        //{
+        //    targetWinder = Winder3;
+        //}
+        //else if (m_LeftSelvedgeWinderSelect && !m_RightSelvedgeWinderSelect)
+        //{
+        //    targetWinder = Winder4;
+        //}
+        //else 
+        //{
+        //    targetWinder = Winder1;
+        //}
+        //// 決定方向位址 (69 正轉 / 70 反轉)
+        //targetAddr = m_WinderJogReverseSelect ? 70 : 69;
 
-        if (state) {
-            // 按下時：送出啟動訊號
-            writeCoils(targetAddr, targetWinder);
-            qDebug() << "Winder Jog START (" << (m_WinderJogReverseSelect ? "Reverse" : "Forward") << ")";
-        }
-        else {
-            // 放開時
+        //if (state) {
+        //    // 按下時：送出啟動訊號
+        //    writeCoils(targetAddr, targetWinder);
+        //    qDebug() << "Winder Jog START (" << (m_WinderJogReverseSelect ? "Reverse" : "Forward") << ")";
+        //}
+        //else {
+        //    // 放開時
 
-            writeCoils(69, StopWinderJog);
-            qDebug() << "Winder Jog STOP";
-        }
+        //    writeCoils(69, StopWinderJog);
+        //    qDebug() << "Winder Jog STOP";
+        //}
 
         break;
     case 11:
-        m_proxy->setLeftSelvedgeWinderSelect(val);    
-        if (state)
-        {
-            m_LeftSelvedgeWinderSelect = true;
-            qDebug() << "DI Bit 11 changed" << state << ")";//Log 
-        }
-        else
-        {
-            m_LeftSelvedgeWinderSelect = false;
-            qDebug() << "DI Bit 11 changed" << state << ")";//Log 
-        }
+        m_proxy->setLeftSelvedgeWinderSelect(val);
+        m_LeftSelvedgeWinderSelect = state;
+        qDebug() << "DI Bit 11 changed" << state << ")";//Log 
         break;
     case 12:
-        m_proxy->setRightSelvedgeWinderSelect(val);  
-        if (state)
-        {
-            m_RightSelvedgeWinderSelect = true;
-            qDebug() << "DI Bit 12 changed" << state << ")";//Log 
-        }
-        else
-        {
-            m_RightSelvedgeWinderSelect = false;
-            qDebug() << "DI Bit 12 changed" << state << ")";//Log 
-        }
+        m_proxy->setRightSelvedgeWinderSelect(val);
+        m_RightSelvedgeWinderSelect = state;
+        qDebug() << "DI Bit 12 changed" << state << ")";//Log 
         break;
-
-        // 如果還有剩下的 13, 14, 15 位元，可以在此擴充
     case 13:
         // 預留位置
         break;
@@ -1096,37 +1085,50 @@ void Core::handleDIOSignal(int bitIndex, bool state)
 
         m_proxy->setWinderJogStart(val);
 
-        if (m_LeftSelvedgeWinderSelect && m_RightSelvedgeWinderSelect)
-        {
-            targetWinder = Winder2;
-        }
-        else if (!m_LeftSelvedgeWinderSelect && m_RightSelvedgeWinderSelect)
-        {
-            targetWinder = Winder3;
-        }
-        else if (m_LeftSelvedgeWinderSelect && !m_RightSelvedgeWinderSelect)
-        {
-            targetWinder = Winder4;
-        }
-        else
-        {
-            targetWinder = Winder1;
-        }
-        // 決定方向位址 (69 正轉 / 70 反轉)
-        targetAddr = m_WinderJogReverseSelect ? 70 : 69;
+        if (isStop) {
 
-        if (state) {
-            // 按下時：送出啟動訊號
-            writeCoils(targetAddr, targetWinder);
-            qDebug() << "Winder Jog START (" << (m_WinderJogReverseSelect ? "Reverse" : "Forward") << ")";
-        }
-        else {
-            // 放開時
+            if(!state)
+            {
+                writeCoils(71, { false, false, false, false, false, false, false, false, false });
+            }
 
-            writeCoils(69, StopWinderJog);
-            qDebug() << "Winder Jog STOP";
-        }
+            if (m_RightSelvedgeWinderSelect&&!m_LeftSelvedgeWinderSelect&& !m_WinderJogReverseSelect) {
+                m_manager->writeRegister59(1.5);
 
+                
+                writeCoils(78, { state,false });
+            }
+            else if (m_RightSelvedgeWinderSelect && !m_LeftSelvedgeWinderSelect && m_WinderJogReverseSelect) {
+                m_manager->writeRegister59(1.5);
+
+                
+                writeCoils(78, {false, state });
+            }
+            else if(!m_RightSelvedgeWinderSelect && m_LeftSelvedgeWinderSelect && !m_WinderJogReverseSelect) {
+                m_manager->writeRegister59(1.5);
+
+
+                writeCoils(76, { state,false });
+            }
+            else if (!m_RightSelvedgeWinderSelect && m_LeftSelvedgeWinderSelect && m_WinderJogReverseSelect) {
+                m_manager->writeRegister59(1.5);
+
+
+                writeCoils(76, { false,state });
+            }
+            else if (!m_RightSelvedgeWinderSelect && !m_LeftSelvedgeWinderSelect && !m_WinderJogReverseSelect) {
+                m_manager->writeRegister57(1.5);
+
+
+                writeCoils(71, { state,false });
+            }
+            else if (!m_RightSelvedgeWinderSelect && !m_LeftSelvedgeWinderSelect && m_WinderJogReverseSelect) {
+                m_manager->writeRegister59(1.5);
+
+
+                writeCoils(71, { false,state });
+            }
+        }
         break;
 
     default:

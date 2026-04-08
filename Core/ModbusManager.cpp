@@ -98,11 +98,12 @@ void ModbusManager::createWorker()
             }
 
             // --- 3. ºò«æ°±¤î (EStop) ÅÞ¿è¨ÌµM«O«ù ---
-            if (shouldLightShow) {
+            if (shouldLightShow&&isStart) {
                 QMetaObject::invokeMethod(m_worker, [this] {
                     m_worker->set_EStop(true);
                     }, Qt::QueuedConnection);
                 m_alarmActive = true;
+                isStart = false;
             }
             else if (!shouldLightShow) {
                 m_alarmActive = false;
@@ -569,7 +570,7 @@ void ModbusManager::io112(double value)//o17
 void ModbusManager::IpcStart(bool v)
 {
     //writeCoils(81, m_worker->startAuto);
-    
+    isStart = true;
     if (m_ModeSelet)
     {   
         writeCoils(109, { false,true });
@@ -592,16 +593,13 @@ void ModbusManager::IpcStart(bool v)
 }
 void ModbusManager::IpcStop()
 {
+    isStart = false;
     QVector<bool> stop(24, false);
     writeCoils(65, stop);
-    writeCoils(109, { true,false });
-    QTimer::singleShot(2000, this,
+    QTimer::singleShot(500, this,
         [this]()
         {
-            QVector<double> values;
-            values.resize(4);
-            values.fill(20);
-            writeRegisters(values);
+            writeCoils(109, { true,false });
         });
 }
 //void ModbusManager::PressPlate(double value)

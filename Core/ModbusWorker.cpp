@@ -847,7 +847,7 @@ void ModbusWorker::writeCoils(int startAddress, const QVector<bool>& values)
         emit writeDone(startAddress, false, "Write values is empty");
         return;
     }
-
+    
     // 建立 DataUnit: Coils, 起始地址 + 數量
     QModbusDataUnit unit(QModbusDataUnit::Coils, startAddress, values.size());
 
