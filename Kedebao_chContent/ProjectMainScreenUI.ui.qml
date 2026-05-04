@@ -1729,6 +1729,91 @@ Rectangle {
 
     }
     Item {
+        id: antiReversPressure
+        //x:660
+        anchors.left: unWindingTensionPosition.left
+        // anchors.leftMargin:88
+        anchors.bottom:unWindingTensionPosition.top
+        anchors.bottomMargin:10
+        height: 169
+        width: 282
+        visible:AppState.isBig ? false : true
+
+        Image {
+
+            x: -4
+            source: "assets/Rectangle 15.png"
+        }
+        Text {
+
+            x: 19.93
+            y: 23.66
+            height: 42.35
+            width: 159.42
+            color: "#000000"
+            font.pixelSize: 32
+            font.weight: Font.DemiBold
+            horizontalAlignment: Text.AlignLeft
+            lineHeight: 22
+            lineHeightMode: Text.FixedHeight
+            text: "止退壓輪升降"
+            verticalAlignment: Text.AlignVCenter
+        }
+
+        Image {
+            x: 56
+            y: 76
+            height: 71
+            width: 63
+            source: "assets/Group1 42.png"//up
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: antiReversPressureMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:antiReversPressureMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                    Kdb.output14 = !Kdb.output14;
+                    console.log("11 Kdb.output14 changed~~~", Kdb.output14);
+                }
+
+            }
+        }
+        //DOWN
+        Image {
+            x: 163
+            y: 76
+            height: 71
+            width: 63
+            source: "assets/Group1 61.png"//up
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: antiReversPressureDownMouseArea.containsMouse ? true : false
+                shadowColor: "#58000000"
+                shadowBlur: 0.8
+            }
+
+            MouseArea {
+                id:antiReversPressureDownMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked:{
+                    Kdb.output15 = !Kdb.output15;
+                    console.log("11 Kdb.output15 changed~~~", Kdb.output15);
+                }
+            }
+        }
+    }
+    Item {
         id: unWindingTensionPosition
         x: 1545
         y: 651
