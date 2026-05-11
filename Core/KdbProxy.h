@@ -11,6 +11,8 @@ class KdbProxy : public QObject
 {
     Q_OBJECT
         QML_ELEMENT
+        
+        Q_PROPERTY(QString errorLog READ getErrorLog WRITE setErrorLog NOTIFY errorLogChanged)
 
         //默認大捲模式(1大捲模式,0小捲模式)
         Q_PROPERTY(int bigRollMode READ getBigRollMode WRITE setBigRollMode NOTIFY bigRollModeChanged)
@@ -529,6 +531,9 @@ class KdbProxy : public QObject
 
 public:
     explicit KdbProxy(QObject* parent = nullptr) : QObject(parent) {}
+
+    Q_INVOKABLE QString getErrorLog() const { return m_ErrorLog; }
+    void setErrorLog(QString errlog) { m_ErrorLog = errlog; emit errorLogChanged(m_ErrorLog); }
     //默認大捲模式(m_bigRollMode = 1大捲模式,0小捲模式)
     Q_INVOKABLE int getBigRollMode() const { return m_bigRollMode; }
     void setBigRollMode(int value) { m_bigRollMode = value; emit bigRollModeChanged(m_bigRollMode); }
@@ -3093,7 +3098,7 @@ signals:
 
     //異常提醒
     void abnormalRaised(QString msg);
-
+    void errorLogChanged(QString errlog);
     void bigRollModeChanged(int value);
     void smallRollModeChanged(int value);
     void restBtnChanged(int value);
@@ -3564,6 +3569,7 @@ signals:
     void singleActionModeChanged(int value);
 
 public:
+    QString m_ErrorLog;
     int m_bigRollMode = 0;//默認大捲模式(1大捲模式,0小捲模式)
     int m_restBtn = 0;//主畫面長度reset btn
 

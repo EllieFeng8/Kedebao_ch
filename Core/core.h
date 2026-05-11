@@ -186,7 +186,36 @@ public:
             loadProductionSettings();
             });
         connect(m_manager, &ModbusManager::ErrMsg, this, [this](QString msg) {
+            // 1. 處理 UI 顯示
             m_proxy->raiseAbnormal(msg);
+
+            QString fileName = "error_history.log";
+            QString currentTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+
+            // 準備新的一行訊息
+            QString newEntry = QString("[%1] %2\n").arg(currentTime).arg(msg);
+
+            QFile file(fileName);
+            QByteArray existingData;
+
+
+            // 1. 先嘗試讀取現有的所有內容
+            if (file.exists()) {
+                if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                    existingData = file.readAll();
+                    file.close();
+                }
+            }
+            QString fullContent = newEntry + QString::fromUtf8(existingData);
+            // 2. 使用 WriteOnly | Truncate 模式重新寫入（這會清空檔案並從頭寫）
+            if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                QTextStream out(&file);
+                out << newEntry;      // 先寫入最新訊息
+                out << existingData; // 再把舊的接在下面
+                file.close();
+            }
+            m_proxy->setErrorLog(fullContent);
+
             });
 
         DataValues.resize(112);

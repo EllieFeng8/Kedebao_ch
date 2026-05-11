@@ -627,12 +627,12 @@ private:
             //{38,QString::fromLocal8Bit("STOP-6"), true,  true,  0},
             //{39,QString::fromLocal8Bit("STOP-7"), true,  true,  0},
 
-            //{40,QString::fromLocal8Bit("門1"), true,  true,  0},
-            //{41,QString::fromLocal8Bit("門2"), true,  true,  0},
+            {40,QString::fromLocal8Bit("門1"), true,  true,  0},
+            {41,QString::fromLocal8Bit("門2"), true,  true,  0},
             //{42,QString::fromLocal8Bit("門3"), true,  true,  0},
-            //{43,QString::fromLocal8Bit("門4"), true,  true,  0},
-            //{44,QString::fromLocal8Bit("門5"), true,  true,  0},
-            //{45,QString::fromLocal8Bit("門6"), true,  true,  0},
+            {43,QString::fromLocal8Bit("門4"), true,  true,  0},
+            {44,QString::fromLocal8Bit("門5"), true,  true,  0},
+            {45,QString::fromLocal8Bit("門6"), true,  true,  0},
             //{46,QString::fromLocal8Bit("門7"), true,  true,  0},
             //{47,QString::fromLocal8Bit("門8"), true,  true,  0},
 

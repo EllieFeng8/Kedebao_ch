@@ -469,28 +469,10 @@ void Core::onMS300Data(int id, double v)
         if (id == 2 && v <= 0.05) {
             qDebug() << "Speed reached zero! Executing Coil Stop...";
 
-            //QVector<bool> stop(24, false);
-            //writeCoils(65, stop);
+
             m_manager->IpcStop();
             isStop = true;
-            //QTimer::singleShot(500, this,
-            //    [this]()
-            //    {
-            //        writeCoils(89, {1,0,0,1,0,1});
-            //        QTimer::singleShot(200, this,
-            //            [this]()
-            //            {
-            //                writeCoils(89, {0,0,0,0,0,0});
-            //            });
-            //        PressIndex = 0;
-            //        PressIndex2 = 0;
-            //        QTimer::singleShot(1000, this,
-            //            [this]()
-            //            {
-            //                writeRegisters(3);
-            //            });
-            //    }
-            //);
+
 
             m_isWaitingForStop = false;
         }
