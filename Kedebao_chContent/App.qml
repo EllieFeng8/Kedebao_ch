@@ -173,11 +173,11 @@ Window {
         }
 
         // ===== 測試 =====
-        Component.onCompleted: {
-            Qt.callLater(function() {
-                showAbnormal("異常提醒！")
-            })
-        }
+        //Component.onCompleted: {
+        //    Qt.callLater(function() {
+        //        showAbnormal("異常提醒！")
+        //    })
+        //}
     }
 }
 

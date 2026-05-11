@@ -42,7 +42,7 @@ class KdbProxy : public QObject
         Q_PROPERTY(double speed READ getSpeed NOTIFY speedChanged)
         Q_PROPERTY(double brakingDistance READ getBrakingDistance NOTIFY brakingDistanceChanged)
 
-        Q_PROPERTY(int modifyCurrentLength READ getModifyCurrentLength WRITE setModifyCurrentLength NOTIFY modifyCurrentLengthChanged)
+        Q_PROPERTY(double modifyCurrentLength READ getModifyCurrentLength WRITE setModifyCurrentLength NOTIFY modifyCurrentLengthChanged)
         Q_PROPERTY(int modifySpeed READ getModifySpeed WRITE setModifySpeed NOTIFY modifySpeedChanged)
         Q_PROPERTY(double modifyBrakingDistance READ getModifyBrakingDistance WRITE setModifyBrakingDistance NOTIFY modifyBrakingDistanceChanged)
 
@@ -655,13 +655,13 @@ public:
      Q_INVOKABLE double getBrakingDistance() const { return m_brakingDistance;}
      void setSpeed(int value) { m_speed = value; emit speedChanged(m_speed); };
      void setCurrentLength(double v) { m_currentLength = v; emit currentLengthChanged(m_currentLength); }
-    Q_INVOKABLE int getModifyCurrentLength() const { return m_modifycurrentLength; }
+    Q_INVOKABLE double getModifyCurrentLength() const { return m_modifycurrentLength; }
     Q_INVOKABLE int getModifySpeed() const { return m_modifyspeed; }
     Q_INVOKABLE double getModifyBrakingDistance() const {
         double value = m_modifybrakingDistance;
         return std::round(value * 100.0) / 100.0;
     }
-     void setModifyCurrentLength(int value){m_modifycurrentLength = value; emit modifyCurrentLengthChanged(m_modifycurrentLength);};
+     void setModifyCurrentLength(double value){m_modifycurrentLength = value; emit modifyCurrentLengthChanged(m_modifycurrentLength);};
     void setModifySpeed(int value) { m_modifyspeed = value; emit modifySpeedChanged(m_modifyspeed); };
     void setModifyBrakingDistance(double value) { m_modifybrakingDistance = value; emit modifyBrakingDistanceChanged(m_modifybrakingDistance); };
 
@@ -3122,7 +3122,7 @@ signals:
     void speedChanged(double value);
     void brakingDistanceChanged(double value);
 
-    void modifyCurrentLengthChanged(int value);
+    void modifyCurrentLengthChanged(double value);
     void modifySpeedChanged(int value);
     void modifyBrakingDistanceChanged(double value);
 
@@ -3567,7 +3567,7 @@ public:
     int m_bigRollMode = 0;//默認大捲模式(1大捲模式,0小捲模式)
     int m_restBtn = 0;//主畫面長度reset btn
 
-    int m_metalDetector = 0;
+    int m_metalDetector = 1;
     int m_gratingDetection = 0;
     int m_gratingDetection2 = 0;
     int m_gratingDetection3 = 0;
@@ -3591,7 +3591,7 @@ public:
     double m_speed = 0;
     double m_brakingDistance = 0;
 
-    int m_modifycurrentLength = 0;
+    double m_modifycurrentLength = 0;
     int m_modifyspeed = 0;
     double m_modifybrakingDistance = 0;
 

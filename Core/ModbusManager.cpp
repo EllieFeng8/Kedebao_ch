@@ -43,6 +43,8 @@ void ModbusManager::createWorker()
     // 將 Worker 的數據輸出轉發給 Manager 的訊號
     connect(m_worker, &ModbusWorker::dataReady,
         this, [this](QVector<quint16> v) {
+            current_data.resize(v.size());
+            current_data = v;
             emit workerData(v);
             bool currentRunning = isRunning(v);
             // 只有當「本次狀態」跟「上次狀態」不同時，才執行寫入
@@ -108,6 +110,7 @@ void ModbusManager::createWorker()
             else if (!shouldLightShow) {
                 m_alarmActive = false;
             }
+            //qDebug() << "alarm = " << hasAlarm;
         });
     connect(m_worker, &ModbusWorker::dataReady2,
         this, [this](QVector<quint16> v) {
@@ -542,16 +545,34 @@ void ModbusManager::io108(double value)//o13
 void ModbusManager::io109(double value)//o14
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "I/O 109 = " << v;
-    m_worker->set_IO109(value);
+    qDebug() << "I/O 109 = " << value;
+    if (value != 2) {
+        m_worker->set_IO109(value);
+    }
+    else {
+        QMetaObject::invokeMethod(
+            m_worker, [this] { m_worker->writeCoils(109, { true,false }); },
+            Qt::QueuedConnection
 
+        );
+        
+    }
 }
 void ModbusManager::io110(double value)//o15
 {
     bool v = (value > 0.0) ? true : false;
-    qDebug() << "I/O 110 = " << v;
-    m_worker->set_IO110(value);
+    qDebug() << "I/O 110 = " << value;
+    if (value != 2) 
+    {
+        m_worker->set_IO110(value);
+    }
+    else {
+        QMetaObject::invokeMethod(
+            m_worker, [this] { m_worker->writeCoils(109, { false ,true }); },
+            Qt::QueuedConnection
 
+        );
+    }
 }
 void ModbusManager::io111(double value)//o16
 {
@@ -570,14 +591,19 @@ void ModbusManager::io112(double value)//o17
 void ModbusManager::IpcStart(bool v)
 {
     //writeCoils(81, m_worker->startAuto);
-    isStart = true;
+
     if (m_ModeSelet)
     {   
         writeCoils(109, { false,true });
         QTimer::singleShot(500, this,
             [this]()
             {
-                writeCoils(65, { 1,0,1,0,1,0,0,0,1,1,0,0,0,0,0,1,1,0,1,0,0,0,0,0 }); //小卷模式 正轉啟動
+                QVector<bool> start= { 1,0,1,0,1,0,0,0,1,1,0,0,0,0,0,1,1,0,1,0,0,0,0,0 };
+                start[9] = current_data[74];
+                start[15] = current_data[80];
+
+                writeCoils(65, start); //小卷模式 正轉啟動
+                isStart = true;
             });
         
     }
@@ -587,7 +613,10 @@ void ModbusManager::IpcStart(bool v)
         QTimer::singleShot(500, this,
             [this]()
             {
-                writeCoils(65, { 1,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,0,0,1,0,1,1 });//大捲模式 正轉啟動
+                QVector<bool> start = { 1,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,0,0,1,0,1,1 };
+                start[15] = current_data[80];
+                writeCoils(65,start);//大捲模式 正轉啟動
+                isStart = true;
             });
     }       
 }
@@ -595,6 +624,9 @@ void ModbusManager::IpcStop()
 {
     isStart = false;
     QVector<bool> stop(24, false);
+    stop[9] = current_data[74];
+    stop[15] = current_data[80];
+
     writeCoils(65, stop);
     QTimer::singleShot(500, this,
         [this]()
@@ -687,4 +719,23 @@ void ModbusManager::PressPlateBack(double value)
             });
 
     }
+}
+
+void ModbusManager::alarm_test(int v)
+{
+    QMetaObject::invokeMethod(
+        m_worker, [this] { m_worker->test_fun(); },
+        Qt::QueuedConnection
+    );
+}
+
+void ModbusManager::onFanBtn(bool v)
+{
+        qDebug() << "SelvedgeFanStart" << v;
+        m_worker->set_SelvedgeFanStart(v);
+}
+void ModbusManager::onWebBtn(bool v)
+{
+    qDebug() << "WebAlignerStart" << v;
+    m_worker->set_WebAlignerStart(v);
 }

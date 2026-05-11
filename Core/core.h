@@ -13,6 +13,9 @@
 #include <QQmlEngine>
 #include "KdbProxy.h"
 #include <QTimer>
+#include <QFile>
+#include <QTextStream>
+#include <QDateTime>
 class Core : public QObject
 {
     Q_OBJECT
@@ -48,6 +51,8 @@ public:
     void readRegisters(int startAddress, int count);
 
     void init() {
+        qInstallMessageHandler(Core::myMessageOutput);
+
         m_tensionStableTimer = new QTimer(this);
         m_tensionStableTimer->setSingleShot(true); // 只需要觸發一次
 
@@ -196,7 +201,7 @@ public:
 
 
         coreConnect();
-
+        //loadProductionSettings();
  
         
     }
@@ -370,6 +375,7 @@ public:
 
                 m_p1 = pc / 100;
                 qDebug() << "p1 set " << m_p1;
+                saveProductionSettings();
 
             }
         );
@@ -378,6 +384,7 @@ public:
                 
                 m_p2 = pc / 100;
                 qDebug() << "p2 set " << m_p2;
+                saveProductionSettings();
 
             }
         );
@@ -386,6 +393,7 @@ public:
                 
                 m_p3 = pc / 100;
                 qDebug() << "p3 set " << m_p3;
+                saveProductionSettings();
 
             }
         );
@@ -394,6 +402,7 @@ public:
 
                 m_p4 = pc / 100;
                 qDebug() << "p4 set " << m_p4;
+                saveProductionSettings();
 
             }
         );
@@ -401,6 +410,7 @@ public:
             {
                 Unwinding_Threshold = value;
                 qDebug() << "UnwindingLimit Threshold =" <<value;
+                saveProductionSettings();
 
             }
         );
@@ -409,6 +419,7 @@ public:
             {
                 m_slowStartSpeed = value;
                 qDebug() << "m_slowStartSpeed =" << value;
+                saveProductionSettings();
 
             }
         );
@@ -417,6 +428,7 @@ public:
             {
                 m_tensionTolerance = value;
                 qDebug() << "m_tensionTolerance =" << value;
+                saveProductionSettings();
 
             }
         );
@@ -425,6 +437,7 @@ public:
             {
                 stableTime = value;
                 qDebug() << "stableTime =" << value;
+                saveProductionSettings();
 
             }
         );
@@ -432,6 +445,7 @@ public:
             {
                 stableTime2 = value;
                 qDebug() << "stableTime2 =" << value;
+                saveProductionSettings();
 
             }
         );
@@ -528,7 +542,7 @@ private slots:
     void on485Data(int id, double pv, double tqo);
     void TensionFailed(const QString& errorMsg);
     void onMS300Data(int id, double v);
-    void setCurrentLength(int length);
+    void setCurrentLength(double length);
     void UImodeSelect(double v)
     {
         m_manager->ModeSelect(v?0.0:1);
@@ -616,7 +630,7 @@ private:
     bool m_mode = false;
     bool onLength=false;
     int targetAddr;
-    int m_length = 0;
+    double m_length = 0;
     double m_BrakingDistance = 0.0;
     double speed = 0;
     double setspeed = 0;
@@ -658,7 +672,7 @@ private:
 
         // 讀取數值，若檔案不存在則使用預設值 0.0
         setspeed = settings.value("Production/SetSpeed", 0.0).toDouble();
-        m_length = settings.value("Production/TargetLength", 0).toInt();
+        m_length = settings.value("Production/TargetLength", 0).toDouble();
         m_BrakingDistance = settings.value("Production/BrakingDistance", 0.0).toDouble();
         Tension1_SV = settings.value("Production/Tension1_SV", 0.0).toDouble();
         Tension2_SV = settings.value("Production/Tension2_SV", 0.0).toDouble();
@@ -668,7 +682,10 @@ private:
         Unwinding_Threshold = settings.value("Production/Unwinder_threshold", 0.0).toDouble();
         stableTime = settings.value("Production/stable_Time", 0).toInt();
         stableTime2 = settings.value("Production/stable_Time2", 0).toInt();
-        m_p4 = settings.value("Production/p4", 60).toDouble();
+        m_p1 = settings.value("Production/analog1", 1).toDouble();
+        m_p2 = settings.value("Production/analog2", 0.95).toDouble();
+        m_p3 = settings.value("Production/analog3", 1).toDouble();
+        m_p4 = settings.value("Production/analog4", 0.6).toDouble();
         // 同步更新到 Proxy (UI 層)，確保介面顯示正確
         if (m_proxy) {
             m_proxy->setModifySpeed(setspeed);
@@ -682,7 +699,10 @@ private:
             m_proxy->setModifyUnwindingLimitThreshold(Unwinding_Threshold);
             m_proxy->setTensionTime(stableTime);
             m_proxy->setSecTensionTime(stableTime2);
-            m_proxy->setAnalogOutSelvedgeWinderPc(m_p4);
+            m_proxy->setAnalogOutUnwinderMainDrivePc(m_p1 * 100);
+            m_proxy->setAnalogOutWinderPc(m_p2 * 100);
+            m_proxy->setAnalogOutCutterPc(m_p3 * 100);
+            m_proxy->setAnalogOutSelvedgeWinderPc(m_p4*100);
             
             m_proxy->setWhiteLight(1);
             m_proxy->setBigRollMode(0);
@@ -704,7 +724,41 @@ private:
         settings.setValue("Production/softstart_speed", m_slowStartSpeed);
         settings.setValue("Production/softstart_threshold", m_tensionTolerance);
         settings.setValue("Production/Unwinder_threshold", Unwinding_Threshold);
-        settings.setValue("Production/p4", m_p4);
+        settings.setValue("Production/analog1", m_p1);
+        settings.setValue("Production/analog2", m_p2);
+        settings.setValue("Production/analog3", m_p3);
+        settings.setValue("Production/analog4", m_p4);
+
         settings.sync(); 
+    }
+    static void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
+
+        QString logFileName = QDateTime::currentDateTime().toString("yyyy-MM-dd");
+        QFile file(QDateTime::currentDateTime().toString("yyyy-MM-dd") + "-log.txt");
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Append))
+            return;
+
+        QTextStream out(&file);
+        out << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss") << " - ";
+
+        switch (type) {
+        case QtDebugMsg:
+            out << "DEBUG: ";
+            break;
+        case QtInfoMsg:
+            out << "INFO: ";
+            break;
+        case QtWarningMsg:
+            out << "WARNING: ";
+            break;
+        case QtCriticalMsg:
+            out << "CRITICAL: ";
+            break;
+        case QtFatalMsg:
+            out << "FATAL: ";
+            break;
+        }
+
+        out << context.category << ": " << msg << Qt::endl;
     }
 };

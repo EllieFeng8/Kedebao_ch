@@ -308,6 +308,44 @@ public slots:
     void set_IO111(double);
     void set_IO112(double);
     void set_EStop(bool v);
+    void test_fun()
+    {
+        QVector<quint16> val;
+        val.resize(63);
+        if (cc < 1) {
+            val.fill(0);
+            val[1] = 1;        
+            val[2] = 1;
+            val[3] = 1;
+            val[4] = 1;
+            val[23] = 0;
+            val[33] = 1;
+            cc++;
+        }
+        else
+        {
+            val.fill(0);
+            val[1] = 1;
+            val[2] = 1;
+            val[3] = 0;
+            val[4] = 1;
+
+            val[23] = 0;
+            val[33] = 0;
+            cc = 0;
+        }
+        //val[1] = 1;
+        //val[5] = 1;
+        //val[23] = 1;
+        emit dataReady(val);;
+    }
+    void reconnect()
+    {
+        if (m_client && m_client->state() == QModbusDevice::UnconnectedState) {
+            qDebug() << "ADAM-5000 is offline, reconnect...";
+            m_client->connectDevice();
+        }
+    }
 signals:
     void writeDone(int address, bool ok, QString msg);
     void dataReady(QVector<quint16> values);  
@@ -316,11 +354,12 @@ signals:
     void errorOccurred(QString msg);           
     void holdingRegisterReady( QVector<quint16> values);
 private:
+    int cc = 0;
     int m_workerId;
     QString m_ip;
     int m_port;
     bool E_Stop=false;
-
+    QVector<quint16> current_values;
     QModbusTcpClient* m_client = nullptr;
     QModbusTcpClient* m_client2 = nullptr;
     QTimer* m_pollTimer = nullptr;

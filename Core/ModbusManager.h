@@ -33,6 +33,17 @@ public slots:
     //void startAuto();
     //void stopAuto();
 
+    void alarm_test(int v);
+    void onFanBtn(bool v);
+    void onWebBtn(bool v);
+    void Metal_Detect()
+    {
+        QMetaObject::invokeMethod(m_worker, [this] {
+            m_worker->set_EStop(true);
+            }, Qt::QueuedConnection);
+        emit ErrMsg(QString::fromLocal8Bit("金屬檢出"));
+    }
+
     void VfdAlarmReset(double value);//64
     void UnwinderForward(double value);//65 
     void UnwinderReverse(double value);//66 
@@ -114,12 +125,12 @@ signals:
     void isWorking();
     void workerError(QString msg);
     void holdingRegisterReady(QVector<quint16> values);
-    void workerWriteDone( int address, bool ok, QString msg);
+    void workerWriteDone(int address, bool ok, QString msg);
     void Zerospeed01();
     void Zerospeed02();
     void ErrMsg(QString msg);
 private:
-
+    QVector<quint16> current_data;
     QThread* m_thread;
     ModbusWorker* m_worker = nullptr;
     bool m_lastRunningStatus = false;
@@ -579,8 +590,8 @@ private:
             {3,QString::fromLocal8Bit("大收卷變頻異常"), true,  false, 1},
             {4,QString::fromLocal8Bit("小卷切刀輪變頻異常"), false, true, 1},
             {5,QString::fromLocal8Bit("耳料抽風變頻異常"), false, true, 1},
-            {6,QString::fromLocal8Bit("左側抽風過載"), false, true, 1},
-            {7,QString::fromLocal8Bit("右側抽風過載"), false, true, 1},
+            //{6,QString::fromLocal8Bit("左側抽風過載"), false, true, 1},
+            //{7,QString::fromLocal8Bit("右側抽風過載"), false, true, 1},
             {8,QString::fromLocal8Bit("大捲切刀輪變頻異常"), true,  false, 1},
             {9,QString::fromLocal8Bit("右側耳料變頻異常"), true,  false, 1},
             {10,QString::fromLocal8Bit("左側耳料變頻異常"), true,  false, 1},
@@ -613,58 +624,101 @@ private:
             {35,QString::fromLocal8Bit("STOP-3"), true,  true,  0},
             {36,QString::fromLocal8Bit("STOP-4"), true,  true,  0},
             {37,QString::fromLocal8Bit("STOP-5"), true,  true,  0},
-            {38,QString::fromLocal8Bit("STOP-6"), true,  true,  0},
-            {39,QString::fromLocal8Bit("STOP-7"), true,  true,  0},
+            //{38,QString::fromLocal8Bit("STOP-6"), true,  true,  0},
+            //{39,QString::fromLocal8Bit("STOP-7"), true,  true,  0},
 
-            {40,QString::fromLocal8Bit("門1"), true,  true,  0},
-            {41,QString::fromLocal8Bit("門2"), true,  true,  0},
-            {42,QString::fromLocal8Bit("門3"), true,  true,  0},
-            {43,QString::fromLocal8Bit("門4"), true,  true,  0},
-            {44,QString::fromLocal8Bit("門5"), true,  true,  0},
-            {45,QString::fromLocal8Bit("門6"), true,  true,  0},
-            {46,QString::fromLocal8Bit("門7"), true,  true,  0},
-            {47,QString::fromLocal8Bit("門8"), true,  true,  0},
+            //{40,QString::fromLocal8Bit("門1"), true,  true,  0},
+            //{41,QString::fromLocal8Bit("門2"), true,  true,  0},
+            //{42,QString::fromLocal8Bit("門3"), true,  true,  0},
+            //{43,QString::fromLocal8Bit("門4"), true,  true,  0},
+            //{44,QString::fromLocal8Bit("門5"), true,  true,  0},
+            //{45,QString::fromLocal8Bit("門6"), true,  true,  0},
+            //{46,QString::fromLocal8Bit("門7"), true,  true,  0},
+            //{47,QString::fromLocal8Bit("門8"), true,  true,  0},
 
-            {48,QString::fromLocal8Bit("放捲圍籬-1"), true,  true,  0},
-            {49,QString::fromLocal8Bit("放捲圍籬-2"), true,  true,  0},
-            {50,QString::fromLocal8Bit("大捲圍籬-3"), true,  false, 0},
-            {51,QString::fromLocal8Bit("大捲圍籬-4"), true,  false, 0},
-            {52,QString::fromLocal8Bit("放捲光柵"), true,  true,  0},
-            {53,QString::fromLocal8Bit("小卷光柵"), false, true,  0},
-            {54,QString::fromLocal8Bit("大捲光柵"), true,  false, 0},
+            //{48,QString::fromLocal8Bit("放捲圍籬-1"), true,  true,  0},
+            //{49,QString::fromLocal8Bit("放捲圍籬-2"), true,  true,  0},
+            //{50,QString::fromLocal8Bit("大捲圍籬-3"), true,  false, 0},
+            //{51,QString::fromLocal8Bit("大捲圍籬-4"), true,  false, 0},
+            //{52,QString::fromLocal8Bit("放捲光柵"), true,  true,  0},
+            //{53,QString::fromLocal8Bit("小卷光柵"), false, true,  0},
+            //{54,QString::fromLocal8Bit("大捲光柵"), true,  false, 0},
 
             //{55,QString::fromLocal8Bit("小收卷零速檢出"), false, false, 1},
             //{56,QString::fromLocal8Bit("大收卷零速檢出"), false, false, 1},
 
-            {57,QString::fromLocal8Bit("放捲張力過大"), true,  true,  1},
-            {58,QString::fromLocal8Bit("小捲張力過大"), false, true,  1},
-            {59,QString::fromLocal8Bit("大捲張力過大"), true,  false, 1},
+            //{57,QString::fromLocal8Bit("放捲張力過大"), true,  true,  1},
+            //{58,QString::fromLocal8Bit("小捲張力過大"), false, true,  1},
+            //{59,QString::fromLocal8Bit("大捲張力過大"), true,  false, 1},
 
             //{60,QString::fromLocal8Bit("左耳料角度異常"), true,  false, 1},
             //{61,QString::fromLocal8Bit("右耳料角度異常"), true,  false, 1},
             //{62, "報警62", true,  true,  1}
         };
+        // --- 新增：用來記錄哪些異常被觸發了 ---
+        QList<int> triggeredIndices;
+        bool hasOtherAlarm = false; // 紀錄是否有 12 之後的異常
 
+        // 步驟 1: 先掃描一遍，確認是否有 index >= 12 的異常
         for (const auto& alarm : alarmDefs) {
             if (v.size() <= alarm.index) continue;
 
             bool isTriggered = (v[alarm.index] == alarm.triggerVal);
-
             if (isTriggered) {
-                hasAlarm = true;
-                if (alarm._big) big_Alarm = true;
-                if (alarm._small) small_Alarm = true;
-
-                // --- 關鍵判斷：只有在上一次不是這個狀態時，才發送訊號 ---
-                if (m_lastV[alarm.index] != v[alarm.index]) {
-                    emit ErrMsg(alarm.msg);
+                //qDebug() << alarm.index;
+                triggeredIndices.append(alarm.index); // 記錄觸發的索引
+                if (alarm.index >= 12) {
+                    hasOtherAlarm = true; // 標記發現了「其他異常」
                 }
             }
         }
 
-        m_lastV = v; // 更新舊狀態，供下次比對
+        // 步驟 2: 根據邏輯決定要處理哪些異常並更新狀態
+        for (const auto& alarm : alarmDefs) {
+            // 檢查此 alarm 是否在觸發清單中
+            if (!triggeredIndices.contains(alarm.index)) continue;
+
+            // --- 核心邏輯控制 ---
+            // 如果現在有 index >= 12 的異常，且當前這個 alarm 是變頻器異常 (0-11)，則跳過不顯示
+
+
+            // --- 執行原本的更新與發送邏輯 ---
+            hasAlarm = true;
+            if (alarm._big) big_Alarm = true;
+            if (alarm._small) small_Alarm = true;
+            if (hasOtherAlarm && alarm.index <= 11) {
+                continue;
+            }
+            // 只有在狀態改變時才發送訊息
+            if (m_lastV[alarm.index] != v[alarm.index]) {
+                emit ErrMsg(alarm.msg);
+            }
+        }
+
+        m_lastV = v;
         return hasAlarm;
     }
+//
+//        for (const auto& alarm : alarmDefs) {
+//            if (v.size() <= alarm.index) continue;
+//
+//            bool isTriggered = (v[alarm.index] == alarm.triggerVal);
+//
+//            if (isTriggered) {
+//                hasAlarm = true;
+//                if (alarm._big) big_Alarm = true;
+//                if (alarm._small) small_Alarm = true;
+//
+//                // --- 關鍵判斷：只有在上一次不是這個狀態時，才發送訊號 ---
+//                if (m_lastV[alarm.index] != v[alarm.index]) {
+//                    emit ErrMsg(alarm.msg);
+//                }
+//            }
+//        }
+//
+//        m_lastV = v; // 更新舊狀態，供下次比對
+//        return hasAlarm;
+//    }
     bool isRunning(const QVector<quint16> v)
     {
         // 安全檢查：確保向量長度至少達到索引 80 (即 size 至少為 81)

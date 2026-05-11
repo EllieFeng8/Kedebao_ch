@@ -11,7 +11,7 @@ ModbusWorker::ModbusWorker( QObject* parent)
     qDebug() << "created worker ";
     // 只建立 QModbusTcpClient，**不要**在建構子建立 QTimer（以免在主線程）
     m_client = new QModbusTcpClient(this);
-
+    current_values.resize(112);
     // 監聽 client 的狀態與錯誤（safe: client 在 worker 被 moveToThread 前可以 connect）
     connect(m_client, &QModbusTcpClient::stateChanged,
         this, &ModbusWorker::onStateChanged);
@@ -55,16 +55,16 @@ void ModbusWorker::startWork()
     m_client->setTimeout(100);
     m_client->setNumberOfRetries(1);
     qDebug() << "connecting to" << m_ip << ":" << m_port;
-    m_client2->setConnectionParameter(QModbusDevice::NetworkAddressParameter, "192.168.1.202");
-    m_client2->setConnectionParameter(QModbusDevice::NetworkPortParameter, 502);
-    m_client2->setTimeout(100);
-    m_client2->setNumberOfRetries(1);
-    qDebug() << "connecting to" << "192.168.1.202" << ":" << "502";
+    //m_client2->setConnectionParameter(QModbusDevice::NetworkAddressParameter, "192.168.1.202");
+    //m_client2->setConnectionParameter(QModbusDevice::NetworkPortParameter, 502);
+    //m_client2->setTimeout(100);
+    //m_client2->setNumberOfRetries(1);
+    //qDebug() << "connecting to" << "192.168.1.202" << ":" << "502";
 
     // 非同步嘗試連線；onStateChanged 會處理 Connected/Unconnected
     m_client->connectDevice(); 
-    m_client2->connectDevice();
-    emit isWorking();
+    //m_client2->connectDevice();
+
 }
 
 void ModbusWorker::stopWork()
@@ -94,21 +94,21 @@ void ModbusWorker::onStateChanged(QModbusDevice::State state)
 
         if (m_pollTimer && !m_pollTimer->isActive())
             m_pollTimer->start();
-
+        emit isWorking();
         //emit isWorking();
         // 用 info-style 訊息也用 errorOccurred（Manager 可另作處理）
         //emit errorOccurred(QString("Connected"));
         //writeCoils(81, startAuto);
     }
-    else if (state == QModbusDevice::UnconnectedState) {
-        qDebug() << "Worker" << m_workerId << "disconnected.";
+    //else if (state == QModbusDevice::UnconnectedState) {
+    //    qDebug() << "Worker" << m_workerId << "disconnected.";
 
-        if (m_pollTimer && m_pollTimer->isActive())
-            m_pollTimer->stop();
+    //    if (m_pollTimer && m_pollTimer->isActive())
+    //        m_pollTimer->stop();
 
-        if (m_running && m_reconnectTimer)
-            m_reconnectTimer->start();
-    }
+    //    if (m_running && m_reconnectTimer)
+    //        m_reconnectTimer->start();
+    //}
 }
 
 void ModbusWorker::onErrorOccurred(QModbusDevice::Error /*error*/)
@@ -129,6 +129,8 @@ void ModbusWorker::poll()
     if (!m_client || m_client->state() != QModbusDevice::ConnectedState)
     {
         qDebug() << "m_client is not connect";
+        reconnect();
+        //m_pollTimer->start();
         return;
     }
     m_pollTimer->stop();
@@ -136,6 +138,9 @@ void ModbusWorker::poll()
     if(E_Stop)
     {
         QVector<bool> stop(24, false);
+        stop[9] = current_values[74];
+        stop[15] = current_values[80];
+
         writeCoils(65, stop);
         writeSingleCoil(102, true);
         E_Stop = false;
@@ -766,18 +771,18 @@ void ModbusWorker::poll()
         reply->deleteLater();
     }
     
-    // --- 第二台設備讀取 (ADAM-5000, Coils 0-16) ---
-    QModbusDataUnit unit2(QModbusDataUnit::Coils, 0, 16);
-    if (auto* reply2 = m_client2->sendReadRequest(unit2, 1)) {
-        QEventLoop loop;
-        connect(reply2, &QModbusReply::finished, &loop, &QEventLoop::quit);
-        loop.exec();
+    ////// --- 第二台設備讀取 (ADAM-5000, Coils 0-16) ---
+    ////QModbusDataUnit unit2(QModbusDataUnit::Coils, 0, 16);
+    ////if (auto* reply2 = m_client2->sendReadRequest(unit2, 1)) {
+    ////    QEventLoop loop;
+    ////    connect(reply2, &QModbusReply::finished, &loop, &QEventLoop::quit);
+    ////    loop.exec();
 
-        // 如果 onReply2 邏輯不同，可另寫 processReply2，
-        // 如果邏輯一樣，直接共用 processReply
-        onReply2(reply2);
-        reply2->deleteLater();
-    }
+    ////    // 如果 onReply2 邏輯不同，可另寫 processReply2，
+    ////    // 如果邏輯一樣，直接共用 processReply
+    ////    onReply2(reply2);
+    ////    reply2->deleteLater();
+    ////}
     //Analog output READ
     readRegisters(56, 4);
     if (m_running) {
@@ -791,14 +796,14 @@ void ModbusWorker::onReply(QModbusReply* reply)
     if (!reply) return;
     
     if (reply->error() == QModbusDevice::NoError) {
-        QVector<quint16> values;
+
         const QModbusDataUnit unit = reply->result();
 
             for (int i = 0; i < unit.valueCount(); ++i)
-                values.append(unit.value(i));
+                current_values[i]= unit.value(i);
 
-            emit dataReady(values);
-        
+            emit dataReady(current_values);
+
     }
     else {
         emit errorOccurred(QString("Reply error: %1").arg(reply->errorString()));

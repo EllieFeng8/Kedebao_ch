@@ -506,10 +506,12 @@ void Core::resetMS300(int id)
     m_ms300->updateResetCache(id, 2);
 }
 
-void Core::setCurrentLength(int length)
+void Core::setCurrentLength(double length)
 {
     qDebug() << "set length = " << length;
     m_length = length;
+    saveProductionSettings();
+
 }
 void Core::setBrakingDistance(double BrakingDistance)
 {
@@ -525,6 +527,8 @@ void Core::setMainFreqs(double v)
     setspeed = v;
     double Hz = v * (60.0 / 130.0); 
     qDebug() << "change";
+    saveProductionSettings();
+
     {
         QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
             Qt::QueuedConnection);
@@ -592,6 +596,8 @@ void Core::setTensionSV_1(double v)
 {
     Tension1_SV = v;
     nowSV1 = v;
+    saveProductionSettings();
+
     QMetaObject::invokeMethod(m_tension, [this, v]() {m_tension->setTargetTension(1, v); },
         Qt::QueuedConnection);
 }
@@ -599,6 +605,7 @@ void Core::setTensionSV_1(double v)
 void Core::setTensionSV_2(double v)
 {
     Tension2_SV = v;
+    saveProductionSettings();
 
     QMetaObject::invokeMethod(m_tension, [this,v]() {m_tension->setTargetTension(2, v); },
         Qt::QueuedConnection);
@@ -607,6 +614,7 @@ void Core::setTensionSV_2(double v)
 void Core::setTensionSV_3(double v)
 {
     Tension3_SV = v;
+    saveProductionSettings();
 
     QMetaObject::invokeMethod(m_tension, [this,v]() {m_tension->setTargetTension(3, v); },
         Qt::QueuedConnection);
@@ -916,11 +924,10 @@ void Core::handleDIOSignal(int bitIndex, bool state)
     switch (bitIndex) {
     case 0:
         m_proxy->setIpcStart(val);
-
-        m_isBrakingPerformed = false;
-        isStop = false;
         m_tensionStableTimer->stop();
         m_tensionStableTimer2->stop();
+        m_isBrakingPerformed = false;
+        isStop = false;
         m_isSoftStarting = true;
         if (state)
         {
@@ -972,18 +979,31 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         //qDebug() << "DI Bit 4 changed" << state << ")";//Log 
         break;
     case 5:
-        m_proxy->setSmallWinderJogForward(val);
-        if (isStop) {
-            writeSingleCoil(69, state);//動作  
+        //金屬檢知
+        //m_proxy->metalD
+        if (state)
+        {
+
+            //m_manager->Metal_Detect();
+            //一般停止
+            m_isSoftStarting = false;
+            waitforPV = false;
+            m_isWaitingForStop = true;
+            m_tensionStableTimer->stop();
+            m_tensionStableTimer2->stop();
+            setSTOP();
         }
-        qDebug() << "DI Bit 5 changed" << state << ")";//Log 
+        //m_proxy->setSmallWinderJogForward(val);
+        //if (isStop) {
+        //    writeSingleCoil(69, state);//動作  
+        //}
+        //qDebug() << "DI Bit 5 changed" << state << ")";//Log 
         break;
     case 6:
-        m_proxy->setSmallWinderJogReverse(val);
-        if (isStop) {
-            writeSingleCoil(70, state);//動作  
-        }
-        qDebug() << "DI Bit 6 changed" << state << ")";//Log 
+        //抽風開關
+
+            m_manager->onFanBtn(state);
+        
         break;
     case 7:
         m_proxy->setUnwinderJogReverseSelect(val);
@@ -1000,22 +1020,47 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         break;
     case 8:
         m_proxy->setUnwinderJogStart(val);
-        if (isStop) {
-            
-            if (state) // 按下時：
-            {
-                m_manager->writeRegister56(0.7);
-                if (m_UnwinderJogReverseSelect)
-                    writeSingleCoil(66, state);
-                else
-                    writeSingleCoil(65, state);
-            }
-            else // 放開時
-            {
-                writeSingleCoil(65, 0.0);
-                writeSingleCoil(66, 0.0);
+
+        if (state) {
+            // 按下時：必須在停止狀態下才允許啟動
+            if (isStop) {
+                m_manager->writeRegister56(0.5);
+                // 建議移除 500ms 延時，或確保延時後按鈕仍是按下狀態
+                    if (m_UnwinderJogReverseSelect)
+                        writeSingleCoil(66, true);
+                    else
+                        writeSingleCoil(65, true);
             }
         }
+        else {
+            // 放開時：無論機器是否在停止狀態，強制發送停止訊號
+            //writeSingleCoil(65, 0.0);
+            writeCoils(65, {false, false});
+        }
+        break;
+
+        //if (isStop) {
+
+        //    if (state) // 按下時：
+        //    {
+        //        m_manager->writeRegister56(0.5);
+        //        QTimer::singleShot(500, this,
+        //            [this, state]()
+        //            {
+        //                if (m_UnwinderJogReverseSelect)
+        //                    writeSingleCoil(66, state);
+        //                else
+        //                    writeSingleCoil(65, state);
+        //            }
+        //        );
+        //    }
+        //}
+        //else // 放開時
+        //{
+        //        writeSingleCoil(65, 0.0);
+        //        writeSingleCoil(66, 0.0);
+        //}
+        
         qDebug() << "DI Bit 8 changed" << state << ")";//Log 
 
         break;
@@ -1093,44 +1138,47 @@ void Core::handleDIOSignal(int bitIndex, bool state)
             }
 
             if (m_RightSelvedgeWinderSelect&&!m_LeftSelvedgeWinderSelect&& !m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(1.5);
+                m_manager->writeRegister59(0.5);
 
                 
                 writeCoils(78, { state,false });
             }
             else if (m_RightSelvedgeWinderSelect && !m_LeftSelvedgeWinderSelect && m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(1.5);
+                m_manager->writeRegister59(0.5);
 
                 
                 writeCoils(78, {false, state });
             }
             else if(!m_RightSelvedgeWinderSelect && m_LeftSelvedgeWinderSelect && !m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(1.5);
+                m_manager->writeRegister59(0.5);
 
 
                 writeCoils(76, { state,false });
             }
             else if (!m_RightSelvedgeWinderSelect && m_LeftSelvedgeWinderSelect && m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(1.5);
+                m_manager->writeRegister59(0.5);
 
 
                 writeCoils(76, { false,state });
             }
             else if (!m_RightSelvedgeWinderSelect && !m_LeftSelvedgeWinderSelect && !m_WinderJogReverseSelect) {
-                m_manager->writeRegister57(1.5);
+                m_manager->writeRegister57(0.5);
 
 
                 writeCoils(71, { state,false });
             }
             else if (!m_RightSelvedgeWinderSelect && !m_LeftSelvedgeWinderSelect && m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(1.5);
+                m_manager->writeRegister59(0.5);
 
 
                 writeCoils(71, { false,state });
             }
         }
         break;
-
+    case 15: 
+        //對邊機開關
+            m_manager->onWebBtn(state);
+            break;
     default:
         break;
     }
