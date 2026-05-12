@@ -26,6 +26,7 @@ Rectangle {
     property int inputTextSize:24
     property int dashPos: 28
     property int btnPos:-15
+    property bool lengthSwitch:false
 
     MouseArea {
         anchors.fill: parent
@@ -618,25 +619,6 @@ Rectangle {
             font.pixelSize: fontSize
             horizontalAlignment: Text.AlignRight
 
-            // TextInput {
-            //     id: output8_1
-            //     width: 100
-            //     font.pixelSize: inputTextSize
-            //     horizontalAlignment: Text.AlignHCenter
-            //     x: textInputLeft
-            //     y: 0
-            //     text:Number(Kdb.curlingAdjust).toFixed(2)//Kdb.wasteRollMotorA
-            //     validator: DoubleValidator {}//限制只能輸入整數/double
-            //     //placeholderText: "請輸入內容"
-            //     focus: true
-            //     inputMethodHints: Qt.ImhDigitsOnly
-            //     Rectangle {
-            //         height: 2
-            //         y:dashPos
-            //         width: output7_1.width
-            //         color: "#aaaaaa"
-            //     }
-            // }
             Image {
                 //id: btnWasteAMotor
                 x: textInputLeft
@@ -645,7 +627,7 @@ Rectangle {
                 scale:0.6
                 layer.enabled: true
                 layer.effect: MultiEffect {
-                    shadowEnabled: btnWasteAMouseArea.containsMouse ? true : false
+                    shadowEnabled: curlAdjustMouseArea.containsMouse ? true : false
                     shadowColor: "#58000000"
                     shadowBlur: 0.8
                 }
@@ -662,7 +644,45 @@ Rectangle {
                 }
             }
         }
+        //長度超過100開關
+        Text {
+            id:text_9
+            x: 700
+            visible:false
+            anchors.top: text_2.top
+            //y: smallMotor.bottom
+            width: setWidth1
+            height: 24
+            text: qsTr("長度超過100歸零")
+            font.pixelSize: fontSize
+            horizontalAlignment: Text.AlignRight
 
+            Image {
+                //id: btnWasteAMotor
+                visible:false
+                x: textInputLeft
+                y: -8
+                source: Kdb.lengthSwitch ?"assets/Group11.png" : "assets/Group 34.png"
+                scale:0.6
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: lengthSwitchMouseArea.containsMouse ? true : false
+                    shadowColor: "#58000000"
+                    shadowBlur: 0.8
+                }
+                MouseArea {
+                    id: lengthSwitchMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Kdb.lengthSwitch = !Kdb.lengthSwitch
+                        console.log("11 lengthSwitch changed~~~", Kdb.m_lengthSwitch);
+
+                    }
+                }
+            }
+        }
     }
 
 }

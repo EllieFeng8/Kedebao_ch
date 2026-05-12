@@ -528,6 +528,10 @@ class KdbProxy : public QObject
 
     //=======ERROR LOG========
     Q_PROPERTY(QString errorLog READ getErrorLog WRITE setErrorLog NOTIFY errorLogChanged)
+
+    //長度過100自動歸零
+    Q_PROPERTY(bool lengthSwitch READ getLengthSwitch WRITE setLengthSwitch NOTIFY lengthSwitchChanged)
+
 public:
     explicit KdbProxy(QObject* parent = nullptr) : QObject(parent) {
     }
@@ -2949,8 +2953,19 @@ public:
         emit errorLogChanged(m_errorLog);
     }
 
+    // ===== 長度過100自動歸零 =====
+
+    Q_INVOKABLE bool getLengthSwitch() const { return m_lengthSwitch; }
+    void setLengthSwitch(bool value)
+    {
+        m_lengthSwitch = value;
+        emit lengthSwitchChanged(m_lengthSwitch);
+    }
+
     signals:
 
+    //長度過100自動歸零
+    void lengthSwitchChanged(bool value);
     //異常提醒
     void abnormalRaised(const QString &msg);
 
@@ -3427,6 +3442,7 @@ public:
     void errorLogChanged(QString value);
 
 private:
+    bool m_lengthSwitch = false;
     int m_bigRollMode = 0;//默認大捲模式(1大捲模式,0小捲模式)
     int m_restBtn = 0;//主畫面長度reset btn
 
@@ -3450,13 +3466,13 @@ private:
     int m_whiteLight = 0;
     int m_bottomLight = 0;
 
-    double m_currentLength = 100;
+    double m_currentLength = 0;
     double m_speed = 0;
     double m_brakingDistance = 0;
 
     int m_modifycurrentLength = 0;
     int m_modifyspeed = 0;
-    double m_modifybrakingDistance = 82;
+    double m_modifybrakingDistance = 0;
 
     double m_modifyUnwindingTension = 0.0;
     double m_modifySmallWinderTensionOver = 0.0;
@@ -3893,7 +3909,7 @@ private:
     int m_singleActionMode = 0;
 
     // QString m_msg = "test";
-    QString m_errorLog = "test111111111\n 11111111111111111111111111111111111111";
+    QString m_errorLog = "";
 };
 
 
