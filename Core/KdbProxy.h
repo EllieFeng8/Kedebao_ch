@@ -465,24 +465,24 @@ class KdbProxy : public QObject
         Q_PROPERTY(double rightSelvedgeWinderSelect READ getRightSelvedgeWinderSelect NOTIFY rightSelvedgeWinderSelectChanged)
 
         // ===== IPC INPUT Light=====
-        Q_PROPERTY(int ipcStartLight READ getIpcStartLight NOTIFY ipcStartLightChanged)
-        Q_PROPERTY(int ipcStopLight READ getIpcStopLight NOTIFY ipcStopLightChanged)
-        Q_PROPERTY(int ipcAlarmResetLight READ getIpcAlarmResetLight NOTIFY ipcAlarmResetLightChanged)
+        Q_PROPERTY(int ipcStartLight READ getIpcStartLight WRITE setIpcStartLight NOTIFY ipcStartLightChanged)
+        Q_PROPERTY(int ipcStopLight READ getIpcStopLight WRITE setIpcStopLight NOTIFY ipcStopLightChanged)
+        Q_PROPERTY(int ipcAlarmResetLight READ getIpcAlarmResetLight WRITE setIpcAlarmResetLight NOTIFY ipcAlarmResetLightChanged)
 
-        Q_PROPERTY(int mainJogForwardLight READ getMainJogForwardLight NOTIFY mainJogForwardLightChanged)
-        Q_PROPERTY(int mainJogReverseLight READ getMainJogReverseLight NOTIFY mainJogReverseLightChanged)
+        Q_PROPERTY(int mainJogForwardLight READ getMainJogForwardLight WRITE setMainJogForwardLight NOTIFY mainJogForwardLightChanged)
+        Q_PROPERTY(int mainJogReverseLight READ getMainJogReverseLight WRITE setMainJogReverseLight NOTIFY mainJogReverseLightChanged)
 
-        Q_PROPERTY(int smallWinderJogForwardLight READ getSmallWinderJogForwardLight NOTIFY smallWinderJogForwardLightChanged)
-        Q_PROPERTY(int smallWinderJogReverseLight READ getSmallWinderJogReverseLight NOTIFY smallWinderJogReverseLightChanged)
+        Q_PROPERTY(int smallWinderJogForwardLight READ getSmallWinderJogForwardLight WRITE setSmallWinderJogForwardLight NOTIFY smallWinderJogForwardLightChanged)
+        Q_PROPERTY(int smallWinderJogReverseLight READ getSmallWinderJogReverseLight WRITE setSmallWinderJogReverseLight NOTIFY smallWinderJogReverseLightChanged)
 
-        Q_PROPERTY(int unwinderJogReverseSelectLight READ getUnwinderJogReverseSelectLight NOTIFY unwinderJogReverseSelectLightChanged)
-        Q_PROPERTY(int unwinderJogStartLight READ getUnwinderJogStartLight NOTIFY unwinderJogStartLightChanged)
+        Q_PROPERTY(int unwinderJogReverseSelectLight READ getUnwinderJogReverseSelectLight WRITE setUnwinderJogReverseSelectLight NOTIFY unwinderJogReverseSelectLightChanged)
+        Q_PROPERTY(int unwinderJogStartLight READ getUnwinderJogStartLight WRITE setUnwinderJogStartLight NOTIFY unwinderJogStartLightChanged)
 
-        Q_PROPERTY(int winderJogReverseSelectLight READ getWinderJogReverseSelectLight NOTIFY winderJogReverseSelectLightChanged)
-        Q_PROPERTY(int winderJogStartLight READ getWinderJogStartLight NOTIFY winderJogStartLightChanged)
+        Q_PROPERTY(int winderJogReverseSelectLight READ getWinderJogReverseSelectLight WRITE setWinderJogReverseSelectLight NOTIFY winderJogReverseSelectLightChanged)
+        Q_PROPERTY(int winderJogStartLight READ getWinderJogStartLight WRITE setWinderJogStartLight NOTIFY winderJogStartLightChanged)
 
-        Q_PROPERTY(int leftSelvedgeWinderSelectLight READ getLeftSelvedgeWinderSelectLight NOTIFY leftSelvedgeWinderSelectLightChanged)
-        Q_PROPERTY(int rightSelvedgeWinderSelectLight READ getRightSelvedgeWinderSelectLight NOTIFY rightSelvedgeWinderSelectLightChanged)
+        Q_PROPERTY(int leftSelvedgeWinderSelectLight READ getLeftSelvedgeWinderSelectLight WRITE setLeftSelvedgeWinderSelectLight NOTIFY leftSelvedgeWinderSelectLightChanged)
+        Q_PROPERTY(int rightSelvedgeWinderSelectLight READ getRightSelvedgeWinderSelectLight WRITE setRightSelvedgeWinderSelectLight NOTIFY rightSelvedgeWinderSelectLightChanged)
 
 
 
@@ -2831,24 +2831,96 @@ public:
     }
     // ===== IPC INPUT WRITE Light=====
     Q_INVOKABLE int getIpcStartLight() const { return m_ipcStartLight; }
+    void setIpcStartLight(int value)
+    {
+        if (m_ipcStartLight != value)
+            m_ipcStartLight = value;
+        emit ipcStartLightChanged(m_ipcStartLight);
+    }
     Q_INVOKABLE int getIpcStopLight() const { return m_ipcStopLight; }
+    void setIpcStopLight(int value)
+    {
+        if (m_ipcStopLight != value)
+            m_ipcStopLight = value;
+        emit ipcStopLightChanged(m_ipcStopLight);
+    }
     Q_INVOKABLE int getIpcAlarmResetLight() const { return m_ipcAlarmResetLight; }
-
+    void setIpcAlarmResetLight(int value)
+    {
+        if (m_ipcAlarmResetLight != value)
+            m_ipcAlarmResetLight = value;
+        emit ipcAlarmResetLightChanged(m_ipcAlarmResetLight);
+    }
     Q_INVOKABLE int getMainJogForwardLight() const { return m_mainJogForwardLight; }
+    void setMainJogForwardLight(int value)
+    {
+        if (m_mainJogForwardLight != value)
+            m_mainJogForwardLight = value;
+        emit mainJogForwardLightChanged(m_mainJogForwardLight);
+    }
     Q_INVOKABLE int getMainJogReverseLight() const { return m_mainJogReverseLight; }
-
+    void setMainJogReverseLight(int value)
+    {
+        if (m_mainJogReverseLight != value)
+            m_mainJogReverseLight = value;
+        emit mainJogReverseLightChanged(m_mainJogReverseLight);
+    }
     Q_INVOKABLE int getSmallWinderJogForwardLight() const { return m_smallWinderJogForwardLight; }
+    void setSmallWinderJogForwardLight(int value)
+    {
+        if (m_smallWinderJogForwardLight != value)
+            m_smallWinderJogForwardLight = value;
+        emit smallWinderJogForwardLightChanged(m_smallWinderJogForwardLight);
+    }
     Q_INVOKABLE int getSmallWinderJogReverseLight() const { return m_smallWinderJogReverseLight; }
-
+    void setSmallWinderJogReverseLight(int value)
+    {
+        if (m_smallWinderJogReverseLight != value)
+            m_smallWinderJogReverseLight = value;
+        emit smallWinderJogReverseLightChanged(m_smallWinderJogReverseLight);
+    }
     Q_INVOKABLE int getUnwinderJogReverseSelectLight() const { return m_unwinderJogReverseSelectLight; }
+    void setUnwinderJogReverseSelectLight(int value)
+    {
+        if (m_unwinderJogReverseSelectLight != value)
+            m_unwinderJogReverseSelectLight = value;
+        emit unwinderJogReverseSelectLightChanged(m_unwinderJogReverseSelectLight);
+    }
     Q_INVOKABLE int getUnwinderJogStartLight() const { return m_unwinderJogStartLight; }
-
+    void setUnwinderJogStartLight(int value)
+    {
+        if (m_unwinderJogStartLight != value)
+            m_unwinderJogStartLight = value;
+        emit unwinderJogStartLightChanged(m_unwinderJogStartLight);
+    }
     Q_INVOKABLE int getWinderJogReverseSelectLight() const { return m_winderJogReverseSelectLight; }
+    void setWinderJogReverseSelectLight(int value)
+    {
+        if (m_winderJogReverseSelectLight != value)
+            m_winderJogReverseSelectLight = value;
+        emit winderJogReverseSelectLightChanged(m_winderJogReverseSelectLight);
+    }
     Q_INVOKABLE int getWinderJogStartLight() const { return m_winderJogStartLight; }
-
+    void setWinderJogStartLight(int value)
+    {
+        if (m_winderJogStartLight != value)
+            m_winderJogStartLight = value;
+        emit winderJogStartLightChanged(m_winderJogStartLight);
+    }
     Q_INVOKABLE int getLeftSelvedgeWinderSelectLight() const { return m_leftSelvedgeWinderSelectLight; }
+    void setLeftSelvedgeWinderSelectLight(int value)
+    {
+        if (m_leftSelvedgeWinderSelectLight != value)
+            m_leftSelvedgeWinderSelectLight = value;
+        emit leftSelvedgeWinderSelectLightChanged(m_leftSelvedgeWinderSelectLight);
+    }
     Q_INVOKABLE int getRightSelvedgeWinderSelectLight() const { return m_rightSelvedgeWinderSelectLight; }
-
+    void setRightSelvedgeWinderSelectLight(int value)
+    {
+        if (m_rightSelvedgeWinderSelectLight != value)
+            m_rightSelvedgeWinderSelectLight = value;
+        emit rightSelvedgeWinderSelectLightChanged(m_rightSelvedgeWinderSelectLight);
+    }
     // =====控制介面 Motor Control =====
     Q_INVOKABLE double getSmallRollMotor() const { return m_smallRollMotor; }
     void setSmallRollMotor(double value)

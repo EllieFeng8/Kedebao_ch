@@ -906,6 +906,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
     switch (bitIndex) {
     case 0:
         m_proxy->setIpcStart(val);
+        m_proxy->setIpcStartLight(val);
         m_tensionStableTimer->stop();
         m_tensionStableTimer2->stop();
         m_isBrakingPerformed = false;
@@ -922,6 +923,8 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         break;
     case 1:
         m_proxy->setIpcStop(val);
+        m_proxy->setIpcStopLight(val);
+
         if (state)
         {
             m_isSoftStarting = false;
@@ -936,8 +939,11 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         break;
     case 2:
             m_proxy->setIpcAlarmReset(val);
+            m_proxy->setIpcAlarmResetLight(val);
+
             m_manager->VfdAlarmReset(val);
         qDebug() << "DI Bit 2 changed" << state << ")";//Log 
+          
         break;
     case 3://主傳正轉吋動 改為>>右側壓板按鈕
         if (state)
@@ -945,6 +951,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
             PressPlate(0);
         }
         m_proxy->setMainJogForward(val);
+        m_proxy->setMainJogForwardLight(val);
         //if (isStop) {
         //    writeSingleCoil(67, state);//動作  
         //}
@@ -955,6 +962,8 @@ void Core::handleDIOSignal(int bitIndex, bool state)
             PressPlateBack(0);
         }
         m_proxy->setMainJogReverse(val);
+        m_proxy->setMainJogReverseLight(val);
+
         //if (isStop) {
         //    writeSingleCoil(68, state);//動作  
         //}
@@ -989,6 +998,8 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         break;
     case 7:
         m_proxy->setUnwinderJogReverseSelect(val);
+        m_proxy->setUnwinderJogReverseSelectLight(val);
+
         if (state)
         {
             m_UnwinderJogReverseSelect = true;
@@ -1002,6 +1013,8 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         break;
     case 8:
         m_proxy->setUnwinderJogStart(val);
+        m_proxy->setUnwinderJogStartLight(val);
+
 
         if (state) {
             // 按下時：必須在停止狀態下才允許啟動
@@ -1048,6 +1061,8 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         break;
     case 9:
         m_proxy->setWinderJogReverseSelect(val);
+        m_proxy->setWinderJogReverseSelectLight(val);
+
         if (state)
         {
             m_WinderJogReverseSelect = true;
@@ -1097,11 +1112,15 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         break;
     case 11:
         m_proxy->setLeftSelvedgeWinderSelect(val);
+        m_proxy->setLeftSelvedgeWinderSelectLight(val);
+
         m_LeftSelvedgeWinderSelect = state;
         qDebug() << "DI Bit 11 changed" << state << ")";//Log 
         break;
     case 12:
         m_proxy->setRightSelvedgeWinderSelect(val);
+        m_proxy->setRightSelvedgeWinderSelectLight(val);
+
         m_RightSelvedgeWinderSelect = state;
         qDebug() << "DI Bit 12 changed" << state << ")";//Log 
         break;
@@ -1111,6 +1130,8 @@ void Core::handleDIOSignal(int bitIndex, bool state)
     case 14:
 
         m_proxy->setWinderJogStart(val);
+        m_proxy->setWinderJogStartLight(val);
+
 
         if (isStop) {
 

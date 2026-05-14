@@ -188,8 +188,25 @@ public:
         connect(m_manager, &ModbusManager::ErrMsg, this, [this](QString msg) {
             // 1. 處理 UI 顯示
             m_proxy->raiseAbnormal(msg);
-
-            QString fileName = "error_history.log";
+            connect(m_manager, &ModbusManager::BigGridAlarm, this, [this]() 
+                {
+                    m_isSoftStarting = false;
+                    waitforPV = false;
+                    m_isWaitingForStop = true;
+                    m_tensionStableTimer->stop();
+                    m_tensionStableTimer2->stop();
+                    setSTOP();
+                });
+            connect(m_manager, &ModbusManager::SmallGridAlarm, this, [this]()
+                {
+                    m_isSoftStarting = false;
+                    waitforPV = false;
+                    m_isWaitingForStop = true;
+                    m_tensionStableTimer->stop();
+                    m_tensionStableTimer2->stop();
+                    setSTOP();
+                });
+            QString fileName = QString("error_history_%1.log").arg(QDateTime::currentDateTime().toString("yyyy-MM-dd"));
             QString currentTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
 
             // 準備新的一行訊息
@@ -735,6 +752,33 @@ private:
             
             m_proxy->setWhiteLight(1);
             m_proxy->setBigRollMode(0);
+            // 1. 嘗試讀取現有的所有內容
+            QFile file(QString("error_history_%1.log").arg(QDateTime::currentDateTime().toString("yyyy-MM-dd")));
+            QByteArray existingData;
+            QString fullContent = "";
+            if (file.exists()) {
+                if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                    existingData = file.readAll();
+                    fullContent += QString::fromUtf8(existingData);
+
+
+                    file.close();
+                }
+            }
+
+            QFile file2(QString("error_history_%1.log").arg(QDateTime::currentDateTime().addDays(-1).toString("yyyy-MM-dd")));
+
+            if (file2.exists()) {
+                if (file2.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                    existingData = file2.readAll();
+                    fullContent += QString::fromUtf8(existingData);
+
+
+                    file2.close();
+                }
+            }
+
+            m_proxy->setErrorLog(fullContent);
         }
     }
 

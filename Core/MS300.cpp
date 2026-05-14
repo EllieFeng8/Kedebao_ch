@@ -36,7 +36,7 @@ void MS300::onPollTimeout()
 
 
     // --- 步驟 A: 寫入頻率指令 (2001H) ---
-    if (id == 2 && m_needWriteID2)
+    if (m_needWriteID2)
     {
         QModbusDataUnit writeUnit(QModbusDataUnit::HoldingRegisters, 0x2001, 1);
         //writeUnit.setValue(0, m_targetCmds[id]);
@@ -45,7 +45,7 @@ void MS300::onPollTimeout()
         writeUnit.setValue(0, static_cast<quint16>(m_targetHz * 100));
         //qDebug() << id << "set value" << static_cast<quint16>(m_targetHz * 100);
         //m_modbus->sendWriteRequest(writeUnit, 2);
-        if (auto* reply = m_modbus->sendWriteRequest(writeUnit, id)) {
+        if (auto* reply = m_modbus->sendWriteRequest(writeUnit, 2)) {
             connect(reply, &QModbusReply::finished, this, [this, reply]() {
                 if (reply->error() == QModbusDevice::NoError) {
                     m_needWriteID2 = false; // 寫入成功後才清除標記

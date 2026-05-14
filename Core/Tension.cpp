@@ -19,12 +19,13 @@ void Modbus485::initPort() {
         }
         });
 
+
     if (m_modbus->connectDevice()) {
         qDebug() << "COM3 connect success";
         m_pollTimer = new QTimer(this);
         //connect(m_pollTimer, &QTimer::timeout, this, &Modbus485::onPollTimeout);
         //m_pollTimer->start(50);
-        QTimer::singleShot(20, this, &Modbus485::onPollTimeout);
+        QTimer::singleShot(60, this, &Modbus485::onPollTimeout);
     }
     else {
         QString err = "connect COM3 fail: " + m_modbus->errorString();
@@ -186,14 +187,36 @@ void Modbus485::onPollTimeout() {
                         qDebug() << "Write Success! ID:" << task.id;
                     }
                     reply->deleteLater();
-                    QTimer::singleShot(30, this, &Modbus485::onPollTimeout);
+                    QTimer::singleShot(50, this, &Modbus485::onPollTimeout);
                     });
             }
             else {
-                QTimer::singleShot(30, this, &Modbus485::onPollTimeout);
+                QTimer::singleShot(50, this, &Modbus485::onPollTimeout);
             }
+            return;
     }
+    //QModbusDataUnit readpid(QModbusDataUnit::HoldingRegisters, 570, 1);
 
+    //auto* replypid = m_modbus->sendReadRequest(readpid, 1);
+    //if (replypid) {
+    //    connect(replypid, &QModbusReply::finished, this, [this, replypid]() {
+    //        if (replypid->error() == QModbusDevice::NoError) {
+    //            const QModbusDataUnit res = replypid->result();
+    //            for (uint i = 0; i < res.valueCount(); ++i) {
+    //                int addr = res.startAddress() + i;
+    //                quint16 value = res.value(i);
+
+    //                qDebug() <<addr <<"&&:"
+    //                    << value;
+    //            }
+    //        }
+    //        else {
+    //            qDebug() << "Com Error ID:" << 1 << replypid->errorString();
+    //        }
+    //        replypid->deleteLater();
+    //        }
+    //    );
+    //}
     // 優先權 2：處理輪詢讀取
     //if (m_slaveIds.isEmpty()) return;
     int id = m_slaveIds[m_currentIndex];

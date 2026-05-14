@@ -318,7 +318,7 @@ public slots:
             val[2] = 1;
             val[3] = 1;
             val[4] = 1;
-            val[23] = 0;
+            val[23] = 1;
             val[33] = 1;
             cc++;
         }
@@ -330,8 +330,8 @@ public slots:
             val[3] = 0;
             val[4] = 1;
 
-            val[23] = 0;
-            val[33] = 0;
+            val[23] = 1;
+            val[33] = 1;
             cc = 0;
         }
         //val[1] = 1;

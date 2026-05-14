@@ -129,11 +129,14 @@ signals:
     void Zerospeed01();
     void Zerospeed02();
     void ErrMsg(QString msg);
+    void BigGridAlarm();
+    void SmallGridAlarm();
 private:
     QVector<quint16> current_data;
     QThread* m_thread;
     ModbusWorker* m_worker = nullptr;
     bool m_lastRunningStatus = false;
+    bool m_Resetting = false;
     bool m_lastAlarmStatus = false;
     bool m_lastLightStatus = false;
     bool m_LeftSelvedgeWinderSelect = false;
@@ -584,18 +587,18 @@ private:
 
         static const QList<AlarmDef> alarmDefs = {
             // --- 原本已有的項目 ---
-            {0,QString::fromLocal8Bit("放捲變頻異常"), true,  true,  1},
-            {1,QString::fromLocal8Bit("主傳變頻異常"), true,  true,  1},
-            {2,QString::fromLocal8Bit("小收卷變頻異常"), false, true,  1},
-            {3,QString::fromLocal8Bit("大收卷變頻異常"), true,  false, 1},
-            {4,QString::fromLocal8Bit("小卷切刀輪變頻異常"), false, true, 1},
-            {5,QString::fromLocal8Bit("耳料抽風變頻異常"), false, true, 1},
+            {0,QString::fromLocal8Bit("放捲變頻異常檢出"), true,  true,  1},
+            {1,QString::fromLocal8Bit("主傳變頻異常檢出"), true,  true,  1},
+            {2,QString::fromLocal8Bit("小收卷變頻異常檢出"), false, true,  1},
+            {3,QString::fromLocal8Bit("大收卷變頻異常檢出"), true,  false, 1},
+            {4,QString::fromLocal8Bit("小卷切刀輪變頻異常檢出"), false, true, 1},
+            {5,QString::fromLocal8Bit("耳料抽風變頻異常檢出"), false, true, 1},
             //{6,QString::fromLocal8Bit("左側抽風過載"), false, true, 1},
             //{7,QString::fromLocal8Bit("右側抽風過載"), false, true, 1},
-            {8,QString::fromLocal8Bit("大捲切刀輪變頻異常"), true,  false, 1},
-            {9,QString::fromLocal8Bit("右側耳料變頻異常"), true,  false, 1},
-            {10,QString::fromLocal8Bit("左側耳料變頻異常"), true,  false, 1},
-            {11,QString::fromLocal8Bit("對邊機變頻異常"), true,  true,  1},
+            {8,QString::fromLocal8Bit("大捲切刀輪變頻異常檢出"), true,  false, 1},
+            {9,QString::fromLocal8Bit("右側耳料變頻異常檢出"), true,  false, 1},
+            {10,QString::fromLocal8Bit("左側耳料變頻異常檢出"), true,  false, 1},
+            {11,QString::fromLocal8Bit("對邊機變頻異常檢出"), true,  true,  1},
             {12,QString::fromLocal8Bit("放捲軸電源檢出"), true,  true,  1},
             {13,QString::fromLocal8Bit("主傳電源檢出"), true,  true,  1},
             {14,QString::fromLocal8Bit("小收卷電源檢出"), false, true,  1},
@@ -619,11 +622,11 @@ private:
             {32,QString::fromLocal8Bit("對邊機切斷開關檢出"), true,  true,  1},
 
             // --- 從註解中還原的項目 ---
-            {33,QString::fromLocal8Bit("STOP-1"), true,  true,  0},
-            {34,QString::fromLocal8Bit("STOP-2"), true,  true,  0},
-            {35,QString::fromLocal8Bit("STOP-3"), true,  true,  0},
-            {36,QString::fromLocal8Bit("STOP-4"), true,  true,  0},
-            {37,QString::fromLocal8Bit("STOP-5"), true,  true,  0},
+            {33,QString::fromLocal8Bit("緊急停止-1"), true,  true,  0},
+            {34,QString::fromLocal8Bit("緊急停止-2"), true,  true,  0},
+            {35,QString::fromLocal8Bit("緊急停止-3"), true,  true,  0},
+            {36,QString::fromLocal8Bit("緊急停止-4"), true,  true,  0},
+            {37,QString::fromLocal8Bit("緊急停止-5"), true,  true,  0},
             //{38,QString::fromLocal8Bit("STOP-6"), true,  true,  0},
             //{39,QString::fromLocal8Bit("STOP-7"), true,  true,  0},
 
@@ -641,8 +644,8 @@ private:
             //{50,QString::fromLocal8Bit("大捲圍籬-3"), true,  false, 0},
             //{51,QString::fromLocal8Bit("大捲圍籬-4"), true,  false, 0},
             //{52,QString::fromLocal8Bit("放捲光柵"), true,  true,  0},
-            //{53,QString::fromLocal8Bit("小卷光柵"), false, true,  0},
-            //{54,QString::fromLocal8Bit("大捲光柵"), true,  false, 0},
+            {53,QString::fromLocal8Bit("小卷光柵檢出"), false, false,  1},
+            {54,QString::fromLocal8Bit("大捲光柵檢出"), false,  false, 1},
 
             //{55,QString::fromLocal8Bit("小收卷零速檢出"), false, false, 1},
             //{56,QString::fromLocal8Bit("大收卷零速檢出"), false, false, 1},
@@ -686,12 +689,29 @@ private:
             hasAlarm = true;
             if (alarm._big) big_Alarm = true;
             if (alarm._small) small_Alarm = true;
+
             if (hasOtherAlarm && alarm.index <= 11) {
                 continue;
             }
             // 只有在狀態改變時才發送訊息
             if (m_lastV[alarm.index] != v[alarm.index]) {
-                emit ErrMsg(alarm.msg);
+                //emit ErrMsg(alarm.msg);
+
+                if (v[alarm.index] == alarm.triggerVal) {
+
+                    emit ErrMsg(alarm.msg);
+
+                    if (alarm.index == 53) {
+                        if (m_ModeSelet) {
+                            emit SmallGridAlarm();
+                        }
+                    }
+                    if (alarm.index == 54) {
+                        if(!m_ModeSelet){
+                            emit BigGridAlarm();
+                        }
+                    }
+                }
             }
         }
 

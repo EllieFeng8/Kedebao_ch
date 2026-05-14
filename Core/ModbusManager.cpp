@@ -262,6 +262,19 @@ void ModbusManager::VfdAlarmReset(double value)
 {
     bool v = (value > 0.0) ? true : false;
     qDebug() << "VfdAlarmReset" << v;
+    if (!v) {
+
+        QTimer::singleShot(100, this,
+            [this]()
+            {
+                m_Resetting = false;
+
+            });
+    }
+    else {
+        m_Resetting = v;
+    }
+    
     m_worker->set_VfdAlarmReset(value);
 }
 void ModbusManager::UnwinderForward(double value)
