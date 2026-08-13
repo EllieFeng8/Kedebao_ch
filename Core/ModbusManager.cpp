@@ -604,13 +604,17 @@ void ModbusManager::io112(double value)//o17
 void ModbusManager::IpcStart(bool v)
 {
     //writeCoils(81, m_worker->startAuto);
-
+    m_stopRequested = false;
     if (m_ModeSelet)
     {   
         writeCoils(109, { false,true });
-        QTimer::singleShot(500, this,
+        QTimer::singleShot(300, this,
             [this]()
             {
+                if (m_stopRequested) {
+                    qDebug() << "IpcStart canceled: stop requested";
+                    return;
+                }
                 QVector<bool> start= { 1,0,1,0,1,0,0,0,1,1,0,0,0,0,0,1,1,0,1,0,0,0,0,0 };
                 start[9] = current_data[74];
                 start[15] = current_data[80];
@@ -618,7 +622,7 @@ void ModbusManager::IpcStart(bool v)
                 writeCoils(65, start); //小卷模式 正轉啟動
                 isStart = true;
             });
-        
+
     }
     else
     {
@@ -627,6 +631,7 @@ void ModbusManager::IpcStart(bool v)
             [this]()
             {
                 QVector<bool> start = { 1,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,0,0,1,0,1,1 };
+                start[9] = current_data[74];
                 start[15] = current_data[80];
                 writeCoils(65,start);//大捲模式 正轉啟動
                 isStart = true;
@@ -635,6 +640,7 @@ void ModbusManager::IpcStart(bool v)
 }
 void ModbusManager::IpcStop()
 {
+    m_stopRequested = true;
     isStart = false;
     QVector<bool> stop(24, false);
     stop[9] = current_data[74];

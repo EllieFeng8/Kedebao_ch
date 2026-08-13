@@ -382,17 +382,16 @@ void Core::setMS300Run(int id, int mode) {
     m_ms300->updateControlCache(id, cmd);
 }
 
-void Core::onlength(double v)
+void Core::onlength(double v) 
 {
     m_proxy->setCurrentLength(v);
     
-    if (m_length > 0 && v >= (double)m_length-0.1 && !onLength) {//距離到 停止
+    if (m_length > 0 && v >= (double)m_length-0.08 && !onLength) {//距離到 停止
 
         qDebug() << "Target length reached!" << v << "/" << m_length;
 
 
-        setSTOP();
-        m_isWaitingForStop = true;
+        requestStop();
 
         if (!onLength && isStop) {
 
@@ -519,12 +518,22 @@ void Core::setMainFreqs(double v)
 
 void Core::setMainSpeed(double v)
 {
-
-    double Hz = v * (60.0 / 130.0);
-    qDebug() << "Set Speed";
+    if (!m_isWaitingForStop) {
+        double Hz = v * (60.0 / 130.0);
+        qDebug() << "Set Speed"<<Hz;
+        {
+            QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
+                Qt::QueuedConnection);
+        }
+    }
+    else
     {
-        QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
-            Qt::QueuedConnection);
+        double Hz = 0;
+        qDebug() << "Set Speed" << Hz;
+        {
+            QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
+                Qt::QueuedConnection);
+        }
     }
 }
 
@@ -576,6 +585,8 @@ void Core::onZeroSpeed02()
 
 void Core::setTensionSV_1(double v)
 {
+    if (v > 60) { v = 60; }
+
     Tension1_SV = v;
     nowSV1 = v;
     saveProductionSettings();
@@ -586,6 +597,8 @@ void Core::setTensionSV_1(double v)
 
 void Core::setTensionSV_2(double v)
 {
+    if (v > 60) { v = 60; }
+
     Tension2_SV = v;
     saveProductionSettings();
 
@@ -595,6 +608,8 @@ void Core::setTensionSV_2(double v)
 
 void Core::setTensionSV_3(double v)
 {
+    if (v > 60) { v = 60; }
+
     Tension3_SV = v;
     saveProductionSettings();
 
@@ -902,7 +917,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
 
     // 將布林狀態轉為 double，以符合您 Proxy 函數的參數形態
     double val = state ? 1.0 : 0.0;
-
+    bool value74 = DataValues[74]? 1:0;
     switch (bitIndex) {
     case 0:
         m_proxy->setIpcStart(val);
@@ -927,6 +942,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
 
         if (state)
         {
+            m_manager->requestStop();
             m_isSoftStarting = false;
             waitforPV = false;
             m_isWaitingForStop = true;
@@ -974,15 +990,7 @@ void Core::handleDIOSignal(int bitIndex, bool state)
         //m_proxy->metalD
         if (state)
         {
-
-            //m_manager->Metal_Detect();
-            //一般停止
-            m_isSoftStarting = false;
-            waitforPV = false;
-            m_isWaitingForStop = true;
-            m_tensionStableTimer->stop();
-            m_tensionStableTimer2->stop();
-            setSTOP();
+            requestStop();
         }
         //m_proxy->setSmallWinderJogForward(val);
         //if (isStop) {
@@ -1137,41 +1145,18 @@ void Core::handleDIOSignal(int bitIndex, bool state)
 
             if(!state)
             {
-                writeCoils(71, { false, false, false, false, false, false, false, false, false });
+                QVector<bool> values = { false, false, false, false, false, false, false, false, false };
+                values[3] = value74;
+                writeCoils(71, values);
             }
-
-            if (m_RightSelvedgeWinderSelect&&!m_LeftSelvedgeWinderSelect&& !m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(0.5);
-
-                
-                writeCoils(78, { state,false });
-            }
-            else if (m_RightSelvedgeWinderSelect && !m_LeftSelvedgeWinderSelect && m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(0.5);
-
-                
-                writeCoils(78, {false, state });
-            }
-            else if(!m_RightSelvedgeWinderSelect && m_LeftSelvedgeWinderSelect && !m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(0.5);
-
-
-                writeCoils(76, { state,false });
-            }
-            else if (!m_RightSelvedgeWinderSelect && m_LeftSelvedgeWinderSelect && m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(0.5);
-
-
-                writeCoils(76, { false,state });
-            }
-            else if (!m_RightSelvedgeWinderSelect && !m_LeftSelvedgeWinderSelect && !m_WinderJogReverseSelect) {
+            if (!m_WinderJogReverseSelect) {
                 m_manager->writeRegister57(0.5);
 
 
                 writeCoils(71, { state,false });
             }
-            else if (!m_RightSelvedgeWinderSelect && !m_LeftSelvedgeWinderSelect && m_WinderJogReverseSelect) {
-                m_manager->writeRegister59(0.5);
+            else if (m_WinderJogReverseSelect) {
+                m_manager->writeRegister57(0.5);
 
 
                 writeCoils(71, { false,state });

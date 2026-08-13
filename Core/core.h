@@ -563,7 +563,21 @@ public slots:
         onWorkerData(DataValues);
         qDebug() << "test";
     }
-   
+    void requestStop()
+    {
+        qDebug() << "STOP requested";
+
+        m_manager->requestStop();   // ¥ý¾×±¼ Manager ¸Ì delayed start
+
+        m_isSoftStarting = false;
+        waitforPV = false;
+        m_isWaitingForStop = true;
+
+        m_tensionStableTimer->stop();
+        m_tensionStableTimer2->stop();
+
+        setSTOP();
+    }
 
 signals:
     void holdingRegisterReady(QVector<quint16> values);

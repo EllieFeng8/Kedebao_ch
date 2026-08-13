@@ -24,7 +24,7 @@ public:
 
 
     void readRegisters(int startAddress, int count);
-
+    bool m_stopRequested = false;
     bool m_alarmActive = false;
     bool m_ModeSelet = false;
 
@@ -32,7 +32,15 @@ public:
 public slots:
     //void startAuto();
     //void stopAuto();
+    void requestStop()
+    {
+        m_stopRequested = true;
+    }
 
+    void clearStopRequest()
+    {
+        m_stopRequested = false;
+    }
     void alarm_test(int v);
     void onFanBtn(bool v);
     void onWebBtn(bool v);
