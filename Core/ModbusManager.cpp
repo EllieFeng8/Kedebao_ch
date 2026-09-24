@@ -630,6 +630,10 @@ void ModbusManager::IpcStart(bool v)
         QTimer::singleShot(500, this,
             [this]()
             {
+                if (m_stopRequested) {
+                    qDebug() << "IpcStart canceled: stop requested";
+                    return;
+                }
                 QVector<bool> start = { 1,0,1,0,0,0,1,0,0,0,1,1,0,1,0,1,1,0,0,0,1,0,1,1 };
                 start[9] = current_data[74];
                 start[15] = current_data[80];

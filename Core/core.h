@@ -461,7 +461,7 @@ public:
             }
         );
 
-        QObject::connect(m_proxy, &KdbProxy::softStartSpeedChanged, this, [this](int value)
+        QObject::connect(m_proxy, &KdbProxy::softStartSpeedChanged, this, [this](double value)
             {
                 m_slowStartSpeed = value;
                 qDebug() << "m_slowStartSpeed =" << value;
@@ -470,7 +470,7 @@ public:
             }
         );
 
-        QObject::connect(m_proxy, &KdbProxy::softStartThresholdChanged, this, [this](int value)
+        QObject::connect(m_proxy, &KdbProxy::softStartThresholdChanged, this, [this](double value)
             {
                 m_tensionTolerance = value;
                 qDebug() << "m_tensionTolerance =" << value;
@@ -479,18 +479,18 @@ public:
             }
         );
 
-        QObject::connect(m_proxy, &KdbProxy::tensionTimeChanged, this, [this](int value)
+        QObject::connect(m_proxy, &KdbProxy::tensionTimeChanged, this, [this](double value)
             {
-                stableTime = value;
-                qDebug() << "stableTime =" << value;
+                stableTime = qRound(value);
+                qDebug() << "stableTime =" << stableTime;
                 saveProductionSettings();
 
             }
         );
-        QObject::connect(m_proxy, &KdbProxy::secTensionTimeChanged, this, [this](int value)
+        QObject::connect(m_proxy, &KdbProxy::secTensionTimeChanged, this, [this](double value)
             {
-                stableTime2 = value;
-                qDebug() << "stableTime2 =" << value;
+                stableTime2 = qRound(value);
+                qDebug() << "stableTime2 =" << stableTime2;
                 saveProductionSettings();
 
             }
