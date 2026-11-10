@@ -136,7 +136,7 @@ signals:
     void workerWriteDone(int address, bool ok, QString msg);
     void Zerospeed01();
     void Zerospeed02();
-    void ErrMsg(QString msg);
+    void ErrMsg(QString msg, bool writeHistory = true);
     void BigGridAlarm();
     void SmallGridAlarm();
 private:
@@ -707,7 +707,7 @@ private:
 
                 if (v[alarm.index] == alarm.triggerVal) {
 
-                    emit ErrMsg(alarm.msg);
+                    emit ErrMsg(alarm.msg, alarm.index < 52 || alarm.index > 54);
 
                     if (alarm.index == 53) {
                         if (m_ModeSelet) {

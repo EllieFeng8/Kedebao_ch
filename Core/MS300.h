@@ -38,14 +38,14 @@ public slots:
         if (id >= 1 && id <= 10) m_targetFreqs[id] = hz;
     }
 
-    void setTargetFrequency(double hz) {
+    void setTargetFrequency(double hz, bool forceWrite = false) {
         if (hz < 0.0) hz = 0.0;
         if (hz > 600.0) hz = 600.0;
-        if (m_targetHz != hz) { // 如果數值真的有變動
+        if (forceWrite || m_targetHz != hz) {
             m_targetHz = hz;
-            m_needWriteID2 = true; // 標記需要寫入
+            m_needWriteID2 = true;
         }
-    }// UI 呼叫此 Slot 來更新運轉狀態
+    }
     void updateControlCache(int id, quint16 cmd) {
         if (id >= 1 && id <= 10) m_targetCmds[id] = cmd;
     }
@@ -82,13 +82,22 @@ private slots:
     void onPollTimeout();
 
 private:
+    void reportCommunicationError(QString& lastError, int id, const QString& operation, const QString& error);
+    void reportFaultStatus(int id, quint16 status);
     double m_targetFreqs[11]; //  2001H (頻率)
     quint16 m_targetCmds[11]; //  2000H (mode)
     quint16 m_targetReset[11];//  2002H (Reset 指令位址)
     QModbusRtuSerialClient* m_modbus = nullptr; 
     QTimer* m_pollTimer = nullptr;
     quint16 m_accelDecelWord = 0x0000;
-    int m_currentIndex = 1;
     double m_targetHz = 0.0;
     bool m_needWriteID2 = false;
+    QString m_lastConnectionError;
+    QString m_lastWriteError;
+    QString m_lastReadErrors[11];
+    quint16 m_lastFaultStatus[11] = {};
+    bool m_hasFaultStatus[11] = {};
+    int m_primaryIndex = 1;
+    int m_faultScanIndex = 3;
+    int m_pollSlot = 0;
 };

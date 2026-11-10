@@ -139,7 +139,13 @@ public:
         connect(threadMS300, &QThread::finished, m_ms300, &QObject::deleteLater);
         connect(threadMS300, &QThread::started, m_ms300, &MS300::initPort);
         connect(m_ms300, &MS300::dataUpdated, this, &Core::onMS300Data);
-
+        connect(m_ms300, &MS300::errorOccurred, this,
+            [this](int, const QString& message) {
+                qWarning() << message;
+                if (m_proxy) {
+                    m_proxy->raiseAbnormal(message);
+                }
+            });
         threadMS300->start();
     
         m_Length = new LengthController();
@@ -185,27 +191,17 @@ public:
         connect(m_manager, &ModbusManager::isWorking, this, [this]() {
             loadProductionSettings();
             });
-        connect(m_manager, &ModbusManager::ErrMsg, this, [this](QString msg) {
-            // 1. 處理 UI 顯示
+        connect(m_manager, &ModbusManager::BigGridAlarm, this, [this]() {
+            requestStop();
+        });
+        connect(m_manager, &ModbusManager::SmallGridAlarm, this, [this]() {
+            requestStop();
+        });
+        connect(m_manager, &ModbusManager::ErrMsg, this, [this](QString msg, bool writeHistory) {
             m_proxy->raiseAbnormal(msg);
-            connect(m_manager, &ModbusManager::BigGridAlarm, this, [this]() 
-                {
-                    m_isSoftStarting = false;
-                    waitforPV = false;
-                    m_isWaitingForStop = true;
-                    m_tensionStableTimer->stop();
-                    m_tensionStableTimer2->stop();
-                    setSTOP();
-                });
-            connect(m_manager, &ModbusManager::SmallGridAlarm, this, [this]()
-                {
-                    m_isSoftStarting = false;
-                    waitforPV = false;
-                    m_isWaitingForStop = true;
-                    m_tensionStableTimer->stop();
-                    m_tensionStableTimer2->stop();
-                    setSTOP();
-                });
+            if (!writeHistory) {
+                return;
+            }
             QString fileName = QString("error_history_%1.log").arg(QDateTime::currentDateTime().toString("yyyy-MM-dd"));
             QString currentTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
 

@@ -382,40 +382,35 @@ void Core::setMS300Run(int id, int mode) {
     m_ms300->updateControlCache(id, cmd);
 }
 
-void Core::onlength(double v) 
+void Core::onlength(double v)
 {
     m_proxy->setCurrentLength(v);
-    
-    if (m_length > 0 && v >= (double)m_length-0.08 && !onLength) {//距離到 停止
+    const bool targetReached = m_length > 0 && v >= (double)m_length - 0.08;
 
+    // `onLength` is only a post-stop action latch. It must not block a new
+    // production run's stop request if a previous run left it true.
+    if (targetReached && !m_isWaitingForStop && !isStop) {
         qDebug() << "Target length reached!" << v << "/" << m_length;
-
-
         requestStop();
-
-        if (!onLength && isStop) {
-
-            QTimer::singleShot(500, this,
-                [this]()
-                {
-                    writeCoils(89, { 1,0,1,0,1,0 });
-                });
-            //QThread::msleep(100);
-            //QTimer::singleShot(500, this,
-            //    [this]()
-            //    {
-            //        writeCoils(89, { 1,0,0,0,0,0 });
-            //    });
-            PressIndex = 0;
-            PressIndex2 = 0;
-
-
-            onLength = true;
-        }
         m_isBrakingPerformed = false;
         return;
-    } 
-    if (m_length > 0 && !m_isBrakingPerformed && !m_isWaitingForStop) {//剎車距離到 減速 
+    }
+
+    // The target stop has completed; perform the one-shot post-stop action.
+    if (targetReached && !m_isWaitingForStop && isStop && !onLength) {
+        QTimer::singleShot(500, this,
+            [this]()
+            {
+                writeCoils(89, { 1,0,1,0,1,0 });
+            });
+        PressIndex = 0;
+        PressIndex2 = 0;
+        onLength = true;
+        m_isBrakingPerformed = false;
+        return;
+    }
+
+    if (m_length > 0 && !m_isBrakingPerformed && !m_isWaitingForStop) {
         double remainingDistance = (double)m_length - v;
 
         if (remainingDistance <= m_BrakingDistance) {
@@ -423,20 +418,14 @@ void Core::onlength(double v)
             m_tensionStableTimer->stop();
             m_tensionStableTimer2->stop();
 
-            // 執行降速指令
             if (speed > 10) {
                 setMainSpeed(10);
             }
-            // 標記為已執行，防止下一次 onlength 又跑進來
             m_isBrakingPerformed = true;
-            
         }
         m_proxy->setModifyBrakingDistance(speed * 0.0765);
-
     }
 }
-
-
 
 void Core::onMS300Data(int id, double v)
 {
@@ -539,12 +528,10 @@ void Core::setMainSpeed(double v)
 
 void Core::setSTOP()
 {
-    double Hz = 0 * (60.0 / 130.0);
+    const double Hz = 0;
     qDebug() << "STOP";
-    {
-        QMetaObject::invokeMethod(m_ms300, [this, Hz]() {m_ms300->setTargetFrequency(Hz); },
-            Qt::QueuedConnection);
-    }
+    QMetaObject::invokeMethod(m_ms300, [this, Hz]() { m_ms300->setTargetFrequency(Hz, true); },
+        Qt::QueuedConnection);
 }
 void Core::loadSavedData() 
 {
